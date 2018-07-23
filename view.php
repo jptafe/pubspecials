@@ -13,6 +13,7 @@ function viewRegisterForm() { ?>
         <input type="hidden" name="register" value="register">
         <input name="email" type="text" placeholder="E-Mail Address" class="form-control">
         <input name="password" type="password" placeholder="Password" class="form-control">
+        <input name="dob" type="text" placeholder="Date of Birth" id="dob" class="form-control">
         <input name="submit" value="submit" type="submit" class="newclass btn btn-lg btn-block btn-primary">
     </form>
 <?php }

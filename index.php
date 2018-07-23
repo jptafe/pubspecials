@@ -16,7 +16,6 @@
     if(isset($_POST['login'])) {
         $_SESSION['user'] = 'user';
         $_SESSION['username'] = $_POST['email'];
-        echo '<p>login</p>';
     }
     if(isset($_POST['register'])) {
         $_SESSION['user'] = 'user';
