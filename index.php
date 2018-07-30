@@ -13,13 +13,16 @@
     }
 
 // FORM ACTIONS
+    if(isset($_POST['update'])) {
+        updateUser();
+    }
     if(isset($_POST['login'])) {
         $_SESSION['user'] = 'user';
         $_SESSION['username'] = $_POST['email'];
     }
     if(isset($_POST['register'])) {
-        $_SESSION['user'] = 'user';
-        echo '<p>registering</p>';
+//        $_SESSION['user'] = 'user';
+        addUser();
     }
     if(isset($_POST['logout'])) {
         $_SESSION['user'] = 'anon';
@@ -44,16 +47,23 @@
             viewRegisterForm();
         }
         if($_GET['pageid'] == 'location') {
-            echo '<p>location</p>';
+            selectAllUsers();
         }
         if($_GET['pageid'] == 'recent') {
-            echo '<p>recent</p>';
+            selectAllUsers();
         }
         if($_GET['pageid'] == 'popular') {
-            echo '<p>popular</p>';
+            selectAllUsers();
+        }
+        if($_GET['pageid'] == 'del') {
+            delUser($_GET['rowid']);
+            selectAllUsers();
+        }
+        if($_GET['pageid'] == 'edit') {
+            editRegisterForm($_GET['rowid']);
         }
     } else {
-        echo '<p>popular</p>';
+        selectAllUsers();
     }
 // FOOTER
     include('footer.php');
