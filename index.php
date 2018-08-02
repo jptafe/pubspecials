@@ -21,7 +21,7 @@
         $_SESSION['username'] = $_POST['email'];
     }
     if(isset($_POST['register'])) {
-//        $_SESSION['user'] = 'user';
+//      $_SESSION['user'] = 'user';
         addUser();
     }
     if(isset($_POST['logout'])) {
