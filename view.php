@@ -38,8 +38,8 @@ function viewLogoutForm() { ?>
     <form method="POST" action="index.php">
         <label>Are you Sure</label>
         <input type="hidden" name="logout" value="logout">
-        <input name="submit" value="yes" type="submit" class="newclass btn btn-lg btn-block btn-primary">
-        <input name="button" value="no" type="submit" class="newclass btn btn-lg btn-block btn-primary">
+        <input name="logoutyes" value="yes" type="submit" class="newclass btn btn-lg btn-block btn-primary">
+        <input name="logoutyes" value="no" type="submit" class="newclass btn btn-lg btn-block btn-primary">
     </form>
 <?php }
 ?>

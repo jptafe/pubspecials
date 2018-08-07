@@ -46,6 +46,22 @@ function updateUser() {
     }
 }
 
+function loginCheck() {
+    $conn = connDb();
+    $login_query = "SELECT * FROM user WHERE 
+        (username = '{$_POST['email']}' OR email = '{$_POST['email']}') 
+        AND password = '{$_POST['password']}';";
+    $stmt = $conn->prepare($login_query);
+    $stmt->execute();
+    $result = $stmt->fetch();
+
+    if(is_array($result)) {
+        return $result;
+    } else {
+        return false;
+    }
+}
+
 function getOneUser($uid) {
     $conn = connDb();
     $sel_query = "SELECT * FROM user WHERE id = " . $uid;

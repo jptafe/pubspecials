@@ -17,17 +17,26 @@
         updateUser();
     }
     if(isset($_POST['login'])) {
-        $_SESSION['user'] = 'user';
-        $_SESSION['username'] = $_POST['email'];
+        $res = loginCheck();
+        if($res != false) {
+            $_SESSION['user'] = $res['id'];
+            $_SESSION['priv'] = $res['privilege'];
+        } else {
+            $_SESSION['user'] = 0; 
+            $_SESSION['priv'] = -1; 
+            $_SESSION['count'] = $_SESSION['count'] + 1;
+        }
     }
     if(isset($_POST['register'])) {
 //      $_SESSION['user'] = 'user';
         addUser();
     }
     if(isset($_POST['logout'])) {
-        $_SESSION['user'] = 'anon';
-        $_SESSION['count'] = 0; 
-        echo '<p>loggingout</p>';
+        if($_POST['logoutyes'] == 'yes') {
+            $_SESSION['user'] = 0;
+            $_SESSION['priv'] = -1;
+            $_SESSION['count'] = 0; 
+        }
     }
 // HEADER
     include('header.php');
