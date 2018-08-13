@@ -53,12 +53,12 @@ DROP TABLE IF EXISTS `pub`;
 CREATE TABLE `pub` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
-  `address` int(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
   `postcode` int(11) NOT NULL,
   `latitude` float NOT NULL,
   `longitude` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,6 +67,7 @@ CREATE TABLE `pub` (
 
 LOCK TABLES `pub` WRITE;
 /*!40000 ALTER TABLE `pub` DISABLE KEYS */;
+INSERT INTO `pub` VALUES (1,'Tipplers Tap','5/182 Gray St SOUTH BRISBANE',4101,-27.4801,153.023),(2,'The Fox Hotel','71-73 Melbourne Street SOUTH BRISBANE',4101,-27.4742,153.017),(3,'The Archive','100 Boundary Street WEST END',4101,-27.4791,153.013),(4,'Redbrick Hotel','83 Annerley Rd, Woolloongabba QLD 4102',4101,-27.4898,153.027),(6,'Junction Hotel','Ipswich Rd & Annerley Rd, Annerley QLD 4103',4103,-27.5093,153.033);
 /*!40000 ALTER TABLE `pub` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,7 +80,7 @@ DROP TABLE IF EXISTS `rating`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rating` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rating` int(11) NOT NULL,
+  `rating` varchar(10) NOT NULL,
   `user_id` int(11) NOT NULL,
   `special_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -87,7 +88,7 @@ CREATE TABLE `rating` (
   KEY `special_id` (`special_id`),
   CONSTRAINT `rating_ibfk_1` FOREIGN KEY (`special_id`) REFERENCES `special` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `rating_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,6 +97,7 @@ CREATE TABLE `rating` (
 
 LOCK TABLES `rating` WRITE;
 /*!40000 ALTER TABLE `rating` DISABLE KEYS */;
+INSERT INTO `rating` VALUES (1,'up',1,2),(2,'up',1,1),(3,'up',1,3),(4,'up',1,2),(5,'up',1,2);
 /*!40000 ALTER TABLE `rating` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,13 +114,14 @@ CREATE TABLE `special` (
   `pub_id` int(11) NOT NULL,
   `special_text` varchar(255) NOT NULL,
   `day_of_week` varchar(12) NOT NULL,
+  `time_of_day` varchar(64) NOT NULL,
   `starts` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `pub_id` (`pub_id`),
   CONSTRAINT `special_ibfk_1` FOREIGN KEY (`pub_id`) REFERENCES `pub` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `special_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,6 +130,7 @@ CREATE TABLE `special` (
 
 LOCK TABLES `special` WRITE;
 /*!40000 ALTER TABLE `special` DISABLE KEYS */;
+INSERT INTO `special` VALUES (1,1,1,'Sunday Paddle Deal','Sunday','all day','2018-08-13'),(2,1,2,'$4 pizza night','Wednesday','From 5pm','2018-08-13'),(3,1,4,'14 Steak and chips','Sunday','From 5pm','2018-08-13'),(5,1,6,'two for one tuesdays','tuesday','5:30pm','2018-08-13');
 /*!40000 ALTER TABLE `special` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-06 14:54:03
+-- Dump completed on 2018-08-13 17:42:38
