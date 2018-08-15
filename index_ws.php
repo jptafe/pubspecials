@@ -45,18 +45,6 @@ SELECT * FROM special
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $stmt = $conn->prepare($sql);
     $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach($result as $row) {
-        echo $row['specialcount'];
-        echo $row['special_text'];
-        echo $row['day_of_week'];
-        echo $row['time_of_day'];
-        echo $row['starts'];
-        echo $row['name'];
-        echo $row['address']; 
-        echo $row['postcode'];
-        echo $row['latitude'];
-        echo $row['longitude'];
-    }
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 ?>

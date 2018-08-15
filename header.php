@@ -42,4 +42,21 @@ if($_SESSION['priv'] > 0) {
         </div>
 <?php } ?>
 
-		<!-- Not sure I want this <link rel="import" href="footer.php"> -->
+<!-- Search Bar -->
+<ul>
+    <li>
+        <li><a href="#" id="search_radius">Search Radius</a></li>
+        <select id="search_radius_distance">
+            <option value="1">1km</option>
+            <option value="5">5km</option>
+            <option value="10">10km</option>
+        </select>
+    </li>
+    <li><input id="search_postcode" type="number" placeholder="pcode" size="4" width="4" max="9999" min="1000" maxlength="4"></li>
+    <li><a href="#" id="search_recent">recent</a></li>
+    <li><a href="#" id="search_popular">popular</a></li>
+</ul>
+<!-- Move this elsewhere -->
+<div id="altdiv"></div>
+
+<!-- Not sure I want this <link rel="import" href="footer.php"> -->
