@@ -8,6 +8,8 @@ Business Rules:
 One must be authentaced to comment of endorse
 They must also be logged in to add a special
 In mobile mode, search can be done by ones' location
+A users' IP will be used to find the city they are in
+A session stores the latitude and longitude of any location input the user wishes to divulge
 You have to be 18 or above to register, just like a pub.
 
 

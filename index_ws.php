@@ -1,6 +1,6 @@
 <?php
-
-echo $_SERVER['REMOTE_ADDR'];
+    include('srv/database.php');
+    include('srv/session.php');
 
 if(isset($_GET['catid'])) {
     if($_GET['catid'] == 'recent') {
@@ -35,10 +35,18 @@ SELECT * FROM special
 ";
     }
     if($_GET['catid'] == 'postcode') {
-        $sql = "
+        if(is_int($_GET['postcode'])) {
+            $sql = "
 SELECT * FROM special
     INNER JOIN pub ON pub.id = special.pub_id
-        WHERE pub.postcode = {$_GET['postcode']}";
+        WHERE pub.postcode = {$_GET['postcode']}";     
+            setLocWithPostcode($_GET['postcode']);
+        } else {
+            $sql = "
+SELECT * FROM special
+    INNER JOIN pub ON pub.id = special.pub_id
+        WHERE pub.postcode = 4000"; 
+        }
     }
     // render output
     $conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');

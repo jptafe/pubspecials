@@ -1,16 +1,10 @@
 <?php
 // INCLUDES
     include('srv/database.php');
+    include('srv/session.php');
     include('view.php');
 // SESSIONS 
-    session_start();
-    if(isset($_SESSION['user'])) {
-        // This user has visited us before;
-        $_SESSION['count'] = $_SESSION['count'] + 1; 
-    } else {
-        $_SESSION['user'] = 'anon';
-        $_SESSION['count'] = 1; 
-    }
+
 
 // FORM ACTIONS
     if(isset($_POST['update'])) {

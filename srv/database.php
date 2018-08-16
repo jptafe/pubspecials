@@ -93,5 +93,7 @@ function selectAllUsers() {
     }
 }
 
-
+function dbGetPostCode($postcode) {
+    return false;
+}
 ?>

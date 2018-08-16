@@ -22,7 +22,6 @@ if($_SESSION['priv'] > 0) {
             <a class="navbar-brand"><img src="img/ozpubspecials.svg" height="60" width="240"></a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=popular">Specials</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=about">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=logout">Logout</a></li>
@@ -33,7 +32,6 @@ if($_SESSION['priv'] > 0) {
             <a class="navbar-brand"><img src="img/ozpubspecials.svg" height="60" width="240"></a>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=popular">Specials</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=about">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" href="index.php?pageid=register">Register</a></li>
@@ -43,19 +41,21 @@ if($_SESSION['priv'] > 0) {
 <?php } ?>
 
 <!-- Search Bar -->
-<ul>
-    <li>
+<div class="navbar navbar-expand-md">
+    <ul>
         <li><a href="#" id="search_radius">Search Radius</a></li>
-        <select id="search_radius_distance">
-            <option value="1">1km</option>
-            <option value="5">5km</option>
-            <option value="10">10km</option>
-        </select>
-    </li>
-    <li><input id="search_postcode" type="number" placeholder="pcode" size="4" width="4" max="9999" min="1000" maxlength="4"></li>
-    <li><a href="#" id="search_recent">recent</a></li>
-    <li><a href="#" id="search_popular">popular</a></li>
-</ul>
+        <li>
+            <select id="search_radius_distance">
+                <option value="1">1km</option>
+                <option value="5">5km</option>
+                <option value="10">10km</option>
+            </select>
+        </li>
+        <li><input id="search_postcode" type="number" placeholder="pcode" size="4" width="4" max="9999" min="1000" maxlength="4"></li>
+        <li><a href="#" id="search_recent">recent</a></li>
+        <li><a href="#" id="search_popular">popular</a></li>
+    </ul>
+</div>
 <!-- Move this elsewhere -->
 <div id="altdiv"></div>
 
