@@ -15,8 +15,11 @@
         if(is_real($lat) && is_real($long)) {
             $_SESSION['lat'] = $lat;
             $_SESSION['long'] = $long;
-        } else {
+        } 
+        if($lat == 0 && $long == 0) {
             getLocByIP();
+            $_SESSION['lat'] = $lat;
+            $_SESSION['long'] = $long;
         }
     }
 

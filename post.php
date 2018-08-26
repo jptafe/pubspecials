@@ -6,7 +6,7 @@
     <script
             src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript"
-            src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCvC1ToQXBS5fGNEY1w0pPOkZb7NUkImVc&sensor=false&libraries=places"></script>
 <script>
 google.maps.event.addDomListener(window, 'load', function() {
     var places = new google.maps.places.Autocomplete(document

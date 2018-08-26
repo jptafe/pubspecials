@@ -1,0 +1,412 @@
+* {
+    /* Resets */
+    border: 0;    padding: 0;    margin: 0;
+    text-decoration: none;
+    list-style-type: none;
+    box-sizing: border-box;
+    transition: all .3s;
+}
+:root {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+/* 
+    
+    
+Pallette */
+
+    --black-leather-jacket: rgba(41, 46, 30, 1);
+    --mindaro: rgba(237, 255, 134, 0.966);
+    --anti-flash-white: rgba(236, 240, 241, 1);
+    --middle-red-purple: rgba(35, 12, 51, 1);
+    --sweet-brown: rgba(173, 52, 62, 1);
+
+    --black-leather-jacket-light: rgba(177, 179, 173, 1);
+    --mindaro-light: rgba(248, 255, 211, 1);
+    --anti-flash-white-light: rgba(248, 249, 249, 1);
+    --middle-red-purple-light: rgba(175, 166, 180, 1);
+    --sweet-brown-light: rgba(225, 181, 184, 1);
+
+    --black-leather-jacket-dark: rgba(19, 21, 14, 1);
+    --mindaro-dark: rgba(108, 116, 61, 1);
+    --anti-flash-white-dark: rgba(108, 110, 110, 1);
+    --middle-red-purple-dark: rgba(16, 6, 24, 1);
+    --sweet-brown-dark: rgba(79, 24, 29, 1);
+
+    --main-bkg: var(--anti-flash-white);
+    --main-txt: var(--middle-red-purple-dark);
+    --main-lnk: var(--middle-red-purple);
+    --main-hov: var(--middle-red-purple-dark);
+    --main-act: var(--middle-red-purple-light);
+    --main-dis: var(--middle-red-purple-light);
+    --main-foc: var(--mindaro-light);
+    --main-inv: var(--sweet-brown-light);
+    --main-lit: var(--sweet-brown);
+
+    --menu-bkg: var(--black-leather-jacket);
+    --menu-txt: var(--mindaro);
+    --menu-lnk: var(--mindaro);
+    --menu-hov: var(--mindaro-light);
+    --menu-act: var(--anti-flash-white-light);
+    --menu-dis: var(--mindaro-dark);
+    --menu-foc: var(--black-leather-jacket-dark);
+    --menu-inv: var(--sweet-brown-dark);
+
+    --sub-menu-bkg: var(--middle-red-purple);
+    --sub-menu-txt: var(--anti-flash-white);
+    --sub-menu-lnk: var(--anti-flash-white);
+    --sub-menu-hov: var(--mindaro);
+    --sub-menu-act: var(--mindaro-light);
+    --sub-menu-dis: var(--anti-flash-white-dark);
+    --sub-menu-foc: var(--middle-red-purple-dark);
+    --sub-menu-inv: var(--sweet-brown-dark);
+
+    --block-bkg: var(--middle-red-purple-light);
+    --block-txt: var(--black-leather-jacket-dark);
+    --block-lnk: var(--middle-red-purple);
+    --block-hov: var(--middle-red-purple-dark);
+    --block-act: var(--middle-red-purple-light);
+    --block-dis: var(--middle-red-purple-light);
+    --block-foc: var(--middle-red-purple-light);
+    --block-inv: var(--sweet-brown);
+
+    --sidebar-bkg: var(--black-leather-jacket-light);
+    --sidebar-txt: var(--middle-red-purple-dark);
+    --sidebar-lnk: var(--middle-red-purple);
+    --sidebar-hov: var(--middle-red-purple-dark);
+    --sidebar-act: var(--middle-red-purple-light);
+    --sidebar-dis: var(--middle-red-purple-light);
+    --sidebar-foc: var(--middle-red-purple-light);
+    --sidebar-inv: var(--sweet-brown);
+
+    --button-bor: var(--anti-flash-white);
+    --button-txt: var(--anti-flash-white);
+    --button-act: var(--mindaro-light);
+    --button-foc: var(--mindaro-light);
+    --button-mar: var(--middle-red-purple);
+    --button-bkg: var(--middle-red-purple);
+
+    --button-disabled-bor: var(--middle-red-purple);
+    --button-disabled-txt: var(--middle-red-purple);
+    --button-disabled-mar: var(--anti-flash-white);
+    --button-disabled-bkg: var(--anti-flash-white);
+
+    --button-submit-bor: var(--mindaro-light);
+    --button-submit-txt: var(--mindaro-light);
+    --button-submit-act: var(--anti-flash-white);    
+    --button-subint-mar: var(--sweet-brown-dark);
+    --button-submit-bkg: var(--sweet-brown-dark);
+
+    --alert-error-bkg: var(--sweet-brown-light);
+    --alert-error-txt: var(--sweet-brown);
+
+    --alert-message-bkg: var(--middle-red-purple-light);
+    --alert-message-txt: var(--middle-red-purple);
+
+    --alert-notice-bkg: var(--mindaro);
+    --alert-notice-txt: var(--mindaro-dark);
+
+}
+body {
+    background-color:  var(--main-bkg);
+    color: var(--main-txt);
+}
+::-moz-selection {
+    background: var(--main-lit);
+}
+::selection {
+    background: var(--main-lit);
+}
+
+/*
+
+
+
+Std Elements */
+
+a {
+    color: var(--main-lnk);
+}
+a:hover {
+    color: var(--main-hov);
+}
+a:active {
+    color: var(--main-act);
+}
+span {
+    color: var(--main-dis);
+}
+input {
+    background-color:  var(--main-bkg);
+    color: var(--main-txt);
+    border: none;
+    box-shadow: 1px 1px 4px var(--main-act);
+}
+input::placeholder {
+    color: var(--main-dis);
+}
+input:not(:placeholder) {
+
+}
+input:invalid {
+    box-shadow: inset 0 0 6px var(--main-inv); 
+}
+input:active {
+    background-color: var(--main-dis);
+}
+input:focus {
+    box-shadow: inset 0 0 10px var(--main-foc), 
+                1px 1px 4px var(--main-act);
+    outline: none;
+}
+input[type="button"] {
+    padding: 4px;
+    outline: 0;
+    background-color: var(--button-bkg);
+    color: var(--button-txt);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--button-txt);
+    border-radius: 3px;
+}
+input[type="submit"] {
+    padding: 4px;
+    outline: 0;
+    background-color: var(--button-submit-bkg);
+    color: var(--button-submit-txt);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--button-submit-txt);
+    border-radius: 3px;
+}
+input[type="button"]:focus {
+    outline: none;
+    text-decoration: underline;
+    box-shadow: 1px 1px 4px var(--main-act);
+    color: var(--button-act);
+    border-color: var(--button-act);
+}
+input[type="submit"]:focus {
+    outline: none;
+    text-decoration: underline;
+    box-shadow: 1px 1px 4px var(--main-act);
+    color: var(--button-act);
+    border-color: var(--button-act);
+}
+input[type="button"]:active {
+    outline: none;
+    text-decoration: dashed;
+    box-shadow: 1px 1px 4px var(--main-act);
+    color: var(--button-act);
+    border-color: var(--button-act);
+}
+input[type="submit"]:active {
+    outline: none;
+    text-decoration: dashed;
+    box-shadow: 1px 1px 4px var(--main-act);
+    color: var(--button-submit-act);
+    border-color: var(--button-submit-act);
+}
+input[type="button"]:disabled, 
+input[type="submit"]:disabled {
+    background-color: inherit;
+    color: inherit;
+    border-color: inherit;
+    text-decoration: none;
+}
+
+/* 
+
+
+
+Navigation */
+
+nav header {
+    background-color:  var(--menu-bkg);
+    color: var(--menu-txt);
+}
+nav header ul {
+}
+nav header li {
+    display: inline-block;
+}
+nav header a {
+    color: var(--menu-txt);
+}
+nav header a:hover {
+    color: var(--menu-hov);
+}
+nav header a:active {
+    color: var(--menu-act);
+}
+nav header span {
+    color: var(--menu-dis);
+}
+nav header input[type="button"]:disabled, 
+nav header input[type="submit"]:disabled {
+    background-color: inherit;
+    color: var(--menu-dis);
+    border-color: var(--menu-dis);
+    text-decoration: none;
+}
+nav header input {
+    background-color:  var(--menu-bkg);
+    color: var(--menu-txt);
+    border: solid;
+    border-color: var(--menu-dis);
+    border-width: 1px;
+    box-shadow: 0 0 0;
+}
+nav header input::placeholder {
+    color: var(--menu-dis);
+}
+nav header input:invalid {
+    background-color: var(--menu-inv);
+    box-shadow: 0 0 0;
+}
+nav header input:active {
+    background-color: var(--menu-hov);
+    box-shadow: 0 0 0;
+}
+nav header input:focus {
+    background-color: var(--menu-foc);
+    box-shadow: 0 0 0;
+}
+nav footer {
+    background-color:  var(--sub-menu-bkg);
+    color: var(--sub-menu-txt);
+}
+nav footer ul {
+}
+nav footer li {
+    display: inline-block;
+}
+nav footer a {
+    color: var(--sub-menu-txt);
+}
+nav footer a:hover {
+    color: var(--sub-menu-hov);
+}
+nav footer a:active {
+    color: var(--sub-menu-act);
+}
+nav footer span {
+    color: var(--sub-menu-dis);
+}
+nav footer input[type="button"]:disabled, 
+nav footer input[type="submit"]:disabled {
+    background-color: inherit;
+    color: var(--menu-dis);
+    border-color: var(--menu-dis);
+    text-decoration: none;
+}
+nav footer input {
+    background-color:  var(--sub-menu-bkg);
+    color: var(--sub-menu-txt);
+    border: solid;
+    border-color: var(--sub-menu-dis);
+    border-width: 1px;
+    box-shadow: 0 0 0;
+}
+nav footer input::placeholder {
+    color: var(--sub-menu-dis);
+}
+nav footer input:invalid {
+    background-color: var(--sub-menu-inv);
+    box-shadow: 0 0 0;
+}
+nav footer input:active {
+    background-color: var(--sub-menu-hov);
+    box-shadow: 0 0 0;
+}
+nav footer input:focus {
+    background-color: var(--sub-menu-foc);
+    box-shadow: 0 0 0;
+}
+footer {
+    background-color:  var(--sidebar-bkg);
+    color: var(--sidebar-txt);
+}
+section {
+    background-color:  var(--block-bkg);
+    color: var(--block-txt);
+}
+
+
+.alert {
+    border-style: double;
+    border-width: 2px;
+    padding: var(--padding);
+    width: var(--section-width);
+}
+#error {
+    border-color: var(--alert-error-txt);
+    background-color: var(--alert-error-bkg);
+    color: var(--alert-error-txt);
+}
+#message {
+    border-color: var(--alert-message-txt);
+    background-color: var(--alert-message-bkg);
+    color: var(--alert-message-txt);
+}
+#notice {
+    border-color: var(--alert-notice-txt);
+    background-color: var(--alert-notice-bkg);
+    color: var(--alert-notice-txt);
+}
+
+@media screen and (min-width: 70em) {
+    :root {
+        --section-padding: 2em;
+        --section-width: 60em;
+        --section-margin: 2em;
+    }
+    #hamburgercheck { 
+        display: none;
+    }
+    #hamburgercheck + label {
+        display: none;
+    }
+}
+@media screen and (max-width:70em) and (min-width: 25em) {
+    :root {
+        --section-padding: 1em;
+        --section-width: 40em;
+        --section-margin: 1em;
+        --section-rounding: 3px;
+
+        --inline-margin: .2em;
+        --inline-padding: .2em;
+    }
+
+    #hamburgercheck { 
+        display: none;
+    }
+    #hamburgercheck + label {
+        display: none;
+    }
+}
+@media screen and (max-width: 25em) {
+    :root {
+        --section-padding: .1em;
+        --section-width: 100%;
+        --section-margin: .1em;
+    }
+    #hamburgercheck { 
+        display: none;
+    }
+    #hamburgercheck + label {
+        display: block;
+    }
+    nav { /* Extensive restyling of NAV is now necessary */
+        display: none;
+    }
+    #hamburgercheck:checked ~ nav {
+        display: block;
+    }
+    #hamburgercheck {
+        cursor: pointer;
+        font-weight: 800;
+    }
+}

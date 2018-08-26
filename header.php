@@ -15,27 +15,33 @@
     </head>
     <body>
 <?php
+if(isset($_GET['pageid'])) {
+    $highlight = $_GET['pageid'];
+} else {
+    $highlight = 'home';
+
+}
+
 if($_SESSION['priv'] > 0) {
 ?>
-
         <div class="navbar navbar-expand-md navbar-dark bg-dark">
             <a class="navbar-brand"><img src="img/ozpubspecials.svg" height="60" width="240"></a>
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=logout">Logout</a></li>
+                <li class="nav-item <?php if($highlight == 'home') { echo 'active'; } ?>"><a class="nav-link" href="index.php">Home</a></li>
+                <li class="nav-item <?php if($highlight == 'about') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=about">About</a></li>
+                <li class="nav-item <?php if($highlight == 'contact') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
+                <li class="nav-item <?php if($highlight == 'logout') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=logout">Logout</a></li>
             </ul>
         </div>
 <?php } else { ?>
         <div class="navbar navbar-expand-md navbar-dark bg-dark">
             <a class="navbar-brand"><img src="img/ozpubspecials.svg" height="60" width="240"></a>
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=register">Register</a></li>
-                <li class="nav-item"><a class="nav-link" href="index.php?pageid=login">Login</a></li>
+                <li class="nav-item <?php if($highlight == 'home') { echo 'active'; } ?>"><a class="nav-link" href="index.php">Home</a></li>
+                <li class="nav-item <?php if($highlight == 'about') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=about">About</a></li>
+                <li class="nav-item <?php if($highlight == 'contact') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=contact">Contact</a></li>
+                <li class="nav-item <?php if($highlight == 'register') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=register">Register</a></li>
+                <li class="nav-item <?php if($highlight == 'login') { echo 'active'; } ?>"><a class="nav-link" href="index.php?pageid=login">Login</a></li>
             </ul>
         </div>
 <?php } ?>
