@@ -12,8 +12,8 @@
     font-style: normal;
 
 /* 
-    
-    
+
+
 Pallette */
 
     --black-leather-jacket: rgba(41, 46, 30, 1);
@@ -108,8 +108,14 @@ Pallette */
     --alert-notice-txt: var(--mindaro-dark);
 
 }
+
+/*
+
+
+
+Std Elements */
 body {
-    background-color:  var(--main-bkg);
+    background-image: linear-gradient(175deg, var(--block-bkg), var(--main-bkg), var(--main-bkg), var(--sidebar-bkg));
     color: var(--main-txt);
 }
 ::-moz-selection {
@@ -118,13 +124,6 @@ body {
 ::selection {
     background: var(--main-lit);
 }
-
-/*
-
-
-
-Std Elements */
-
 a {
     color: var(--main-lnk);
 }
@@ -221,7 +220,6 @@ input[type="submit"]:disabled {
 
 
 Navigation */
-
 nav header {
     background-color:  var(--menu-bkg);
     color: var(--menu-txt);
@@ -333,6 +331,18 @@ section {
     color: var(--block-txt);
 }
 
+/*
+
+
+
+Content */
+article section {
+    background: var(--main-bkg);
+    width: var(--section-width);
+    margin: 0 auto;
+    box-shadow: 5px 5px 10px var(--main-act), -5px 5px 10px var(--main-act);
+    padding: var(--section-padding);
+}
 
 .alert {
     border-style: double;
@@ -355,11 +365,10 @@ section {
     background-color: var(--alert-notice-bkg);
     color: var(--alert-notice-txt);
 }
-
 @media screen and (min-width: 70em) {
     :root {
         --section-padding: 2em;
-        --section-width: 60em;
+        --section-width: 70em;
         --section-margin: 2em;
     }
     #hamburgercheck { 
@@ -372,7 +381,7 @@ section {
 @media screen and (max-width:70em) and (min-width: 25em) {
     :root {
         --section-padding: 1em;
-        --section-width: 40em;
+        --section-width: 60em;
         --section-margin: 1em;
         --section-rounding: 3px;
 
@@ -397,16 +406,25 @@ section {
         display: none;
     }
     #hamburgercheck + label {
-        display: block;
+        background-color: var(--menu-bkg);
+        color: var(--menu-txt);
+        display: inline-block;
+        cursor: pointer;
+        font-weight: 800;
+    }
+    #hamburgercheck ~ div {
+        background-color: var(--menu-bkg);
+        color: var(--menu-txt);
+        display: inline-block;
+        width: 90%;
+        text-align: center;
     }
     nav { /* Extensive restyling of NAV is now necessary */
         display: none;
+        width: 12em;
+        position: absolute;
     }
     #hamburgercheck:checked ~ nav {
         display: block;
-    }
-    #hamburgercheck {
-        cursor: pointer;
-        font-weight: 800;
     }
 }
