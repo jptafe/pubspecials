@@ -179,6 +179,14 @@ input[type="submit"] {
     border-color: var(--button-submit-txt);
     border-radius: 3px;
 }
+input[type="submit"][value="Loading..."] {
+    animation: loading-cycle 1s infinite;
+}
+@keyframes loading-cycle {
+    0%   {background-color: var(--button-bkg)}
+    50%  {background-color: var(--button-submit-bkg)}
+    100% {background-color: var(--button-bkg)}
+}
 input[type="button"]:focus {
     outline: none;
     text-decoration: underline;
