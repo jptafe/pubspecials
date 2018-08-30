@@ -179,7 +179,8 @@ input[type="submit"] {
     border-color: var(--button-submit-txt);
     border-radius: 3px;
 }
-input[type="submit"][value="Loading..."] {
+input[type="submit"][value="Loading..."],
+input[type="submit"][value="Error"] {
     animation: loading-cycle 1s infinite;
 }
 @keyframes loading-cycle {

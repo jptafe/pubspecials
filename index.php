@@ -3,8 +3,6 @@
     include('srv/database.php');
     include('srv/session.php');
     include('view.php');
-// SESSIONS 
-
 
 // FORM ACTIONS
     if(isset($_POST['update'])) {
@@ -22,7 +20,7 @@
         }
     }
     if(isset($_POST['register'])) {
-//      $_SESSION['user'] = 'user';
+// $_SESSION['user'] = 'user';
         addUser();
     }
     if(isset($_POST['logout'])) {
