@@ -30,6 +30,13 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
     }
 }
 
+var alertBoxes = document.getElementsByClassName('alert');
+for(var loop = 0;loop<alertBoxes.length;loop++) {
+    alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
+        clearMessage(evt.target.parentElement);
+    });
+}
+
 function unCheck() {
     document.getElementById('hamburgercheck').checked = false;
 }
@@ -74,4 +81,13 @@ function checkInputElement(inputField) {
 function doSubmit(submitForm) {
     submitForm.preventDefault(); 
     return false;
+}
+function clearForm() {
+    
+}
+function clearMessage(targetElement) {
+    targetElement.style.display = 'none';
+}
+function showMessage(targetElement) {
+    targetElement.style.display = 'block';
 }

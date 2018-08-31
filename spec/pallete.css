@@ -358,19 +358,28 @@ article section {
     border-width: 2px;
     padding: var(--padding);
     width: var(--section-width);
+    border-color: var(--alert-notice-txt);
+    position: relative;
+}
+.alert aside { 
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    cursor: pointer;
+}
+.alert div {
+    padding: 2em;
 }
 #error {
-    border-color: var(--alert-error-txt);
     background-color: var(--alert-error-bkg);
     color: var(--alert-error-txt);
 }
 #message {
-    border-color: var(--alert-message-txt);
     background-color: var(--alert-message-bkg);
     color: var(--alert-message-txt);
 }
 #notice {
-    border-color: var(--alert-notice-txt);
     background-color: var(--alert-notice-bkg);
     color: var(--alert-notice-txt);
 }
