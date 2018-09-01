@@ -145,10 +145,7 @@ input {
 input::placeholder {
     color: var(--main-dis);
 }
-input:not(:placeholder) {
-
-}
-input:invalid {
+input:not(:placeholder-shown):not(:focus):invalid {
     box-shadow: inset 0 0 6px var(--main-inv); 
 }
 input:active {
@@ -179,7 +176,6 @@ input[type="submit"] {
     border-color: var(--button-submit-txt);
     border-radius: 3px;
 }
-input[type="submit"][value="Loading..."],
 input[type="submit"][value="Error"] {
     animation: loading-cycle 1s infinite;
 }

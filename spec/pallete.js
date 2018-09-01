@@ -8,7 +8,9 @@ for(var loop = 0;loop<forms.length;loop++) {
         var errorCode = checkSubmit(this);
         if(errorCode == true) {
             evt.target.lastElementChild.value = 'Loading...';
+            evt.target.lastElementChild.setAttribute('disabled', '');
             doSubmit(evt);
+            clearForm(evt.target.childNodes); // Make Sure you do this AFTER AJAX
         } else {
             evt.target.lastElementChild.value = 'Error';
             document.getElementById('error').innerHTML = errorCode;
@@ -21,10 +23,12 @@ var requiredFields = document.getElementsByTagName('input');
 for(var loop = 0;loop<requiredFields.length;loop++) {
     if(requiredFields[loop].hasAttribute('required')) {
         requiredFields[loop].addEventListener('change', function(evt) {
-            if(checkAllFields(evt.target.parentElement) == true) {
-                evt.target.parentElement.lastElementChild.value = 'Submit';
-            } else {
-                evt.target.parentElement.lastElementChild.value = 'Error';
+            if(evt.target.parentElement.lastElementChild.value != 'Loading...') {
+                if(checkAllFields(evt.target.parentElement) == true) {
+                    evt.target.parentElement.lastElementChild.value = 'Submit';
+                } else {
+                    evt.target.parentElement.lastElementChild.value = 'Error';
+                }
             }
         });
     }
@@ -79,11 +83,20 @@ function checkInputElement(inputField) {
     }
 }
 function doSubmit(submitForm) {
+//    This goes into AJAX...
+//    submitForm.target.lastElementChild.value = 'submit';
+//    submitForm.target.lastElementChild.removeAttribute('disabled');
     submitForm.preventDefault(); 
     return false;
 }
-function clearForm() {
-    
+function clearForm(submittedForm) {
+    for(loop = 0;loop < submittedForm.length;loop++) {
+        if(submittedForm[loop].nodeName == 'INPUT') {
+            if(submittedForm[loop].hasAttribute('required')) {    
+                submittedForm[loop].value = '';
+            }
+        }
+    }
 }
 function clearMessage(targetElement) {
     targetElement.style.display = 'none';
