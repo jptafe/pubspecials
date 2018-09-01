@@ -65,8 +65,8 @@
         <form method="POST" action="#" novalidate>
             <a href="#">Link</a>
             Txt
-            <input value="A" type="text" pattern="[A-Z]" title="Please enter a Single Capital Letter" placeholder="Single Capital Letter" required>
-            <input value="B" type="text" pattern="[A-Z]{1,3}" title="You must enter 1-3 Capital Letters" placeholder="Max 3 Capitals" required>
+            <input name="single_letter" type="text" pattern="[A-Z]" title="Please enter a Single Capital Letter" placeholder="Single Capital Letter" required>
+            <input name="three_letters" type="text" pattern="[A-Z]{1,3}" title="You must enter 1-3 Capital Letters" placeholder="Max 3 Capitals" required>
             <span>Dead link</span>
             <input type="button" value="button">
             <input type="button" value="disabled" disabled>
@@ -74,16 +74,19 @@
         </form>
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
+        <figcaption>ERROR:</figcaption>
         <div id="error">Error: this is an error</div>
     </div>
     
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
+        <figcaption>MESSAGE:</figcaption>
         <div id="message">Message: this is an message</div>
     </div>
         
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
+        <figcaption>ALERT:</figcaption>
         <div id="notice">Notice: this is an Notice</div>
     </div>
 </body>

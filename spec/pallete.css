@@ -180,8 +180,8 @@ input[type="submit"][value="Error"] {
     animation: loading-cycle 1s infinite;
 }
 @keyframes loading-cycle {
-    0%   {background-color: var(--button-bkg)}
-    50%  {background-color: var(--button-submit-bkg)}
+      0% {background-color: var(--button-bkg)}
+     50% {background-color: var(--button-submit-bkg)}
     100% {background-color: var(--button-bkg)}
 }
 input[type="button"]:focus {
@@ -364,8 +364,14 @@ article section {
     left: 2px;
     cursor: pointer;
 }
+.alert figcaption {
+    display: block;
+    position: absolute;
+    top: 2em;
+    left: 2em;
+}
 .alert div {
-    padding: 2em;
+    padding: 4em 0 2em 3em;
 }
 #error {
     background-color: var(--alert-error-bkg);

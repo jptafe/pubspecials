@@ -5,15 +5,19 @@ document.getElementById('contentstuff').addEventListener('click', unCheck);
 var forms = document.getElementsByTagName('form');
 for(var loop = 0;loop<forms.length;loop++) {
     forms[loop].addEventListener('submit', function(evt) {
-        var errorCode = checkSubmit(this);
+        var errorCode = checkSubmit(evt.target);
         if(errorCode == true) {
             evt.target.lastElementChild.value = 'Loading...';
-            evt.target.lastElementChild.setAttribute('disabled', '');
+            disableFields(evt.target.children);
+            hideMessage(document.getElementById('error').parentElement);
             doSubmit(evt);
-            clearForm(evt.target.childNodes); // Make Sure you do this AFTER AJAX
+            clearForm(evt.target.children); // Make Sure you do this AFTER AJAX is done
+            enableFields(evt.target.children);  // Make Sure you do this AFTER AJAX is done
+            evt.target.lastElementChild.value = 'Submit';  //          This goes into AJAX...
         } else {
             evt.target.lastElementChild.value = 'Error';
             document.getElementById('error').innerHTML = errorCode;
+            showMessage(document.getElementById('error').parentElement);
             evt.preventDefault();
         }
     });
@@ -37,7 +41,7 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
     alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
-        clearMessage(evt.target.parentElement);
+        hideMessage(evt.target.parentElement);
     });
 }
 
@@ -68,7 +72,8 @@ function checkAllFields(thisForm) {
             if(checkFields[loop].hasAttribute('required')) {                
                 if(checkInputElement(checkFields[loop]) == false) {
                     checkFields[loop].focus();
-                    return false;
+                    var returnVal = checkFields[loop].name + ': ' + checkFields[loop].title;
+                    return returnVal;
                 }
             }
         }
@@ -83,9 +88,6 @@ function checkInputElement(inputField) {
     }
 }
 function doSubmit(submitForm) {
-//    This goes into AJAX...
-//    submitForm.target.lastElementChild.value = 'submit';
-//    submitForm.target.lastElementChild.removeAttribute('disabled');
     submitForm.preventDefault(); 
     return false;
 }
@@ -98,7 +100,22 @@ function clearForm(submittedForm) {
         }
     }
 }
-function clearMessage(targetElement) {
+function disableFields(fieldsToDisable) {
+    for(loop = 0;loop < fieldsToDisable.length;loop++) {
+        if(fieldsToDisable[loop].nodeName == 'INPUT') {
+            fieldsToDisable[loop].setAttribute('disabled', '');
+        }
+    }
+}
+function enableFields(fieldsToEable) {
+    // ARE WE Re-Enabling TOO MUCH?
+    for(loop = 0;loop < fieldsToEable.length;loop++) {
+        if(fieldsToEable[loop].nodeName == 'INPUT') {
+            fieldsToEable[loop].removeAttribute('disabled');
+        }
+    }
+}
+function hideMessage(targetElement) {
     targetElement.style.display = 'none';
 }
 function showMessage(targetElement) {
