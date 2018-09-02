@@ -2,6 +2,11 @@
 window.addEventListener("resize", unCheck);
 document.getElementById('contentstuff').addEventListener('click', unCheck);
 
+document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
+    console.log(evt.srcElement.value);
+    var result = AJAXsearchSuburb(evt.srcElement.value);
+});
+
 var forms = document.getElementsByTagName('form');
 for(var loop = 0;loop<forms.length;loop++) {
     forms[loop].addEventListener('submit', function(evt) {
@@ -120,4 +125,33 @@ function hideMessage(targetElement) {
 }
 function showMessage(targetElement) {
     targetElement.style.display = 'block';
+}
+function AJAXsearchSuburb(dataField) {
+    fetch('../api/ws.php?catid=suburb&locale=' + dataField)
+        .then(
+            function(response) {
+                console.log(response);
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                }
+                response.json().then(function(data) {
+                    if(data.length > 0) {
+                        document.getElementById('suburbpostlist').innerHTML = '';
+                        for(loop = 0;loop<data.length;loop++) {
+                            var newElem = document.createElement('option');
+                            newElem.setAttribute('value', data[loop].suburb);
+                            newElem.innerHTML = data[loop].postcode + ' ' + data[loop].suburb;
+                            document.getElementById('suburbpostlist').appendChild(newElem);
+                        }
+                    } else {
+                        document.getElementById('suburbpostlist').innerHTML = '';
+                    }
+                });
+            }
+        )
+        .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+        }
+    );
+    return false;
 }

@@ -1,6 +1,6 @@
 <?php
-    include('srv/database.php');
-    include('srv/session.php');
+    include('../srv/database.php');
+    include('../srv/session.php');
 
 if(isset($_GET['catid'])) {
     if($_GET['catid'] == 'recent') {
@@ -48,11 +48,19 @@ SELECT * FROM special
         WHERE pub.postcode = 4000"; 
         }
     }
+    if($_GET['catid'] == 'suburb') { 
+        $sql = "
+SELECT * FROM postcode_db 
+    WHERE suburb = '" . $_GET['locale'] . "'
+        OR postcode = '" . $_GET['locale'] . "'
+        ";
+    }
     // render output
     $conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $stmt = $conn->prepare($sql);
     $stmt->execute();
+    header('Content-Type: application/json');
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 ?>
