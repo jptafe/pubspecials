@@ -5,7 +5,6 @@ function connDb() {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $conn;
 }
-
 function delUser($rowid) {
     $conn = connDb();
     $del_query = "DELETE FROM user WHERE id = '" . $rowid . "';";
@@ -30,7 +29,6 @@ function addUser() {
         return true;
     }
 }
-
 function updateUser() {
     $conn = connDb();
     $update_query = "UPDATE user SET 
@@ -45,7 +43,6 @@ function updateUser() {
         return true;
     }
 }
-
 function loginCheck() {
     $conn = connDb();
     $login_query = "SELECT * FROM user WHERE 
@@ -61,7 +58,6 @@ function loginCheck() {
         return false;
     }
 }
-
 function getOneUser($uid) {
     $conn = connDb();
     $sel_query = "SELECT * FROM user WHERE id = " . $uid;
@@ -75,7 +71,6 @@ function getOneUser($uid) {
         return false;
     }
 }
-
 function selectAllUsers() {
     $conn = connDb();
     $sel_query = "SELECT * FROM user";
@@ -92,8 +87,28 @@ function selectAllUsers() {
         echo '</p>';
     }
 }
-
-function dbGetPostCode($postcode) {
-    return false;
+function getLocale($suburb_post) {
+    $conn = connDb();
+    $clean_suburb_post = validate($suburb_post);
+    $sql = "
+SELECT * FROM postcode_db 
+    WHERE suburb LIKE :subpost 
+        OR postcode LIKE :subpost";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':subpost', $clean_suburb_post, PDO::PARAM_STR, 8);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    if(is_array($result) && sizeof($count) > 0) {
+        return $result;
+    } else {
+        return false;
+    }
+}
+function validate($string) {
+    $new_string = stripslashes($string);
+    $new_string = strip_tags($new_string);
+    $new_string = htmlspecialchars($new_string);
+    $new_string = trim($new_string);
+    return $new_string;
 }
 ?>

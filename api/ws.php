@@ -35,25 +35,21 @@ SELECT * FROM special
 ";
     }
     if($_GET['catid'] == 'postcode') {
-        if(is_int($_GET['postcode'])) {
             $sql = "
 SELECT * FROM special
     INNER JOIN pub ON pub.id = special.pub_id
         WHERE pub.postcode = {$_GET['postcode']}";     
-            setLocWithPostcode($_GET['postcode']);
-        } else {
-            $sql = "
-SELECT * FROM special
-    INNER JOIN pub ON pub.id = special.pub_id
-        WHERE pub.postcode = 4000"; 
-        }
+        setLocWithPostcode($_GET['postcode']);
     }
     if($_GET['catid'] == 'suburb') { 
-        $sql = "
-SELECT * FROM postcode_db 
-    WHERE suburb = '" . $_GET['locale'] . "'
-        OR postcode = '" . $_GET['locale'] . "'
-        ";
+        $good = filter_input(INPUT_GET, $_GET['locale'], FILTER_SANITIZE_ENCODED);
+        if($good !== false) {
+            $res = getLocale($good);
+            if($res !== false) {
+                echo json_encode($res);
+                die();
+            }
+        }
     }
     // render output
     $conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');

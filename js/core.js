@@ -17,7 +17,7 @@ window.onload = function(e) {
 function getLoc(range) {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            var link = 'index_ws.php?catid=near&range=' + range + '&currentlat=' + position.coords.latitude + '&currentlong=' + position.coords.longitude;
+            var link = 'api/ws.php?catid=near&range=' + range + '&currentlat=' + position.coords.latitude + '&currentlong=' + position.coords.longitude;
             $('#altdiv').html('loading...');
             $('#altdiv').load(link);
             console.log('lat:' + position.coords.latitude + ' long:' + position.coords.longitude);
@@ -26,12 +26,12 @@ function getLoc(range) {
 }
 function searchPostcode(pcode) {
     if(pcode.length == 4 && !isNaN(pcode)) {
-        var link = 'index_ws.php?catid=postcode&postcode=' + pcode;
+        var link = 'api/ws.php?catid=postcode&postcode=' + pcode;
         $('#altdiv').html('loading...');
         $('#altdiv').load(link);
     }
 }
 function searchOrderBy(urlval) {
     $('#altdiv').html('loading...');
-    $('#altdiv').load('index_ws.php?catid=' + urlval);
+    $('#altdiv').load('api/ws.php?catid=' + urlval);
 }

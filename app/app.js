@@ -130,7 +130,6 @@ function AJAXsearchSuburb(dataField) {
     fetch('../api/ws.php?catid=suburb&locale=' + dataField)
         .then(
             function(response) {
-                console.log(response);
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' + response.status);
                 }
