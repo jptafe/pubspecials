@@ -148,6 +148,10 @@ input::placeholder {
 input:not(:placeholder-shown):not(:focus):invalid {
     box-shadow: inset 0 0 6px var(--main-inv); 
 }
+input:not(:placeholder-shown):focus:invalid {
+    background-color: var(--main-inv); 
+    box-shadow: 0 0 0;
+}
 input:active {
     background-color: var(--main-dis);
 }
