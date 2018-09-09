@@ -107,7 +107,6 @@ SELECT * FROM postcode_db
 function validate($string) {
     $new_string = stripslashes($string);
     $new_string = strip_tags($new_string);
-    $new_string = htmlspecialchars($new_string);
     $new_string = trim($new_string);
     return $new_string;
 }

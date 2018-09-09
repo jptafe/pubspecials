@@ -30,5 +30,3 @@ header('Location:success.php');
 
 EXTRA 
 There should be three attempts and then a 20m cooling off period
-
-
