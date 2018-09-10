@@ -53,6 +53,33 @@ pub.latitude, pub.longitude
             $dow = date('l');
         }
         public function newPub($pubArray) {
+            $clean_pubname = validate($pubArray['pubname'], 'PUBNAME');
+            $clean_pubaddress = validate($pubArray['pubaddress'], 'PUBADDR');
+            $clean_publat = validate($pubArray['lat'], 'GPS');
+            $clean_publong = validate($pubArray['long'], 'GPS');
+            $clean_postcode = validate($pubArray['pcode'], 'POSTCODE');
+
+            if($clean_pubname == false || $clean_pubaddress == false || 
+                    $clean_publat == false || $clean_publong == false ||
+                    $clean_postcode == false) {
+                return false;
+            }
+            $sql = "
+INSERT INTO pub 
+    (name, address, postcode, logo, latitude, longitude) 
+        VALUES ( :pubname, :pubaddress, :pubpcode, NULL, :publat, :publong);";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':pubname', $clean_pubname, PDO::PARAM_STR, 256);
+            $stmt->bindParam(':pubaddress', $clean_pubaddress, PDO::PARAM_STR, 128);
+            $stmt->bindParam(':pubpcode', $clean_postcode, PDO::PARAM_STR, 10);
+            $stmt->bindParam(':publat', $clean_publat, PDO::PARAM_STR, 10);
+            $stmt->bindParam(':publong', $clean_publong, PDO::PARAM_STR, 10);
+            $res = $stmt->execute();
+            if($res == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
         public function newSpecial($specialArray) {
         }      
@@ -124,6 +151,12 @@ function validate($value, $type) {
                 return $safe_value;
             }
         }
+    }
+    if($type == 'PUBNAME') {
+        return $safe_value;
+    }
+    if($type == 'PUBADDR') {
+        return $safe_value;
     }
     if($type == 'RADIUS') {
         if(is_int($safe_value)) {

@@ -160,6 +160,11 @@ input:focus {
                 1px 1px 4px var(--main-act);
     outline: none;
 }
+input:disabled {
+    box-shadow: inset 0 0 10px var(--main-dis), 
+                1px 1px 4px var(--main-dis);
+    background-color: var(--main-bkg);
+}
 input[type="button"] {
     padding: 4px;
     outline: 0;

@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.16-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.17-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: pubspecials
 -- ------------------------------------------------------
--- Server version	10.2.16-MariaDB
+-- Server version	10.2.17-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,9 +54,11 @@ CREATE TABLE `pub` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `postcode` int(11) NOT NULL,
+  `postcode` int(5) NOT NULL,
+  `logo` varchar(128) DEFAULT NULL,
   `latitude` float NOT NULL,
   `longitude` float NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -67,7 +69,7 @@ CREATE TABLE `pub` (
 
 LOCK TABLES `pub` WRITE;
 /*!40000 ALTER TABLE `pub` DISABLE KEYS */;
-INSERT INTO `pub` VALUES (1,'Tipplers Tap','5/182 Gray St SOUTH BRISBANE',4101,-27.4801,153.023),(2,'The Fox Hotel','71-73 Melbourne Street SOUTH BRISBANE',4101,-27.4742,153.017),(3,'The Archive','100 Boundary Street WEST END',4101,-27.4791,153.013),(4,'Redbrick Hotel','83 Annerley Rd, Woolloongabba QLD 4102',4101,-27.4898,153.027),(6,'Junction Hotel','Ipswich Rd & Annerley Rd, Annerley QLD 4103',4103,-27.5093,153.033);
+INSERT INTO `pub` VALUES (1,'Tipplers Tap','5/182 Gray St SOUTH BRISBANE',4101,NULL,-27.4801,153.023,'2018-09-09 23:47:11'),(2,'The Fox Hotel','71-73 Melbourne Street SOUTH BRISBANE',4101,NULL,-27.4742,153.017,'2018-09-09 23:47:11'),(3,'The Archive','100 Boundary Street WEST END',4101,NULL,-27.4791,153.013,'2018-09-09 23:47:11'),(4,'Redbrick Hotel','83 Annerley Rd, Woolloongabba QLD 4102',4101,NULL,-27.4898,153.027,'2018-09-09 23:47:11'),(6,'Junction Hotel','Ipswich Rd & Annerley Rd, Annerley QLD 4103',4103,NULL,-27.5093,153.033,'2018-09-09 23:47:11');
 /*!40000 ALTER TABLE `pub` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,8 +116,9 @@ CREATE TABLE `special` (
   `pub_id` int(11) NOT NULL,
   `special_text` varchar(255) NOT NULL,
   `day_of_week` varchar(12) NOT NULL,
-  `time_of_day` varchar(64) NOT NULL,
+  `time_of_day` time NOT NULL,
   `starts` date NOT NULL,
+  `expires` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `pub_id` (`pub_id`),
@@ -130,7 +133,7 @@ CREATE TABLE `special` (
 
 LOCK TABLES `special` WRITE;
 /*!40000 ALTER TABLE `special` DISABLE KEYS */;
-INSERT INTO `special` VALUES (1,1,1,'Sunday Paddle Deal','Sunday','all day','2018-08-13'),(2,1,2,'$4 pizza night','Wednesday','From 5pm','2018-08-13'),(3,1,4,'14 Steak and chips','Sunday','From 5pm','2018-08-13'),(5,1,6,'two for one tuesdays','tuesday','5:30pm','2018-08-13');
+INSERT INTO `special` VALUES (1,1,1,'Sunday Paddle Deal','Sunday','14:00','2018-08-13','0000-00-00'),(2,1,2,'$4 pizza night','Wednesday','14:00','2018-08-13','0000-00-00'),(3,1,4,'14 Steak and chips','Sunday','16:00','2018-08-13','0000-00-00'),(5,1,6,'two for one tuesdays','tuesday','17:00','2018-08-13','0000-00-00');
 /*!40000 ALTER TABLE `special` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,4 +175,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-13 17:42:38
+-- Dump completed on 2018-09-10 12:36:56

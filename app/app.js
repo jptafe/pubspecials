@@ -43,6 +43,9 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
     }
 }
 
+document.getElementById('password1').addEventListener('change', checkPasswordsMatch);
+document.getElementById('password2').addEventListener('change', checkPasswordsMatch);
+
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
     alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
@@ -68,6 +71,14 @@ function checkSubmit(thisForm) {
                 }
             }
         }
+        if(checkFields[loop].nodeName == 'SELECT') {
+            if(checkFields[loop].hasAttribute('required')) {    
+                if(checkFields[loop].value == 'choose') {
+                    checkFields[loop].focus();
+                    checkFields[loop].setCustomValidity('must choose one');
+                }
+            }
+        }
     }
 }
 function checkAllFields(thisForm) {
@@ -84,6 +95,15 @@ function checkAllFields(thisForm) {
         }
     }
     return true;
+}
+function checkPasswordsMatch() {
+    if(document.getElementById('password1').value != document.getElementById('password2').value) {
+        document.getElementById('password1').setCustomValidity('Passwords don\'t match');
+        document.getElementById('password2').setCustomValidity('Passwords don\'t match');
+    } else {
+        document.getElementById('password1').setCustomValidity('');
+        document.getElementById('password2').setCustomValidity('');
+    }
 }
 function checkInputElement(inputField) {
     if(inputField.checkValidity() || inputField.value == '') {

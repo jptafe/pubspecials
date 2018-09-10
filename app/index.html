@@ -45,8 +45,98 @@
             <h1>Heading</h1>
             <h3>Sub Heading</h3>
             <p>Lorem ipsum</p>
+            <fieldset>
+                <legend>Registration Form</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>E-mail</label>
+                    <input type="text" name="email" placeholder="Email Address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                    <label>Password</label>
+                    <input type="password" name="password" id="password1" placeholder="Password" pattern="{8,16}" required>
+                    <label>Password Again</label>
+                    <input type="password" name="passwordagain" id="password2" placeholder="Password Again" pattern="{8,16}" required>
+                    <input type="submit" name="register" value="register">
+                </form>
+            </fieldset> 
+            <fieldset>
+                <legend>Login Form</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>E-mail</label>
+                    <input type="text" name="email" placeholder="Email Address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Password" pattern="{8,16}" required>
+                    <input type="submit" name="login" value="login">
+                </form>
+            </fieldset> 
+                <legend>Add Pub Form</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>Pub Name</label>
+                    <input type="text" name="pubname" placeholder="Pub Name" required>
+                    <label>Pub Address</label>
+                    <input type="text" name="pubaddress" placeholder="Pub Address" id="pubaddress" required>
+                    <label>Pub Image</label>
+                    <input type="file" name="publogo" accept="image/png, image/jpeg">
+                    <input type="hidden" name="postcode">
+                    <label>Latitude</label>
+                    <input type="number" name="latitude" disabled>
+                    <label>Longitude</label>
+                    <input type="number" name="longitude" disabled>
+                    <input type="submit" name="add pub" value="add pub">
+                </form>
+            </fieldset> 
+                <legend>Add Special Form</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>Special Description</label>
+                    <input type="text" name="specialdesc" placeholder="Special Description" required>
+                    <label>Day of Week</label>
+                    <select name="specialdow" required>
+                        <option value="choose" selected>Choose...</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Weekdays">Weekdays</option>
+                        <option value="Weekends">Weekends</option>
+                        <option value="Alldays">All Days</option>
+                    </select>
+                    <input type="text" name="specialdow" placeholder="Special Day of Week" required>
+                    <label>Start Time</label>
+                    <select name="specialstarttime" required>
+                        <option value="choose" selected>Choose...</option>
+                        <option value="10:00">10 am</option>
+                        <option value="11:00">11 am</option>
+                        <option value="12:00">12 pm</option>
+                        <option value="13:00">1 pm</option>
+                        <option value="14:00">2 pm</option>
+                        <option value="15:00">3 pm</option>
+                        <option value="16:00">4 pm</option>
+                        <option value="17:00">5 pm</option>
+                        <option value="18:00">6 pm</option>
+                        <option value="19:00">7 pm</option>
+                        <option value="20:00">8 pm</option>
+                        <option value="21:00">9 pm</option>
+                        <option value="22:00">10 pm</option>
+                    </select>
+                    <label>Effective</label>
+                    <input type="date" name="specialbegins" placeholder="Special Begins" required>
+                    <label>Expires</label>
+                    <input type="date" name="specialbegins" placeholder="Special Expires" required>
+                    <input type="submit" name="add special" value="add special">
+                </form>
+            </fieldset> 
+                <legend>Add Comment to Special</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>comment</label>
+                    <input type="text" name="comment">
+                    <input type="hidden" name="specialid" value="">
+                    <input type="submit" name="add comment" value="add comment">
+                </form>
+            </fieldset> 
         </section>
-    </article>
+    <section>
+    </section>
     <footer>
         <ul>
             <li><a href="#">Link</a></li>
