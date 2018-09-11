@@ -1,8 +1,10 @@
 <?php
     class pubSpecial {
+        private $conn;
+        
         public function __construct() {
-            $conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         public function recentPubs($lat, $long, $radius) {
             $safe_lat = validate($lat, 'GPS');
@@ -22,7 +24,7 @@ SELECT * FROM pub
             (pub.longitude + :radius) > :long
                 ORDER BY special.starts;
         ";
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':radius', $safe_radius, PDO::PARAM_INT, 3);
             $stmt->bindParam(':lat', $safe_lat);
             $stmt->bindParam(':long', $safe_long);
@@ -68,7 +70,7 @@ pub.latitude, pub.longitude
 INSERT INTO pub 
     (name, address, postcode, logo, latitude, longitude) 
         VALUES ( :pubname, :pubaddress, :pubpcode, NULL, :publat, :publong);";
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':pubname', $clean_pubname, PDO::PARAM_STR, 256);
             $stmt->bindParam(':pubaddress', $clean_pubaddress, PDO::PARAM_STR, 128);
             $stmt->bindParam(':pubpcode', $clean_postcode, PDO::PARAM_STR, 10);
@@ -100,24 +102,27 @@ INSERT INTO pub
     }
 
     class locData {
-        function __construct() {
-            $conn = new PDO("mysql:host=localhost;dbname=pubdata", 'root','');
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        private $conn;
+        
+        public function __construct() {
+            $this->conn = new PDO("mysql:host=localhost;dbname=pubdata", 'root','');
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         public function suburbList($postcode) {
-            $clean_suburb = validate($suburb_post, 'SUBURBPOST');
+            $clean_suburb = validate($postcode, 'SUBURBPOST');
             if($clean_suburb == false) { 
                 return false;
             }
+            $clean_suburb .= '%';
             $sql = "
 SELECT * FROM postcode_db 
     WHERE suburb LIKE :subpost 
         OR postcode LIKE :subpost";
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':subpost', $clean_suburb, PDO::PARAM_STR, 8);
             $stmt->execute();
             $result = $stmt->fetchAll();
-            if(is_array($result) && sizeof($result) > 0) {
+            if(is_array($result) && (sizeof($result) > 0)) {
                 return $result;
             } else {
                 return false;
@@ -178,7 +183,7 @@ function validate($value, $type) {
         }
     }
     if($type == 'SUBURBPOST') {
-        if(preg_match('/[A-Za-z09 \-]{2,12}/', $safe_value) > 0) {
+        if(preg_match('/[A-Za-z0-9 \-]{3,12}/', $safe_value) > 0) {
             return $safe_value;
         }
     }

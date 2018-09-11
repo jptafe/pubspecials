@@ -4,7 +4,9 @@ document.getElementById('contentstuff').addEventListener('click', unCheck);
 
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     console.log(evt.srcElement.value);
-    var result = AJAXsearchSuburb(evt.srcElement.value);
+    if(document.getElementById('suburbpost').checkValidity()) {
+        var result = AJAXsearchSuburb(evt.srcElement.value);
+    }
 });
 
 var forms = document.getElementsByTagName('form');
@@ -147,7 +149,7 @@ function showMessage(targetElement) {
     targetElement.style.display = 'block';
 }
 function AJAXsearchSuburb(dataField) {
-    fetch('../api/ws.php?catid=suburb&locale=' + dataField)
+    fetch('../api/ws.php?catid=postburb&locale=' + dataField)
         .then(
             function(response) {
                 if (response.status !== 200) {

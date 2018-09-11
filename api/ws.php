@@ -53,14 +53,14 @@
             }
         }
         if($_GET['catid'] == 'postburb') { // 
-            $good = filter_input(INPUT_GET, $_GET['locale'], FILTER_SANITIZE_ENCODED);
+            $good = filter_input(INPUT_GET, 'locale', FILTER_SANITIZE_SPECIAL_CHARS);
             if($good != false) {
                 $output = $locations->suburbList($good);
                 if($output == false) {
-                    $output = array(['error'=>'true']);
+                    $output = array(['error'=>'No Results']);
                 }
             } else {
-                $output = array(['error'=>'true']);
+                $output = array(['error'=>'Input Not Valid']);
             }
         }
         if($_GET['catid'] == 'setradius') {
@@ -88,6 +88,10 @@
         }
 
         header('Content-Type: application/json');
-        echo json_encode($output);
+        if(isset($output)) {
+            echo json_encode($output);
+        } else {
+            echo json_encode(array('error'=>'Function Not Implemented'));
+        }
 }
 ?>

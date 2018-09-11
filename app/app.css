@@ -106,7 +106,6 @@ Pallette */
 
     --alert-notice-bkg: var(--mindaro);
     --alert-notice-txt: var(--mindaro-dark);
-
 }
 
 /*
@@ -137,7 +136,6 @@ span {
     color: var(--main-dis);
 }
 input {
-    background-color:  var(--main-bkg);
     color: var(--main-txt);
     border: none;
     box-shadow: 1px 1px 4px var(--main-act);
@@ -146,11 +144,13 @@ input::placeholder {
     color: var(--main-dis);
 }
 input:not(:placeholder-shown):not(:focus):invalid {
-    box-shadow: inset 0 0 6px var(--main-inv); 
+    box-shadow: inset 0 0 6px var(--main-inv),
+                  1px 1px 4px var(--main-inv);
 }
 input:not(:placeholder-shown):focus:invalid {
     background-color: var(--main-inv); 
-    box-shadow: 0 0 0;
+    box-shadow: inset 0 0 6px var(--main-inv),
+              1px 1px 4px var(--main-inv);
 }
 input:active {
     background-color: var(--main-dis);
