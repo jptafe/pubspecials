@@ -6,6 +6,15 @@
     <title>test</title>
     <link rel="stylesheet" href="app.css">
     <script src="app.js" defer></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvC1ToQXBS5fGNEY1w0pPOkZb7NUkImVc&libraries=places"></script>
 </head>
 <body>
     <input type="checkbox" id="hamburgercheck">
@@ -38,7 +47,19 @@
     <article id="contentstuff">
         <section>
             <ul>
-                <input type="text" name="suburbpost" id="suburbpost" list="suburbpostlist" placeholder="Suburb or Postcode" pattern="[A-Za-z0-9 ]{3,}"> 
+                <input type="text" name="suburbpost" id="suburbpost" list="suburbpostlist" placeholder="Suburb or Postcode" 
+                    pattern="[A-Za-z0-9 ,-.]{3,}"> 
+                <input type="text" name="suburbpost_post" id="suburbpost_post" size="4" maxwidth="4" disabled>
+                <input type="text" name="suburbpost_state" id="suburbpost_state" size="3" maxlength="3" disabled>
+                <input type="text" name="suburbpost_lat" id="suburbpost_lat" size="7" maxlengeth="8" disabled>
+                <input type="text" name="suburbpost_long" id="suburbpost_long" size="7" maxlength="8" disabled>
+                <select name="subrubpost_radius" id="suburbpost_radius">
+                    <option value="1">1km</option>
+                    <option value="5">5km</option>
+                    <option value="10">10km</option>
+                    <option value="50">50km</option>
+                    <option value="100">100km</option>
+                </select>
                 <datalist id="suburbpostlist">
                 </datalist>
             </ul>
@@ -49,11 +70,11 @@
                 <legend>Registration Form</legend>
                 <form action="#" method="POST" novalidate>
                     <label>E-mail</label>
-                    <input type="text" name="email" placeholder="Email Address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                     <label>Password</label>
-                    <input type="password" name="password" id="password1" placeholder="Password" pattern=".{8,}" required>
+                    <input type="password" name="password" id="password1" placeholder="Password" autocomplete="new-password" pattern=".{8,}" required>
                     <label>Password Again</label>
-                    <input type="password" name="passwordagain" id="password2" placeholder="Password Again" pattern=".{8,}" required>
+                    <input type="password" name="passwordagain" id="password2" placeholder="Password Again" autocomplete="new-password" pattern=".{8,}" required>
                     <input type="submit" name="register" value="register">
                 </form>
             </fieldset> 
@@ -61,9 +82,9 @@
                 <legend>Login Form</legend>
                 <form action="#" method="POST" novalidate>
                     <label>E-mail</label>
-                    <input type="text" name="email" placeholder="Email Address" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="Password" pattern=".{8,}" required>
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" pattern=".{8,}" required>
                     <input type="submit" name="login" value="login">
                 </form>
             </fieldset> 
@@ -76,10 +97,18 @@
                     <label>Pub Image</label>
                     <input type="file" name="publogo" accept="image/png, image/jpeg">
                     <input type="hidden" name="postcode">
+                    <label>Number & Street</label>
+                    <input type="text" name="pubnostreet" id="pubnostreet"size="14" maxlength="64" disabled>
+                    <label>Suburb</label>
+                    <input type="text" name="pubsuburb" id="pubsuburb" size="14" maxlength="32" disabled>
+                    <label>State</label>
+                    <input type="text" name="pubstate" id="pubstate" size="3" maxlength="3" disabled>   
+                    <label>Postcode</label>
+                    <input type="number" name="pubpcode" id="pubpcode"size="4" maxlength="4" disabled>   
                     <label>Latitude</label>
-                    <input type="number" name="latitude" disabled>
+                    <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
                     <label>Longitude</label>
-                    <input type="number" name="longitude" disabled>
+                    <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
                     <input type="submit" name="add pub" value="add pub">
                 </form>
             </fieldset> 
@@ -88,7 +117,7 @@
                     <label>Special Description</label>
                     <input type="text" name="specialdesc" placeholder="Special Description" required>
                     <label>Day of Week</label>
-                    <select name="specialdow" required>
+                    <select name="specialdow" pattern="[A-Za-z]{6,9}" required>
                         <option value="choose" selected>Choose...</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
@@ -101,9 +130,8 @@
                         <option value="Weekends">Weekends</option>
                         <option value="Alldays">All Days</option>
                     </select>
-                    <input type="text" name="specialdow" placeholder="Special Day of Week" required>
                     <label>Start Time</label>
-                    <select name="specialstarttime" required>
+                    <select name="specialstarttime" pattern="[0-9]{2}+:[0-9]{2}" required>
                         <option value="choose" selected>Choose...</option>
                         <option value="10:00">10 am</option>
                         <option value="11:00">11 am</option>
@@ -120,9 +148,9 @@
                         <option value="22:00">10 pm</option>
                     </select>
                     <label>Effective</label>
-                    <input type="date" name="specialbegins" placeholder="Special Begins" required>
+                    <input type="text" name="specialbegins" id="specialbegins" placeholder="Special Begins" required>
                     <label>Expires</label>
-                    <input type="date" name="specialbegins" placeholder="Special Expires" required>
+                    <input type="text" name="specialexpires" id="specialexpires" placeholder="Special Expires" required>
                     <input type="submit" name="add special" value="add special">
                 </form>
             </fieldset> 

@@ -3,9 +3,24 @@ window.addEventListener("resize", unCheck);
 document.getElementById('contentstuff').addEventListener('click', unCheck);
 
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
-    console.log(evt.srcElement.value);
     if(document.getElementById('suburbpost').checkValidity()) {
-        var result = AJAXsearchSuburb(evt.srcElement.value);
+        if(evt.srcElement.value.indexOf(',') > -1) {
+            var dataFieldArray = evt.srcElement.value.split(',');
+            document.getElementById('suburbpostlist').innerHTML = '';
+            document.getElementById('suburbpost').value = dataFieldArray[1];
+            document.getElementById('suburbpost_post').value = dataFieldArray[0];
+            document.getElementById('suburbpost_state').value = dataFieldArray[2];
+            document.getElementById('suburbpost_lat').value = dataFieldArray[3];
+            document.getElementById('suburbpost_long').value = dataFieldArray[4];
+            var result = AJAXpubsWithGPS(document.getElementById('suburbpost_lat').value, 
+                                         document.getElementById('suburbpost_long').value);
+        } else {
+            document.getElementById('suburbpost_post').value = '';
+            document.getElementById('suburbpost_state').value = '';
+            document.getElementById('suburbpost_lat').value = '';
+            document.getElementById('suburbpost_long').value = '';
+            var result = AJAXsearchSuburb(evt.srcElement.value);
+        }
     }
 });
 
@@ -58,6 +73,35 @@ for(var loop = 0;loop<alertBoxes.length;loop++) {
 function unCheck() {
     document.getElementById('hamburgercheck').checked = false;
 }
+
+/* GMAPS */
+
+var places = new google.maps.places.Autocomplete(document
+    .getElementById('pubaddress'));
+places.setComponentRestrictions(
+    {'country': ['au']});
+google.maps.event.addListener(places, 'place_changed', function() {
+    var place = places.getPlace();
+    var address = place.formatted_address;
+    var addr_pieces = address.split(',');
+
+    var count=addr_pieces.length;
+    document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
+    
+    var sub_state = addr_pieces[count-2];
+    var sub_stage_pieces = sub_state.split(' ');
+    var subcount=sub_stage_pieces.length;
+
+    document.getElementById('pubsuburb').value = sub_stage_pieces[subcount-3].toUpperCase();
+    document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
+    document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
+
+    document.getElementById('publat').value = place.geometry.location.lat();
+    document.getElementById('publong').value = place.geometry.location.lng();
+
+    document.getElementById("pubaddress").value = address;
+});
+
 
 /* FORM VALIDATION */
 function checkSubmit(thisForm) {
@@ -151,31 +195,64 @@ function hideMessage(targetElement) {
 function showMessage(targetElement) {
     targetElement.style.display = 'block';
 }
+
+/* AJAX */
 function AJAXsearchSuburb(dataField) {
     fetch('../api/ws.php?catid=postburb&locale=' + dataField)
-        .then(
-            function(response) {
-                if (response.status !== 200) {
-                    console.log('Looks like there was a problem. Status Code: ' + response.status);
-                }
-                response.json().then(function(data) {
-                    if(data.length > 0) {
-                        document.getElementById('suburbpostlist').innerHTML = '';
-                        for(loop = 0;loop<data.length;loop++) {
-                            var newElem = document.createElement('option');
-                            newElem.setAttribute('value', data[loop].suburb);
-                            newElem.innerHTML = data[loop].postcode + ' ' + data[loop].suburb;
-                            document.getElementById('suburbpostlist').appendChild(newElem);
-                        }
-                    } else {
-                        document.getElementById('suburbpostlist').innerHTML = '';
-                    }
-                });
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
-        )
-        .catch(function(err) {
-            console.log('Fetch Error :-S', err);
+            response.json().then(function(data) {
+                if(data.length > 0) {
+                    document.getElementById('suburbpostlist').innerHTML = '';
+                    for(loop = 0;loop<data.length;loop++) {
+                        var newElem = document.createElement('option');
+                        var attValue = data[loop].postcode + ',' + data[loop].suburb + ',' + 
+                            data[loop].state + ',' + data[loop].lat + ',' + data[loop].lon;
+                        newElem.setAttribute('value', attValue);
+                        newElem.innerHTML = data[loop].postcode + ' ' + data[loop].suburb;
+                        document.getElementById('suburbpostlist').appendChild(newElem);
+                    }
+                } else {
+                    document.getElementById('suburbpostlist').innerHTML = '';
+                }
+            });
         }
-    );
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
     return false;
 }
+
+function AJAXpubsWithGPS(lat, long) {
+
+}
+/* 3rd Party Components */
+var dateFormat = "yy-mm-dd",
+    from = $('#specialbegins').datepicker({
+        changeMonth: true,
+        dateFormat: 'yy-mm-dd',
+        changeYear: true,
+        minDate: '+0D',
+        maxDate: '+10Y',
+        numberOfMonths: 1
+    })
+    .on('change', function() {
+        to.datepicker( "option", "minDate", this.value);
+    }),
+    to = $('#specialexpires').datepicker({
+        changeMonth: true,
+        dateFormat: 'yy-mm-dd',
+        changeYear: true,
+        minDate: '+0D',
+        maxDate: '+10Y',
+        numberOfMonths: 1
+    })
+    .on('change', function() {
+        from.datepicker('option', 'maxDate', this.value)
+        console.log('foo');
+    });
+
