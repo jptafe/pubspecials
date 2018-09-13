@@ -62,6 +62,7 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
 
 document.getElementById('password1').addEventListener('change', checkPasswordsMatch);
 document.getElementById('password2').addEventListener('change', checkPasswordsMatch);
+document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -88,11 +89,20 @@ google.maps.event.addListener(places, 'place_changed', function() {
     var count=addr_pieces.length;
     document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
     
-    var sub_state = addr_pieces[count-2];
+    var sub_state = addr_pieces[count-2].trim();
     var sub_stage_pieces = sub_state.split(' ');
     var subcount=sub_stage_pieces.length;
 
-    document.getElementById('pubsuburb').value = sub_stage_pieces[subcount-3].toUpperCase();
+    var sub_concat_string;
+    if(subcount-2 == 3) {
+        sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase() + ' ' + sub_stage_pieces[2].toUpperCase();
+    } else if(subcount-2 == 2) {
+        sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase();
+    } else {
+        sub_concat_string = sub_stage_pieces[0].toUpperCase();
+    }
+    document.getElementById('pubsuburb').value = sub_concat_string;
+
     document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
     document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
 
@@ -152,6 +162,18 @@ function checkPasswordsMatch() {
             document.getElementById('password1').setCustomValidity('');
             document.getElementById('password2').setCustomValidity('');
         }
+    }
+}
+document.getElementById('specialneverexpires').checked = true;
+function disableSpecialExpires() {
+    if(document.getElementById('specialneverexpires').checked) {
+        document.getElementById('specialexpires').disabled = true;
+        document.getElementById('specialexpires').value = '2030-01-01';
+
+    } else {
+        document.getElementById('specialexpires').disabled = false;
+        document.getElementById('specialexpires').value = '';
+
     }
 }
 function checkInputElement(inputField) {
@@ -242,7 +264,8 @@ var dateFormat = "yy-mm-dd",
     })
     .on('change', function() {
         to.datepicker( "option", "minDate", this.value);
-    }),
+    })
+    .datepicker("setDate", new Date()),
     to = $('#specialexpires').datepicker({
         changeMonth: true,
         dateFormat: 'yy-mm-dd',
@@ -255,4 +278,12 @@ var dateFormat = "yy-mm-dd",
         from.datepicker('option', 'maxDate', this.value)
         console.log('foo');
     });
-
+/* Location */
+function getLocation() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var link = 'api/ws.php?catid=near&range=' + range + '&currentlat=' + position.coords.latitude + '&currentlong=' + position.coords.longitude;
+            console.log('lat:' + position.coords.latitude + ' long:' + position.coords.longitude);
+        });
+    }
+}
