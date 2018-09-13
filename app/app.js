@@ -99,12 +99,15 @@ function checkAllFields(thisForm) {
     return true;
 }
 function checkPasswordsMatch() {
-    if(document.getElementById('password1').value != document.getElementById('password2').value) {
-        document.getElementById('password1').setCustomValidity('Passwords don\'t match');
-        document.getElementById('password2').setCustomValidity('Passwords don\'t match');
-    } else {
-        document.getElementById('password1').setCustomValidity('');
-        document.getElementById('password2').setCustomValidity('');
+    if(document.getElementById('password1').value.length > 0 && 
+       document.getElementById('password2').value.length > 0) {
+        if(document.getElementById('password1').value != document.getElementById('password2').value) {
+            document.getElementById('password1').setCustomValidity('Passwords don\'t match');
+            document.getElementById('password2').setCustomValidity('Passwords don\'t match');
+        } else {
+            document.getElementById('password1').setCustomValidity('');
+            document.getElementById('password2').setCustomValidity('');
+        }
     }
 }
 function checkInputElement(inputField) {
