@@ -63,6 +63,7 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
 document.getElementById('password1').addEventListener('change', checkPasswordsMatch);
 document.getElementById('password2').addEventListener('change', checkPasswordsMatch);
 document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
+document.getElementById('pubgps').addEventListener('click', getAddressFromGPS);
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -265,7 +266,6 @@ var dateFormat = "yy-mm-dd",
     .on('change', function() {
         to.datepicker( "option", "minDate", this.value);
     })
-    .datepicker("setDate", new Date()),
     to = $('#specialexpires').datepicker({
         changeMonth: true,
         dateFormat: 'yy-mm-dd',
@@ -278,12 +278,31 @@ var dateFormat = "yy-mm-dd",
         from.datepicker('option', 'maxDate', this.value)
         console.log('foo');
     });
+    document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
 /* Location */
-function getLocation() {
+
+function getAddressFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            var link = 'api/ws.php?catid=near&range=' + range + '&currentlat=' + position.coords.latitude + '&currentlong=' + position.coords.longitude;
-            console.log('lat:' + position.coords.latitude + ' long:' + position.coords.longitude);
+            var GPSlink = 'location=' + position.coords.latitude + ',' + position.coords.longitude;
+            var locationURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?' + GPSlink +'&radius=40&key=AIzaSyCvC1ToQXBS5fGNEY1w0pPOkZb7NUkImVc';
+            
+            fetch(locationURL)
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+                    }
+                    response.json().then(function(data) {
+                        console.log(data);
+                    });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
         });
+    } else {
+        return false;
     }
 }
