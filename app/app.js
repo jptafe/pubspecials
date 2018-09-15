@@ -77,9 +77,8 @@ function unCheck() {
 }
 
 /* GMAPS */
-
-var places = new google.maps.places.Autocomplete(document
-    .getElementById('pubaddress'));
+var geocoder = new google.maps.Geocoder;
+var places = new google.maps.places.Autocomplete(document.getElementById('pubaddress'));
 places.setComponentRestrictions(
     {'country': ['au']});
 google.maps.event.addListener(places, 'place_changed', function() {
@@ -284,9 +283,45 @@ var dateFormat = "yy-mm-dd",
 function getAddressFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            var GPSlink = 'location=' + position.coords.latitude + ',' + position.coords.longitude;
-            var locationURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?' + GPSlink +'&radius=40&key=AIzaSyCvC1ToQXBS5fGNEY1w0pPOkZb7NUkImVc';
-            
+              //radius: position.coords.accuracy
+            var latlng = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if(status === 'OK') {
+                    if(results[0]) {
+                        document.getElementById('pubaddress').value = results[0].formatted_address;
+                        
+                        var addr_pieces = results[0].formatted_address.split(',');
+                    
+                        var count=addr_pieces.length;
+                        document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
+                        
+                        var sub_state = addr_pieces[count-2].trim();
+                        var sub_stage_pieces = sub_state.split(' ');
+                        var subcount=sub_stage_pieces.length;
+                    
+                        var sub_concat_string;
+                        if(subcount-2 == 3) {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase() + ' ' + sub_stage_pieces[2].toUpperCase();
+                        } else if(subcount-2 == 2) {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase();
+                        } else {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase();
+                        }
+                        document.getElementById('pubsuburb').value = sub_concat_string;
+                    
+                        document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
+                        document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
+                    
+                        document.getElementById('publat').value = position.coords.latitude;
+                        document.getElementById('publong').value = position.coords.longitude;
+                    }
+                }
+            });
+        });
+    }
+}
+
+/*            
             fetch(locationURL)
             .then(
                 function(response) {
@@ -305,4 +340,4 @@ function getAddressFromGPS() {
     } else {
         return false;
     }
-}
+*/
