@@ -1,7 +1,44 @@
+/* PERSISTENT STORAGE */
+if (localStorage.getItem('currentLat') === null) {
+} else {
+    document.getElementById('suburbpost_lat').value = localStorage.getItem('currentLat');
+}
+if (localStorage.getItem('currentLong') === null) {
+} else {
+    document.getElementById('suburbpost_long').value = localStorage.getItem('currentLong');
+}
+if (localStorage.getItem('currentRadius') === null) {
+    localStorage.setItem('currentRadius', 1);
+} else {
+    document.getElementById('suburbpost_radius').value = localStorage.getItem('currentRadius');
+}
+if (localStorage.getItem('currentSuburb') === null) {
+} else {
+    document.getElementById('suburbpost').value = localStorage.getItem('currentSuburb');
+}
+if (localStorage.getItem('currentPostcode') === null) {
+} else {
+    document.getElementById('suburbpost_post').value = localStorage.getItem('currentPostcode');
+}
+if (localStorage.getItem('currentState') === null) {
+} else {
+    document.getElementById('suburbpost_state').value = localStorage.getItem('currentState');
+}
+if (localStorage.getItem('currentExtIP') === null) {
+    //Go to API and get it.
+    if(localStorage.getItem('currentLat') === null) {
+        // Set LAT from IP
+    }
+    if(localStorage.getItem('currentLong') === null) {
+        // Set LONG from IP
+    }
+} else {
+    // Is the stored IP different from the current one?
+}
+
 /* EVENTS */
 window.addEventListener("resize", unCheck);
 document.getElementById('contentstuff').addEventListener('click', unCheck);
-
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
         if(evt.srcElement.value.indexOf(',') > -1) {
@@ -12,6 +49,8 @@ document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
             document.getElementById('suburbpost_state').value = dataFieldArray[2];
             document.getElementById('suburbpost_lat').value = dataFieldArray[3];
             document.getElementById('suburbpost_long').value = dataFieldArray[4];
+            rememberSuburbPostState(dataFieldArray[1], dataFieldArray[0], dataFieldArray[2]);
+            rememberLatLong(dataFieldArray[3], dataFieldArray[4]);
             var result = AJAXpubsWithGPS(document.getElementById('suburbpost_lat').value, 
                                          document.getElementById('suburbpost_long').value);
         } else {
@@ -23,7 +62,6 @@ document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
         }
     }
 });
-
 var forms = document.getElementsByTagName('form');
 for(var loop = 0;loop<forms.length;loop++) {
     forms[loop].addEventListener('submit', function(evt) {
@@ -44,7 +82,6 @@ for(var loop = 0;loop<forms.length;loop++) {
         }
     });
 }
-
 var requiredFields = document.getElementsByTagName('input');
 for(var loop = 0;loop<requiredFields.length;loop++) {
     if(requiredFields[loop].hasAttribute('required')) {
@@ -64,6 +101,7 @@ document.getElementById('password1').addEventListener('change', checkPasswordsMa
 document.getElementById('password2').addEventListener('change', checkPasswordsMatch);
 document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
 document.getElementById('pubgps').addEventListener('click', getAddressFromGPS);
+document.getElementById('suburbpost_radius').addEventListener('change', rememberRadius);
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -71,13 +109,54 @@ for(var loop = 0;loop<alertBoxes.length;loop++) {
         hideMessage(evt.target.parentElement);
     });
 }
-
 function unCheck() {
     document.getElementById('hamburgercheck').checked = false;
 }
 
 /* GMAPS */
 var geocoder = new google.maps.Geocoder;
+function getAddressFromGPS() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+              //radius: position.coords.accuracy
+            var latlng = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if(status === 'OK') {
+                    if(results[0]) {
+                        document.getElementById('pubaddress').value = results[0].formatted_address;
+                        
+                        var addr_pieces = results[0].formatted_address.split(',');
+                    
+                        var count=addr_pieces.length;
+                        document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
+                        
+                        var sub_state = addr_pieces[count-2].trim();
+                        var sub_stage_pieces = sub_state.split(' ');
+                        var subcount=sub_stage_pieces.length;
+                    
+                        var sub_concat_string;
+                        if(subcount-2 == 3) {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase() + ' ' + sub_stage_pieces[2].toUpperCase();
+                        } else if(subcount-2 == 2) {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase();
+                        } else {
+                            sub_concat_string = sub_stage_pieces[0].toUpperCase();
+                        }
+                        document.getElementById('pubsuburb').value = sub_concat_string;
+                    
+                        document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
+                        document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
+                    
+                        document.getElementById('publat').value = position.coords.latitude;
+                        document.getElementById('publong').value = position.coords.longitude;
+
+                        rememberLatLong(position.coords.latitude, position.coords.longitude);
+                    }
+                }
+            });
+        });
+    }
+}
 var places = new google.maps.places.Autocomplete(document.getElementById('pubaddress'));
 places.setComponentRestrictions(
     {'country': ['au']});
@@ -111,7 +190,6 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     document.getElementById("pubaddress").value = address;
 });
-
 
 /* FORM VALIDATION */
 function checkSubmit(thisForm) {
@@ -218,6 +296,20 @@ function showMessage(targetElement) {
     targetElement.style.display = 'block';
 }
 
+/* PERSISTENCE */
+function rememberRadius() {
+    localStorage.setItem('currentRadius', document.getElementById('suburbpost_radius').value); 
+}
+function rememberSuburbPostState(suburb, postcode, state) {
+    localStorage.setItem('currentSuburb', suburb);
+    localStorage.setItem('currentState', postcode);
+    localStorage.setItem('currentPostcode', state);
+}
+function rememberLatLong(latitude, longitude) {
+    localStorage.setItem('currentLat', latitude);
+    localStorage.setItem('currentLong', longitude);
+}
+
 /* AJAX */
 function AJAXsearchSuburb(dataField) {
     fetch('../api/ws.php?catid=postburb&locale=' + dataField)
@@ -248,10 +340,10 @@ function AJAXsearchSuburb(dataField) {
     });
     return false;
 }
-
 function AJAXpubsWithGPS(lat, long) {
 
 }
+
 /* 3rd Party Components */
 var dateFormat = "yy-mm-dd",
     from = $('#specialbegins').datepicker({
@@ -277,67 +369,4 @@ var dateFormat = "yy-mm-dd",
         from.datepicker('option', 'maxDate', this.value)
         console.log('foo');
     });
-    document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
-/* Location */
-
-function getAddressFromGPS() {
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-              //radius: position.coords.accuracy
-            var latlng = {lat: parseFloat(position.coords.latitude), lng: parseFloat(position.coords.longitude)};
-            geocoder.geocode({'location': latlng}, function(results, status) {
-                if(status === 'OK') {
-                    if(results[0]) {
-                        document.getElementById('pubaddress').value = results[0].formatted_address;
-                        
-                        var addr_pieces = results[0].formatted_address.split(',');
-                    
-                        var count=addr_pieces.length;
-                        document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
-                        
-                        var sub_state = addr_pieces[count-2].trim();
-                        var sub_stage_pieces = sub_state.split(' ');
-                        var subcount=sub_stage_pieces.length;
-                    
-                        var sub_concat_string;
-                        if(subcount-2 == 3) {
-                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase() + ' ' + sub_stage_pieces[2].toUpperCase();
-                        } else if(subcount-2 == 2) {
-                            sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase();
-                        } else {
-                            sub_concat_string = sub_stage_pieces[0].toUpperCase();
-                        }
-                        document.getElementById('pubsuburb').value = sub_concat_string;
-                    
-                        document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
-                        document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
-                    
-                        document.getElementById('publat').value = position.coords.latitude;
-                        document.getElementById('publong').value = position.coords.longitude;
-                    }
-                }
-            });
-        });
-    }
-}
-
-/*            
-            fetch(locationURL)
-            .then(
-                function(response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
-                    }
-                    response.json().then(function(data) {
-                        console.log(data);
-                    });
-                }
-            )
-            .catch(function(err) {
-                console.log('Fetch Error :-S', err);
-            });
-        });
-    } else {
-        return false;
-    }
-*/
+document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);

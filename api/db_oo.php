@@ -129,12 +129,44 @@ SELECT * FROM postcode_db
             }
         }
         public function getCoordinatesForSuburb($suburb) {
-            $loc = array('lat'=>-27.478150,'long'=>153.019693); return $loc;
+			$clean_suburb = validate($suburb, 'SUBURBPOST');
+            if($clean_suburb == false) { 
+				return false;
+			}
+			$sql = "
+SELECT * FROM postcode_db
+	WHERE suburb = :suburb";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':suburb', $clean_suburb, PDO::PARAM_STR, 32);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            if(is_array($result) && (sizeof($result) > 0)) {
+				return array('lat'=>$result[0].lat, 'long'=>$result[0].long);
+			}
         }
         public function getCoordinatesForIP($IP) {
-            $loc = array('lat'=>-27.478150,'long'=>153.019693); return $loc;
+			$clean_ip = validate($ip, 'IP');
+			if($clean_ip == false) {
+                return false;
+			}
+			$sql = "
+SELECT * FROM ip_loc 
+	WHERE INET_ATON(:ip) >= INET_ATON(start_ip) 
+	AND INET_ATON(:ip) <= INET_ATON(end_ip)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':ip', $clean_ip, PDO::PARAM_STR, 15);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            if(is_array($result) && (sizeof($result) > 0)) {
+				$coords = getCoordinatesForSuburb($result[0].city);
+				if(is_array($coords) && (sizeof($coords) > 0)) {
+					return $coords;
+				}
+			}
+			return false;
         }
         public function getCoordinatesForPostcode() {
+			// better to get this from Suburb...
             $loc = array('lat'=>-27.478150,'long'=>153.019693); return $loc;
         }
         public function isInAustralia($IP) {
