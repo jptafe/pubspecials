@@ -4,8 +4,8 @@
     include('./session_oo.php');
     session_start();
 
-//  include(./security_oo.php);
 //  RATE LIMITING CODE COULD BE GOOD HERE min 1 per second & 1,000 per day.
+//  include(./security_oo.php);
 
     $pubs = new pubSpecial;
     $locations = new locData;
@@ -15,6 +15,7 @@
         $locArray = $locations->getCoordinatesForIP($_SERVER['REMOTE_ADDR']);
         if(is_array($locArray)) {
             $_SESSION['session_object']->setCoordinates($locArray);
+            $_SESSION['session_object']->setIP($_SERVER['REMOTE_ADDR']);
         }
     } else {
         if($_SERVER['REMOTE_ADDR'] != $_SESSION['session_object']->getIP()) {
@@ -26,8 +27,30 @@
         }
     }
     $_SESSION['session_object']->logInteraction();
-
+    
     if(isset($_GET['catid'])) {
+        if($_GET['catid'] == 'locforip') {
+            $output = array();
+            if($_SESSION['session_object']->getLat() != false) {
+                array_push($output, array('lat'=>$_SESSION['session_object']->getLat()));
+            }
+            if($_SESSION['session_object']->getLong() != false) {
+                array_push($output, array('long'=>$_SESSION['session_object']->getLong()));
+            }
+            if($_SESSION['session_object']->getSuburb() != false) {
+                array_push($output, array('suburb'=>$_SESSION['session_object']->getSuburb()));
+            }
+            if($_SESSION['session_object']->getState() != false) {
+                array_push($output, array('state'=>$_SESSION['session_object']->getState()));
+            }
+            if($_SESSION['session_object']->getPostcode() != false) {
+                array_push($output, array('postcode'=>$_SESSION['session_object']->getPostcode()));
+            }
+            if(sizeof($output) == 0) {
+                $output = array(['error'=>'true']);
+            }
+        }
+    
         if($_GET['catid'] == 'recent') {
             $output = $pubs->recentPubs($_SESSION['session_object']->getLat(), 
                 $_SESSION['session_object']->getLong(),
@@ -64,7 +87,7 @@
             }
         }
         if($_GET['catid'] == 'setradius') {
-            $good = filter_input(INPUT_GET, $_GET['radius'], FILTER_VALIDATE_INT); // wrong?
+            $good = filter_input(INPUT_GET, 'radius', FILTER_VALIDATE_INT);
             if($good != false) {
                 $output = $pubs->popularPubs($_SESSION['session_object']->getLat(), 
                 $_SESSION['session_object']->getLong(), $good);
@@ -78,7 +101,7 @@
         if($_GET['catid'] == 'listburbgps') { // JSON autocomplete list for suburb;
             $goodlat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
             $goodlong = filter_input(INPUT_GET, 'long', FILTER_VALIDATE_FLOAT);
-            if($goodlat != false || $goodlong == false) {
+            if($goodlat != false || $goodlong == false || $$goodradius == false) {
                 $output = $locations->suburbListByGPS($goodlat, $goodlong);
                 if($output == false) {
                     $output = array(['error'=>'data']);
@@ -98,7 +121,6 @@
                 $output = array(['error'=>'true']);
             }
         }
-
         header('Content-Type: application/json');
         if(isset($output)) {
             echo json_encode($output);

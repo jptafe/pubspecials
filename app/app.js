@@ -1,31 +1,88 @@
 /* PERSISTENT STORAGE */
+if(localStorage.getItem('currentRadius') === null) {
+    localStorage.setItem('currentRadius', 1);
+}
+document.getElementById('suburbpost_radius').value = localStorage.getItem('currentRadius');
+if(localStorage.getItem('currentSuburb') === null) {
+    localStorage.setItem('currentSuburb', '');
+} else {
+    document.getElementById('suburbpost').value = localStorage.getItem('currentSuburb');
+}
+if (localStorage.getItem('currentState') === null) {
+    localStorage.setItem('currentState', '');
+} else {
+    document.getElementById('suburbpost_state').value = localStorage.getItem('currentState');
+}
+if (localStorage.getItem('currentPostcode') === null) {
+    localStorage.setItem('currentPostcode', '');
+} else {
+    document.getElementById('suburbpost_post').value = localStorage.getItem('currentPostcode');
+}
 if (localStorage.getItem('currentLat') === null) {
+    localStorage.setItem('currentLat', '');
 } else {
     document.getElementById('suburbpost_lat').value = localStorage.getItem('currentLat');
 }
 if (localStorage.getItem('currentLong') === null) {
+    localStorage.setItem('currentLong', '');
 } else {
     document.getElementById('suburbpost_long').value = localStorage.getItem('currentLong');
 }
-if (localStorage.getItem('currentRadius') === null) {
-    localStorage.setItem('currentRadius', 1);
-} else {
-    document.getElementById('suburbpost_radius').value = localStorage.getItem('currentRadius');
+console.log('here');
+
+if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat') == '') {
+    fetch('../api/ws.php?catid=locforip')
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+            }
+            response.json().then(function(data) {
+                if(data.hasOwnProperty('suburb')){
+                    if(localStorage.getItem('currentSuburb') == '') {
+                        localStorage.setItem('currentSuburb', data.suburb);
+                        document.getElementById('suburbpost').value = data.suburb;
+                    }
+                }
+                if(data.hasOwnProperty('state')){
+                    if(localStorage.getItem('currentState') == '') {
+                        localStorage.setItem('currentState', data.state);
+                        document.getElementById('suburbpost_state').value = data.state;
+                    }
+                }
+                if(data.hasOwnProperty('postcode')){
+                    if(localStorage.getItem('currentPostcode') == '') {
+                        localStorage.setItem('currentPostcode', data.postcode);
+                        document.getElementById('suburbpost_post').value = data.postcode;
+                    }            
+                }
+                if(data.hasOwnProperty('lat') && data.hasOwnProperty('long')){
+                    if(localStorage.getItem('currentLat') == '') {
+                        localStorage.setItem('currentLat', data.lat);
+                        document.getElementById('suburbpost_lat').value = data.lat;
+                    }
+                    if(localStorage.getItem('currentLong') == '') {
+                        localStorage.setItem('currentLong', data.long);
+                        document.getElementById('suburbpost_long').value = data.long;
+                    }
+                }
+                // After all this, if we still don't have a location, we have to assume the are non .au referrers.
+                if(localStorage.getItem('currentLat') == '' && localStorage.getItem('currentLong') == '') {
+                    // not in OZ
+                } else {
+                    // do a search on the data
+                }
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
 }
-if (localStorage.getItem('currentSuburb') === null) {
-} else {
-    document.getElementById('suburbpost').value = localStorage.getItem('currentSuburb');
-}
-if (localStorage.getItem('currentPostcode') === null) {
-} else {
-    document.getElementById('suburbpost_post').value = localStorage.getItem('currentPostcode');
-}
-if (localStorage.getItem('currentState') === null) {
-} else {
-    document.getElementById('suburbpost_state').value = localStorage.getItem('currentState');
-}
+
 if (localStorage.getItem('currentExtIP') === null) {
-    //Go to API and get it.
+
+    
     if(localStorage.getItem('currentLat') === null) {
         // Set LAT from IP
     }
@@ -191,18 +248,7 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     document.getElementById("pubaddress").value = address;
 });
-/* GPS */
-function getSuburbFromGPS() {
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
-                var url = '../api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
-                          '&long=' + position.coords.longitude;
-                console.log(url);
-            }
-        });
-    }
-}
+
 /* FORM VALIDATION */
 function checkSubmit(thisForm) {
     var checkFields = thisForm.childNodes;
@@ -323,6 +369,48 @@ function rememberLatLong(latitude, longitude) {
 }
 
 /* AJAX */
+function getSuburbFromGPS() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
+                var url = '../api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
+                          '&long=' + position.coords.longitude;
+                document.getElementById('suburbpost_lat').value = position.coords.longitude;
+                localStorage.setItem('currentLat', position.coords.latitude);
+                document.getElementById('suburbpost_long').value = position.coords.latitude;
+                localStorage.setItem('currentLong', position.coords.longitude);
+
+                fetch(url)
+                .then(
+                    function(response) {
+                        if (response.status !== 200) {
+                            console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        }
+                        response.json().then(function(data) {
+                            if(data.length > 0) {
+                                if(data.length > 0) {
+                                    document.getElementById('suburbpost').value = data[0].suburb;
+                                    localStorage.setItem('currentSuburb', data[0].suburb);
+                                    document.getElementById('suburbpost_post').value = data[0].postcode;
+                                    localStorage.setItem('currentPostcode', data[0].postcode);
+                                    document.getElementById('suburbpost_state').value = data[0].state;
+                                    localStorage.setItem('currentState', data[0].state);
+                                }
+                            } else {
+                                document.getElementById('suburbpost').value = 'not found. Increase Area';
+                                document.getElementById('suburbpost_post').value = '';
+                                document.getElementById('suburbpost_state').value = '';
+                            }
+                        });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+            } //if
+        });
+    }
+}
 function AJAXsearchSuburb(dataField) {
     fetch('../api/ws.php?catid=postburb&locale=' + dataField)
     .then(

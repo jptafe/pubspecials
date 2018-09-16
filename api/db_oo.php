@@ -139,12 +139,12 @@ SELECT * FROM postcode_db
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':suburb', $clean_suburb, PDO::PARAM_STR, 32);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if(is_array($result) && (sizeof($result) > 0)) {
-				return array('lat'=>$result[0].lat, 'long'=>$result[0].long);
+				return $result;
 			}
         }
-        public function getCoordinatesForIP($IP) {
+        public function getCoordinatesForIP($ip) {
 			$clean_ip = validate($ip, 'IP');
 			if($clean_ip == false) {
                 return false;
@@ -157,8 +157,9 @@ SELECT * FROM ip_loc
             $stmt->bindParam(':ip', $clean_ip, PDO::PARAM_STR, 15);
             $stmt->execute();
             $result = $stmt->fetchAll();
+            
             if(is_array($result) && (sizeof($result) > 0)) {
-				$coords = getCoordinatesForSuburb($result[0].city);
+				$coords = $this->getCoordinatesForSuburb($result[0]['city']);
 				if(is_array($coords) && (sizeof($coords) > 0)) {
 					return $coords;
 				}
@@ -168,26 +169,38 @@ SELECT * FROM ip_loc
         public function suburbListByGPS($lat, $long) {
             $clean_lat = validate($lat, 'GPS');
             $clean_long = validate($long, 'GPS');
-			if($lat == false || $long == false) {
+            $clean_radius = .01; 
+			if($clean_lat == false || $clean_long == false || $clean_radius == false) {
                 return false;
 			}
 			$sql = "
 SELECT * FROM postcode_db 
-    WHERE lat >= :latitude AND lat <= :latitude 
-        AND lon >= :longitude AND lon <= :longitude";
+    WHERE (lat - :radius) <= :latitude AND (lat + :radius) >= :latitude 
+        AND (lon - :radius) <= :longitude AND (lon + :radius) >= :longitude
+            LIMIT 10";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':latitude', $clean_lat);
             $stmt->bindParam(':longitude', $clean_long);
+            $stmt->bindParam(':radius', $clean_radius);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            print_r($result); die();
             if(is_array($result) && (sizeof($result) > 0)) {
 				return $result;
+			} else {
+			    $clean_radius = .01; 
+			    $stmt->bindParam(':latitude', $clean_lat);
+                $stmt->bindParam(':longitude', $clean_long);
+                $stmt->bindParam(':radius', $clean_radius);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if(is_array($result) && (sizeof($result) > 0)) {
+                    return $result;
+                }
 			}
 			return false;
         }
-        public function isInAustralia($IP) {
-            $clean_IP = validate($IP, 'IP');
+        public function isInAustralia($ip) {
+            $clean_IP = validate($ip, 'IP');
             if($clean_IP == false) {
                 //database check for IP in subnet range of AU
                 return false;
@@ -214,8 +227,8 @@ function validate($value, $type) {
         return $safe_value;
     }
     if($type == 'RADIUS') {
-        if(is_int($safe_value)) {
-            if($safe_value < 100) {
+        if(preg_match('/[\d]{1,}+$/', $safe_value)) {
+            if($safe_value <= 100) {
                 return $safe_value;
             }
         }
@@ -239,5 +252,4 @@ function validate($value, $type) {
     }
     return false;
 }
-
 ?>
