@@ -102,6 +102,7 @@ document.getElementById('password2').addEventListener('change', checkPasswordsMa
 document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
 document.getElementById('pubgps').addEventListener('click', getAddressFromGPS);
 document.getElementById('suburbpost_radius').addEventListener('change', rememberRadius);
+document.getElementById('suburbgps').addEventListener('click', getSuburbFromGPS);
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -190,7 +191,18 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     document.getElementById("pubaddress").value = address;
 });
-
+/* GPS */
+function getSuburbFromGPS() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
+                var url = '../api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
+                          '&long=' + position.coords.longitude;
+                console.log(url);
+            }
+        });
+    }
+}
 /* FORM VALIDATION */
 function checkSubmit(thisForm) {
     var checkFields = thisForm.childNodes;
@@ -340,7 +352,7 @@ function AJAXsearchSuburb(dataField) {
     });
     return false;
 }
-function AJAXpubsWithGPS(lat, long) {
+function AJAXpubsWithGPS(lat, long, radius) {
 
 }
 

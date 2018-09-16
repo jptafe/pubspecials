@@ -121,7 +121,7 @@ SELECT * FROM postcode_db
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':subpost', $clean_suburb, PDO::PARAM_STR, 8);
             $stmt->execute();
-            $result = $stmt->fetchAll();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if(is_array($result) && (sizeof($result) > 0)) {
                 return $result;
             } else {
@@ -139,7 +139,7 @@ SELECT * FROM postcode_db
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':suburb', $clean_suburb, PDO::PARAM_STR, 32);
             $stmt->execute();
-            $result = $stmt->fetchAll();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if(is_array($result) && (sizeof($result) > 0)) {
 				return array('lat'=>$result[0].lat, 'long'=>$result[0].long);
 			}
@@ -165,9 +165,26 @@ SELECT * FROM ip_loc
 			}
 			return false;
         }
-        public function getCoordinatesForPostcode() {
-			// better to get this from Suburb...
-            $loc = array('lat'=>-27.478150,'long'=>153.019693); return $loc;
+        public function suburbListByGPS($lat, $long) {
+            $clean_lat = validate($lat, 'GPS');
+            $clean_long = validate($long, 'GPS');
+			if($lat == false || $long == false) {
+                return false;
+			}
+			$sql = "
+SELECT * FROM postcode_db 
+    WHERE lat >= :latitude AND lat <= :latitude 
+        AND lon >= :longitude AND lon <= :longitude";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':latitude', $clean_lat);
+            $stmt->bindParam(':longitude', $clean_long);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            print_r($result); die();
+            if(is_array($result) && (sizeof($result) > 0)) {
+				return $result;
+			}
+			return false;
         }
         public function isInAustralia($IP) {
             $clean_IP = validate($IP, 'IP');
@@ -182,8 +199,9 @@ function validate($value, $type) {
     $safe_value = strip_tags($value);
     $safe_value = trim($safe_value);
     $safe_value = stripslashes($safe_value);
+    
     if($type == 'GPS') {
-        if(is_float($safe_value)) {
+        if(preg_match('/[\d]{2,}+\.[\d]{3,}+$/', $safe_value)) {
             if($safe_value < 360 && $safe_value > -180) {
                 return $safe_value;
             }

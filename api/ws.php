@@ -75,6 +75,18 @@
                 $output = array(['error'=>'true']);
             }
         }
+        if($_GET['catid'] == 'listburbgps') { // JSON autocomplete list for suburb;
+            $goodlat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
+            $goodlong = filter_input(INPUT_GET, 'long', FILTER_VALIDATE_FLOAT);
+            if($goodlat != false || $goodlong == false) {
+                $output = $locations->suburbListByGPS($goodlat, $goodlong);
+                if($output == false) {
+                    $output = array(['error'=>'data']);
+                }
+            } else {
+                $output = array(['error'=>'input']);
+            }
+        }
         if($_GET['catid'] == 'listburbs') { // JSON autocomplete list for suburb;
             $good = filter_input(INPUT_GET, $_GET['locale'], FILTER_SANITIZE_ENCODED);
             if($good != false) {
@@ -93,5 +105,5 @@
         } else {
             echo json_encode(array('error'=>'Function Not Implemented'));
         }
-}
+    }
 ?>
