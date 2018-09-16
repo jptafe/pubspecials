@@ -32,19 +32,19 @@
         if($_GET['catid'] == 'locforip') {
             $output = array();
             if($_SESSION['session_object']->getLat() != false) {
-                array_push($output, array('lat'=>$_SESSION['session_object']->getLat()));
+                $output['lat'] = $_SESSION['session_object']->getLat();
             }
             if($_SESSION['session_object']->getLong() != false) {
-                array_push($output, array('long'=>$_SESSION['session_object']->getLong()));
+                $output['long'] = $_SESSION['session_object']->getLong();
             }
             if($_SESSION['session_object']->getSuburb() != false) {
-                array_push($output, array('suburb'=>$_SESSION['session_object']->getSuburb()));
+                $output['suburb'] = $_SESSION['session_object']->getSuburb();
             }
             if($_SESSION['session_object']->getState() != false) {
-                array_push($output, array('state'=>$_SESSION['session_object']->getState()));
+                $output['state'] = $_SESSION['session_object']->getState();
             }
             if($_SESSION['session_object']->getPostcode() != false) {
-                array_push($output, array('postcode'=>$_SESSION['session_object']->getPostcode()));
+                $output['postcode'] = $_SESSION['session_object']->getPostcode();
             }
             if(sizeof($output) == 0) {
                 $output = array(['error'=>'true']);

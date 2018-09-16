@@ -28,7 +28,6 @@ if (localStorage.getItem('currentLong') === null) {
 } else {
     document.getElementById('suburbpost_long').value = localStorage.getItem('currentLong');
 }
-console.log('here');
 
 if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat') == '') {
     fetch('../api/ws.php?catid=locforip')
@@ -38,6 +37,7 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
+                console.log(data);
                 if(data.hasOwnProperty('suburb')){
                     if(localStorage.getItem('currentSuburb') == '') {
                         localStorage.setItem('currentSuburb', data.suburb);
@@ -68,9 +68,9 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
                 }
                 // After all this, if we still don't have a location, we have to assume the are non .au referrers.
                 if(localStorage.getItem('currentLat') == '' && localStorage.getItem('currentLong') == '') {
-                    // not in OZ
+                    // tell the user, not in OZ
                 } else {
-                    // do a search on the data
+                    // do a search on lat and long pulled from IP address
                 }
             });
         }
@@ -78,20 +78,10 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
     .catch(function(err) {
         console.log('Fetch Error :-S', err);
     });
-}
-
-if (localStorage.getItem('currentExtIP') === null) {
-
-    
-    if(localStorage.getItem('currentLat') === null) {
-        // Set LAT from IP
-    }
-    if(localStorage.getItem('currentLong') === null) {
-        // Set LONG from IP
-    }
 } else {
-    // Is the stored IP different from the current one?
+    // do a search with the current long and lat info...
 }
+
 
 /* EVENTS */
 window.addEventListener("resize", unCheck);
