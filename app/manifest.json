@@ -1,0 +1,22 @@
+{
+  "short_name": "pubspecials",
+  "name": "Pub Specials",
+  "icons": [
+    {
+      "src": "images/man-sm.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "images/man.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#3367D6",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "",
+  "theme_color": "#3367D6"
+}

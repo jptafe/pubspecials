@@ -3,7 +3,7 @@
         private $conn;
         
         public function __construct() {
-            $this->conn = new PDO("mysql:host=localhost;dbname=pubspecials", 'root','');
+            $this->conn = new PDO("mysql:host=127.0.0.1;dbname=pubspecials", 'root','');
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         public function recentPubs($lat, $long, $radius) {
@@ -134,7 +134,7 @@ INSERT INTO pub
         private $conn;
         
         public function __construct() {
-            $this->conn = new PDO("mysql:host=localhost;dbname=pubdata", 'root','');
+            $this->conn = new PDO("mysql:host=127.0.0.1;dbname=pubdata", 'root','');
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         public function suburbList($postcode) {
