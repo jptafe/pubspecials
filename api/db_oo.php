@@ -50,18 +50,17 @@ SELECT * FROM pub
             
             $sql = "
 SELECT * FROM pub 
-    WHERE (pub.latitude - :radius) < :lat AND
-        (pub.latitude + :radius) > :lat AND
-        (pub.longitude - :radius) < :long AND
-        (pub.longitude + :radius) > :long";
+    WHERE (pub.latitude - :radius) <= :lat AND
+        (pub.latitude + :radius) >= :lat AND
+        (pub.longitude - :radius) <= :long AND
+        (pub.longitude + :radius) >= :long";
         
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':lat', $clean_publat, PDO::PARAM_STR, 10);
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
-            $stmt->bindParam(':radius', $clean_pubradius, PDO::PARAM_INT, 3);
+            $stmt->bindParam(':radius', $clean_pubradius);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            print_r($result); die();
             if(is_array($result) && sizeof($result) > 0) {
                 return $result;
             } else {
