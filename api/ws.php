@@ -68,12 +68,19 @@
             }
         }
         if($_GET['catid'] == 'near') { // GPS DATA tendered.
-            $output = $pubs->popularPubs($_SESSION['session_object']->getLat(), 
-                $_SESSION['session_object']->getLong(),
-                $_SESSION['session_object']->getRadius());
+            $goodlat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
+            $goodlong = filter_input(INPUT_GET, 'long', FILTER_VALIDATE_FLOAT);        
+            $goodrad = filter_input(INPUT_GET, 'radius', FILTER_VALIDATE_INT);        
+
+            $output = $pubs->popularPubs($goodlat, $goodlong, $goodrad);
+            
             if($output == false) {
-                $output = array(['error'=>'true']);
+                $output = array(['error'=>'no data']);
             }
+            
+            $_SESSION['session_object']->setLat($goodlat);
+            $_SESSION['session_object']->setLong($goodlong);
+            $_SESSION['session_object']->setRadius($goodrad);
         }
         if($_GET['catid'] == 'postburb') { // 
             $good = filter_input(INPUT_GET, 'locale', FILTER_SANITIZE_SPECIAL_CHARS);

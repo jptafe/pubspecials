@@ -86,6 +86,7 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
 /* EVENTS */
 window.addEventListener("resize", unCheck);
 document.getElementById('contentstuff').addEventListener('click', unCheck);
+
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
         if(evt.srcElement.value.indexOf(',') > -1) {
@@ -98,8 +99,7 @@ document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
             document.getElementById('suburbpost_long').value = dataFieldArray[4];
             rememberSuburbPostState(dataFieldArray[1], dataFieldArray[0], dataFieldArray[2]);
             rememberLatLong(dataFieldArray[3], dataFieldArray[4]);
-            var result = AJAXpubsWithGPS(document.getElementById('suburbpost_lat').value, 
-                                         document.getElementById('suburbpost_long').value);
+            AJAXpubsWithGPS();
         } else {
             document.getElementById('suburbpost_post').value = '';
             document.getElementById('suburbpost_state').value = '';
@@ -365,9 +365,9 @@ function getSuburbFromGPS() {
             if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
                 var url = '../api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
                           '&long=' + position.coords.longitude;
-                document.getElementById('suburbpost_lat').value = position.coords.longitude;
+                document.getElementById('suburbpost_lat').value = position.coords.latitude;
                 localStorage.setItem('currentLat', position.coords.latitude);
-                document.getElementById('suburbpost_long').value = position.coords.latitude;
+                document.getElementById('suburbpost_long').value = position.coords.longitude;
                 localStorage.setItem('currentLong', position.coords.longitude);
 
                 fetch(url)
@@ -430,8 +430,24 @@ function AJAXsearchSuburb(dataField) {
     });
     return false;
 }
-function AJAXpubsWithGPS(lat, long, radius) {
-
+function AJAXpubsWithGPS() {
+    var url = '../api/ws.php?catid=near&lat=' + localStorage.getItem('currentLat') + 
+              '&long=' + localStorage.getItem('currentLong') + '&radius=' + localStorage.getItem('currentRadius');
+    console.log(url);
+    fetch(url)
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+            }
+            response.json().then(function(data) {
+                console.log(data);
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    })
 }
 
 /* 3rd Party Components */

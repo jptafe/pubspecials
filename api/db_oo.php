@@ -38,6 +38,38 @@ SELECT * FROM pub
             }
         }
         public function popularPubs($lat, $long, $radius) {
+            $clean_publat = validate($lat, 'GPS');
+            $clean_publong = validate($long, 'GPS');
+            $clean_pubradius = validate($radius, 'RADIUS');
+
+            if($clean_publat == false || $clean_publong == false ||
+                $clean_pubradius == false) {
+                return false;
+            }
+            $clean_pubradius = $clean_pubradius / 100;
+            
+            $sql = "
+SELECT * FROM pub 
+    WHERE (pub.latitude - :radius) < :lat AND
+        (pub.latitude + :radius) > :lat AND
+        (pub.longitude - :radius) < :long AND
+        (pub.longitude + :radius) > :long";
+        
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':lat', $clean_publat, PDO::PARAM_STR, 10);
+            $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
+            $stmt->bindParam(':radius', $clean_pubradius, PDO::PARAM_INT, 3);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            print_r($result); die();
+            if(is_array($result) && sizeof($result) > 0) {
+                return $result;
+            } else {
+                return false;
+            }
+        }
+        public function specialsNowPubs($lat, $long, $radius) {
+            
             $sql = "
 SELECT count(special_id) AS specialcount, special.special_text,
 special.day_of_week, special.time_of_day, special.starts,
@@ -49,9 +81,7 @@ pub.latitude, pub.longitude
             GROUP BY rating.special_id
                 ORDER BY specialcount DESC
             ";
-            return false;
-        }
-        public function specialsNowPubs($lat, $long, $radius) {
+            
             $dow = date('l');
         }
         public function newPub($pubArray) {
