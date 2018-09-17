@@ -145,6 +145,7 @@ SELECT * FROM postcode_db
 			}
         }
         public function getCoordinatesForIP($ip) {
+            // we might need to call an API to get more accurate locations
 			$clean_ip = validate($ip, 'IP');
 			if($clean_ip == false) {
                 return false;
@@ -169,7 +170,7 @@ SELECT * FROM ip_loc
         public function suburbListByGPS($lat, $long) {
             $clean_lat = validate($lat, 'GPS');
             $clean_long = validate($long, 'GPS');
-            $clean_radius = .01; 
+            $clean_radius = .001; 
 			if($clean_lat == false || $clean_long == false || $clean_radius == false) {
                 return false;
 			}
@@ -188,8 +189,6 @@ SELECT * FROM postcode_db
 				return $result;
 			} else {
 			    $clean_radius = .01; 
-			    $stmt->bindParam(':latitude', $clean_lat);
-                $stmt->bindParam(':longitude', $clean_long);
                 $stmt->bindParam(':radius', $clean_radius);
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -202,7 +201,7 @@ SELECT * FROM postcode_db
         public function isInAustralia($ip) {
             $clean_IP = validate($ip, 'IP');
             if($clean_IP == false) {
-                //database check for IP in subnet range of AU
+//                GPS range - Australia: -10.594079, 113.436668 - -44.576466, 157.212898
                 return false;
             }
         }
