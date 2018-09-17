@@ -433,7 +433,6 @@ function AJAXsearchSuburb(dataField) {
 function AJAXpubsWithGPS() {
     var url = '../api/ws.php?catid=near&lat=' + localStorage.getItem('currentLat') + 
               '&long=' + localStorage.getItem('currentLong') + '&radius=' + localStorage.getItem('currentRadius');
-    console.log(url);
     fetch(url)
     .then(
         function(response) {
