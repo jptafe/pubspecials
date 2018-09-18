@@ -440,7 +440,7 @@ function AJAXpubsWithGPS() {
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
-                console.log(data);
+                document.getElementById('publist').innerHTML = JSON.stringify(data);
             });
         }
     )
