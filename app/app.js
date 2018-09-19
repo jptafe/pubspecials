@@ -440,7 +440,17 @@ function AJAXpubsWithGPS() {
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
-                document.getElementById('publist').innerHTML = JSON.stringify(data);
+                var template = document.getElementById("template-pub");
+                var templateHtml = template.innerHTML;
+                var listHtml = "";
+                
+                for (var key in data) {
+                    listHtml += templateHtml.replace(/{{name}}/g, data[key]["name"])
+                                            .replace(/{{desc}}/g, data[key]["state"])
+                                            .replace(/{{addr}}/g, data[key]["address"])
+                                            .replace(/{{img}}/g, data[key]["postcode"])
+                }
+                document.getElementById("publist").innerHTML = listHtml;
             });
         }
     )
