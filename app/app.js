@@ -475,3 +475,16 @@ var dateFormat = "yy-mm-dd",
         console.log('foo');
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
+
+
+document.getElementById('favourite').addEventListener('change', makeFavourite);
+
+function makeFavourite() {
+    if(document.getElementById('favourite').checked == true) {
+        document.getElementById('favouriteicon').classList.remove("far");
+        document.getElementById('favouriteicon').classList.add("fas");
+    } else {
+        document.getElementById('favouriteicon').classList.remove("fas");
+        document.getElementById('favouriteicon').classList.add("far");
+    }
+}

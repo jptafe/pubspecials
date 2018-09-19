@@ -47,7 +47,16 @@ SELECT * FROM pub
                 return false;
             }
             $clean_pubradius = $clean_pubradius / 100;
-            
+            $newersql = "
+SELECT count(special.id), pub.name 
+    FROM `pub` INNER JOIN special ON pub.id = special.pub_id 
+    INNER JOIN rating ON special.id = rating.special_id 
+        WHERE (pub.latitude - :radius) <= :lat AND
+        (pub.latitude + :radius) >= :lat AND
+        (pub.longitude - :radius) <= :long AND
+        (pub.longitude + :radius) >= :long
+        GROUP BY pub.id";
+
             $sql = "
 SELECT * FROM pub 
     WHERE (pub.latitude - :radius) <= :lat AND
@@ -60,12 +69,25 @@ SELECT * FROM pub
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
             $stmt->bindParam(':radius', $clean_pubradius);
             $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $specialsql = "
+SELECT * FROM special
+    WHERE pub_id = :pub"; // don't show user/pub IDs...
+                $substmt = $this->conn->prepare($specialsql);
+                $substmt->bindParam(':pub', $row['id'], PDO::PARAM_INT);
+                $substmt->execute();
+                $specialresult = $substmt->fetchAll(PDO::FETCH_ASSOC);
+                if(is_array($specialresult) && sizeof($specialresult) > 0) {
+                    $row['specials'] = array($specialresult);
+                }
+                $result[] = $row;
+            }
             if(is_array($result) && sizeof($result) > 0) {
                 return $result;
             } else {
                 return false;
             }
+
         }
         public function specialsNowPubs($lat, $long, $radius) {
             
