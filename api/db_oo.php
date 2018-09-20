@@ -70,6 +70,15 @@ SELECT * FROM pub
             $stmt->bindParam(':radius', $clean_pubradius);
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                
+                $updateviewssql = "
+UPDATE pub 
+    SET viewcount = viewcount + 1
+        WHERE id = :pubid";
+                $subupdate = $this->conn->prepare($updateviewssql);
+                $subupdate->bindParam(':pubid', $row['id'], PDO::PARAM_INT);
+                $subupdate->execute();
+
                 $specialsql = "
 SELECT * FROM special
     WHERE pub_id = :pub"; // don't show user/pub IDs...
