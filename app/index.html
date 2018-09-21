@@ -230,10 +230,35 @@
 </body>
 <script id="template-pub" type="text/template">
     <aside>
-        <li>{{name}}</li>
-        <li>{{desc}}</li>
-        <li>{{addr}}</li>
-        <li><img src="{{img}}"></li>
+        <header>
+            <p>Views:{{views}}</p>
+            <p>{{name}}</p>
+            <p>Score:{{calc_value}}</p>
+        </header>
+        <p>{{name}}</p>
+        <p>{{desc}}</p>
+        <p>{{addr}}</p>
+</script>
+<script id="template-special" type="text/template">
+        <section>
+            <p>{{up}}<p>
+            <p>{{dow}}</p>
+            <p>{{down}}<p>
+            <p>{{spec_title}}</p>
+            <p>{{tod}}</p>
+        </section>
+</script>
+<script id="template-special-comment" type="text/template">
+        <footer>
+            <form>
+                <input type="text" name="special_comment" placeholder="comment">
+            </form>
+        </footer>
     </aside>
 </script>
+
+
+
+
+
 </html>

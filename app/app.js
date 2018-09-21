@@ -1,3 +1,14 @@
+/* CONSTANTS */
+var d = new Date();
+var weekday = new Array(7);
+weekday[0] =  "Sunday";
+weekday[1] = "Monday";
+weekday[2] = "Tuesday";
+weekday[3] = "Wednesday";
+weekday[4] = "Thursday";
+weekday[5] = "Friday";
+weekday[6] = "Saturday";
+console.log(weekday[d.getDay()]);
 /* PERSISTENT STORAGE */
 if(localStorage.getItem('currentRadius') === null) {
     localStorage.setItem('currentRadius', 1);
@@ -440,17 +451,30 @@ function AJAXpubsWithGPS() {
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
-                var template = document.getElementById("template-pub");
-                var templateHtml = template.innerHTML;
-                var listHtml = "";
+                var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
+                var specialTemplateHTML = document.getElementById("template-special").innerHTML;
+
                 
-                for (var key in data) {
-                    listHtml += templateHtml.replace(/{{name}}/g, data[key]["name"])
-                                            .replace(/{{desc}}/g, data[key]["state"])
+                var pubHtml = "";
+                
+                for(var key in data) {
+                    pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]["viewcount"])
+                                            .replace(/{{name}}/g, data[key]["name"])
+                                            .replace(/{{desc}}/g, data[key]["description"])
                                             .replace(/{{addr}}/g, data[key]["address"])
-                                            .replace(/{{img}}/g, data[key]["postcode"])
+                                            .replace(/{{img}}/g, data[key]["postcode"]);
+                    if (typeof data[key].specials !== 'undefined') {
+                        for(var special in data[key].specials) {
+                            pubHtml += specialTemplateHTML.replace(/{{up}}/g, data[key].specials[special]['upcount'])
+                                                          .replace(/{{dow}}/g, data[key].specials[special]['day_of_week'])
+                                                          .replace(/{{down}}/g, data[key].specials[special]['downcount'])
+                                                          .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
+                                                          .replace(/{{tod}}/g, data[key].specials[special]['time_of_day']);
+                        }               
+                    }
                 }
-                document.getElementById("publist").innerHTML = listHtml;
+                pubHtml +=  document.getElementById('template-special-comment').innerHTML;
+                document.getElementById("publist").innerHTML = pubHtml;
             });
         }
     )
@@ -485,18 +509,6 @@ var dateFormat = "yy-mm-dd",
         console.log('foo');
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
-
-var d = new Date();
-var weekday = new Array(7);
-weekday[0] =  "Sunday";
-weekday[1] = "Monday";
-weekday[2] = "Tuesday";
-weekday[3] = "Wednesday";
-weekday[4] = "Thursday";
-weekday[5] = "Friday";
-weekday[6] = "Saturday";
-console.log(weekday[d.getDay()]);
-
 // Refactor so that we use CSS instead...
 document.getElementById('favourite').addEventListener('change', makeFavourite);
 
@@ -510,7 +522,6 @@ function makeFavourite() {
     }
 }
 /* FACEBOOK */
-
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '335876946985539',
