@@ -47,30 +47,18 @@ SELECT * FROM pub
                 return false;
             }
             $clean_pubradius = $clean_pubradius / 100;
-            $newersql = "
-SELECT count(special.id), pub.name 
-    FROM `pub` INNER JOIN special ON pub.id = special.pub_id 
-    INNER JOIN rating ON special.id = rating.special_id 
-        WHERE (pub.latitude - :radius) <= :lat AND
-        (pub.latitude + :radius) >= :lat AND
-        (pub.longitude - :radius) <= :long AND
-        (pub.longitude + :radius) >= :long
-        GROUP BY pub.id";
-
             $sql = "
 SELECT * FROM pub 
     WHERE (pub.latitude - :radius) <= :lat AND
         (pub.latitude + :radius) >= :lat AND
         (pub.longitude - :radius) <= :long AND
         (pub.longitude + :radius) >= :long";
-        
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':lat', $clean_publat, PDO::PARAM_STR, 10);
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
             $stmt->bindParam(':radius', $clean_pubradius);
             $stmt->execute();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
                 $updateviewssql = "
 UPDATE pub 
     SET viewcount = viewcount + 1
@@ -85,9 +73,25 @@ SELECT * FROM special
                 $substmt = $this->conn->prepare($specialsql);
                 $substmt->bindParam(':pub', $row['id'], PDO::PARAM_INT);
                 $substmt->execute();
-                $specialresult = $substmt->fetchAll(PDO::FETCH_ASSOC);
-                if(is_array($specialresult) && sizeof($specialresult) > 0) {
-                    $row['specials'] = array($specialresult);
+                unset($specialresult);
+                while ($specialrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
+                    $ratinguponspecialsql = "SELECT count(*) AS upcount FROM `rating` WHERE special_id = {$specialrow['id']} AND rating = 'UP'";
+                    $uponstmt = $this->conn->prepare($ratinguponspecialsql);
+                    $uponstmt->execute();
+                    $upcount = $uponstmt->fetch(PDO::FETCH_ASSOC);
+                    $specialrow['upcount'] = $upcount['upcount'];
+
+                    $ratingdownspecialsql = "SELECT count(*) AS downcount FROM `rating` WHERE special_id = {$specialrow['id']} AND rating = 'DOWN';";
+                    $downstmt = $this->conn->prepare($ratingdownspecialsql);
+                    $downstmt->execute();
+                    $downcount = $downstmt->fetch(PDO::FETCH_ASSOC);
+                    $specialrow['downcount'] = $downcount['downcount'];
+                    $specialresult[] = $specialrow;
+                }
+                if(isset($specialresult)) {
+                    if(is_array($specialresult) && sizeof($specialresult) > 0) {
+                        $row['specials'] = $specialresult;
+                    }
                 }
                 $result[] = $row;
             }
@@ -96,7 +100,6 @@ SELECT * FROM special
             } else {
                 return false;
             }
-
         }
         public function specialsNowPubs($lat, $long, $radius) {
             
