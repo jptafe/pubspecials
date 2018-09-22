@@ -66,6 +66,7 @@ UPDATE pub
         WHERE id = :pubid";
                 $subupdate = $this->conn->prepare($updateviewssql);
                 $subupdate->bindParam(':pubid', $row['id'], PDO::PARAM_INT);
+                $row['viewcount'] = $row['viewcount'] + 1;
                 $subupdate->execute();
 
                 $specialsql = "

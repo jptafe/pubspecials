@@ -9,7 +9,11 @@ weekday[4] = "Thursday";
 weekday[5] = "Friday";
 weekday[6] = "Saturday";
 console.log(weekday[d.getDay()]);
+
 /* PERSISTENT STORAGE */
+if(localStorage.getItem('authenticated') === null) {
+    localStorage.setItem('authenticated', 'false');
+}
 if(localStorage.getItem('currentRadius') === null) {
     localStorage.setItem('currentRadius', 1);
 }
@@ -90,7 +94,7 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
         console.log('Fetch Error :-S', err);
     });
 } else {
-    // do a search with the current long and lat info...
+    AJAXpubsWithGPS();
 }
 
 
@@ -183,16 +187,16 @@ function getAddressFromGPS() {
                 if(status === 'OK') {
                     if(results[0]) {
                         document.getElementById('pubaddress').value = results[0].formatted_address;
-                        
+
                         var addr_pieces = results[0].formatted_address.split(',');
-                    
+
                         var count=addr_pieces.length;
                         document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
-                        
+
                         var sub_state = addr_pieces[count-2].trim();
                         var sub_stage_pieces = sub_state.split(' ');
                         var subcount=sub_stage_pieces.length;
-                    
+
                         var sub_concat_string;
                         if(subcount-2 == 3) {
                             sub_concat_string = sub_stage_pieces[0].toUpperCase() + ' ' + sub_stage_pieces[1].toUpperCase() + ' ' + sub_stage_pieces[2].toUpperCase();
@@ -202,10 +206,10 @@ function getAddressFromGPS() {
                             sub_concat_string = sub_stage_pieces[0].toUpperCase();
                         }
                         document.getElementById('pubsuburb').value = sub_concat_string;
-                    
+
                         document.getElementById('pubstate').value = sub_stage_pieces[subcount-2];
                         document.getElementById("pubpcode").value = sub_stage_pieces[subcount-1];
-                    
+
                         document.getElementById('publat').value = position.coords.latitude;
                         document.getElementById('publong').value = position.coords.longitude;
 
@@ -226,7 +230,7 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     var count=addr_pieces.length;
     document.getElementById('pubnostreet').value = addr_pieces[count-3]; 
-    
+
     var sub_state = addr_pieces[count-2].trim();
     var sub_stage_pieces = sub_state.split(' ');
     var subcount=sub_stage_pieces.length;
@@ -321,6 +325,7 @@ function checkInputElement(inputField) {
     }
 }
 function doSubmit(submitForm) {
+    // All posts need AJAX functions allocated 
     submitForm.preventDefault(); 
     return false;
 }
@@ -354,10 +359,27 @@ function hideMessage(targetElement) {
 function showMessage(targetElement) {
     targetElement.style.display = 'block';
 }
+function upThumb(specialID) {
+    if(document.getElementById('makefavourite' + specialID).checked == true) {
+        document.getElementById('unfavourite' + specialID).checked = false;
+        // AJAXUpVoteSpecial(specialID);
+    } else {
+        // AJAXCancelUpVoteSpecial(specialID);
+    }
+}
+function downThumb(specialID) {
+    if(document.getElementById('unfavourite' + specialID).checked == true) {
+        document.getElementById('makefavourite' + specialID).checked = false;
+        // AJAXDownVoteSpecial(specialID);
+    } else {
+        // AJAXCancelDownVoteSpecial(specialID);
+    }
+}
 
-/* PERSISTENCE */
+/* PERSISTENCE EVENTS */
 function rememberRadius() {
     localStorage.setItem('currentRadius', document.getElementById('suburbpost_radius').value); 
+    AJAXpubsWithGPS();
 }
 function rememberSuburbPostState(suburb, postcode, state) {
     localStorage.setItem('currentSuburb', suburb);
@@ -396,6 +418,7 @@ function getSuburbFromGPS() {
                                     localStorage.setItem('currentPostcode', data[0].postcode);
                                     document.getElementById('suburbpost_state').value = data[0].state;
                                     localStorage.setItem('currentState', data[0].state);
+                                    AJAXpubsWithGPS();
                                 }
                             } else {
                                 document.getElementById('suburbpost').value = 'not found. Increase Area';
@@ -460,21 +483,53 @@ function AJAXpubsWithGPS() {
                 for(var key in data) {
                     pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]["viewcount"])
                                             .replace(/{{name}}/g, data[key]["name"])
+                                            .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]["id"])
                                             .replace(/{{desc}}/g, data[key]["description"])
                                             .replace(/{{addr}}/g, data[key]["address"])
                                             .replace(/{{img}}/g, data[key]["postcode"]);
                     if (typeof data[key].specials !== 'undefined') {
                         for(var special in data[key].specials) {
                             pubHtml += specialTemplateHTML.replace(/{{up}}/g, data[key].specials[special]['upcount'])
+                                                          .replace(/{{id}}/g, data[key].specials[special]['id'])
                                                           .replace(/{{dow}}/g, data[key].specials[special]['day_of_week'])
                                                           .replace(/{{down}}/g, data[key].specials[special]['downcount'])
                                                           .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
                                                           .replace(/{{tod}}/g, data[key].specials[special]['time_of_day']);
                         }               
+                    } else {
+
                     }
                 }
                 pubHtml +=  document.getElementById('template-special-comment').innerHTML;
                 document.getElementById("publist").innerHTML = pubHtml;
+
+                for(var key in data) {
+                    if(typeof data[key].specials == 'undefined') {
+                        document.getElementById('calcscore' + data[key]['id']).innerHTML = 'Score: 0';
+                    } else {
+                        var calc_score = 0;
+                        for(var special in data[key].specials) {
+                            calc_score = calc_score + parseInt(data[key].specials[special].upcount);
+                            calc_score = calc_score - parseInt(data[key].specials[special].downcount);
+                        }
+                        document.getElementById('calcscore' + data[key]["id"]).innerHTML = 'Score: ' + calc_score;
+                    }
+                }
+                if(localStorage.getItem('authenticated') != 'false') {
+                    var thumbsUp = document.getElementsByClassName('makefavourite');
+                    var thumbsDown = document.getElementsByClassName('unfavourite');
+                    var specialComment = document.getElementsByClassName('commentonspecial');
+
+                    for(loop = 0;loop<thumbsUp.length;loop++) {
+                        thumbsUp[loop].removeAttribute('disabled');
+                    }
+                    for(loop = 0;loop<thumbsDown.length;loop++) {
+                        thumbsDown[loop].removeAttribute('disabled');
+                    }
+                    for(loop = 0;loop<specialComment.length;loop++) {
+                        specialComment[loop].removeAttribute('disabled');
+                    }
+                }
             });
         }
     )
@@ -509,18 +564,7 @@ var dateFormat = "yy-mm-dd",
         console.log('foo');
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
-// Refactor so that we use CSS instead...
-document.getElementById('favourite').addEventListener('change', makeFavourite);
 
-function makeFavourite() {
-    if(document.getElementById('favourite').checked == true) {
-        document.getElementById('favouriteicon').classList.remove("far");
-        document.getElementById('favouriteicon').classList.add("fas");
-    } else {
-        document.getElementById('favouriteicon').classList.remove("fas");
-        document.getElementById('favouriteicon').classList.add("far");
-    }
-}
 /* FACEBOOK */
   window.fbAsyncInit = function() {
     FB.init({
@@ -529,18 +573,17 @@ function makeFavourite() {
       xfbml      : true,
       version    : 'v3.1'
     });
-      
-    FB.AppEvents.logPageView();   
-      
+
+    //This is FB logging my site?
+    //FB.AppEvents.logPageView();   
+  
     FB.getLoginStatus(function(response) {
-        //statusChangeCallback(response);
         if(response.status == 'not_authorized') {
-            FB.login();
+            sessionStorage.setItem('authenticated', 'false');
         }
         if(response.status == 'connected') {
-            
+            sessionStorage.setItem('authenticated', response.authResponse.userID);
         }
-        console.log(response);
     });
   };
 

@@ -11,6 +11,8 @@
     font-weight: 400;
     font-style: normal;
 
+
+
 /* 
 
 
@@ -357,7 +359,32 @@ article section {
     box-shadow: 5px 5px 10px var(--main-act), -5px 5px 10px var(--main-act);
     padding: var(--section-padding);
 }
-
+.unfavourite {
+    display: none;
+}
+.unfavourite + label::after {
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 500;
+    content: '\f165';
+}
+.unfavourite:checked + label::after {
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900; 
+    content: '\f165';
+}
+.makefavourite {
+    display: none;
+}
+.makefavourite + label::after {
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 500;
+    content: '\f164';
+}
+.makefavourite:checked + label::after {
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900; 
+    content: '\f164';
+}
 .alert {
     border-style: double;
     border-width: 2px;

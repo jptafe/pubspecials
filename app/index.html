@@ -76,8 +76,11 @@
             </ul>
             <h1>Heading</h1>
             <h3>Sub Heading</h3>
+            <!--
             <input type="checkbox" class="favourite" id="favourite" style="display: none;">
             <label for="favourite"><i id="favouriteicon" class="far fa-thumbs-up"></i></label>
+-->
+
             <p id="publist">Lorem ipsum</p>
             <fieldset>
                 <legend>Registration Form</legend>
@@ -231,21 +234,25 @@
 <script id="template-pub" type="text/template">
     <aside>
         <header>
-            <p>Views:{{views}}</p>
-            <p>{{name}}</p>
-            <p>Score:{{calc_value}}</p>
+            <span>Views:{{views}}</span>
+            <span>{{name}}</span>
+            <span id="{{calc_score_id}}">Score:</span>
         </header>
-        <p>{{name}}</p>
         <p>{{desc}}</p>
         <p>{{addr}}</p>
 </script>
 <script id="template-special" type="text/template">
         <section>
-            <p>{{up}}<p>
-            <p>{{dow}}</p>
-            <p>{{down}}<p>
+            <input onChange="upThumb({{id}})" type="checkbox" class="makefavourite" id="makefavourite{{id}}" disabled>
+            <label for="makefavourite{{id}}"></label>
+            <span id="allthumbsup{{id}}">{{up}}</span>
+            <span>{{dow}}</span>
+            <span id="allthumbsdown{{id}}">{{down}}</span>
+            <input onChange="downThumb({{id}})" type="checkbox" class="unfavourite" id="unfavourite{{id}}" disabled>
+            <label for="unfavourite{{id}}"></label>
             <p>{{spec_title}}</p>
             <p>{{tod}}</p>
+            <input type="text" onchange="" class="commentonspecial" name="commentonspecial{{id}}" id="commentonspecial{{id}}" placeholder="comment" disabled>
         </section>
 </script>
 <script id="template-special-comment" type="text/template">
@@ -256,9 +263,4 @@
         </footer>
     </aside>
 </script>
-
-
-
-
-
 </html>
