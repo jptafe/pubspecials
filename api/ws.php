@@ -71,8 +71,8 @@
             $goodlat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
             $goodlong = filter_input(INPUT_GET, 'long', FILTER_VALIDATE_FLOAT);        
             $goodrad = filter_input(INPUT_GET, 'radius', FILTER_VALIDATE_INT);        
-
-            $output = $pubs->popularPubs($goodlat, $goodlong, $goodrad);
+            $goodorder = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_SPECIAL_CHARS);
+            $output = $pubs->popularPubs($goodlat, $goodlong, $goodrad, $goodorder);
             
             if($output == false) {
                 $output = array(['error'=>'no data']);

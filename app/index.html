@@ -55,9 +55,13 @@
     <article id="contentstuff">
         <section>
             <ul>
-                <input type="button" id="suburbgps" name="suburbgps" value="Get Pubs Around You">
+                <button id="suburbgps" name="suburbgps">
+                    Near <i class="fas fa-map-marker-alt"></i>
+                </button>
                 <input type="text" name="suburbpost" id="suburbpost" list="suburbpostlist" onfocus="this.select()" placeholder="Search Suburb or Postcode" 
                     pattern="[A-Za-z0-9 ,-.]{3,}"> 
+                <datalist id="suburbpostlist">
+                </datalist>
                 <input type="text" name="suburbpost_post" id="suburbpost_post" size="4" maxwidth="4" disabled>
                 <input type="text" name="suburbpost_state" id="suburbpost_state" size="3" maxlength="3" disabled>
                 <input type="text" name="suburbpost_lat" id="suburbpost_lat" size="7" maxlengeth="8" disabled>
@@ -69,10 +73,16 @@
                     <option value="50">50km</option>
                     <option value="100">100km</option>
                 </select>
-                <datalist id="suburbpostlist">
-                </datalist>
-                <input type="button" name="suburbpost_recent" id="suburbpost_recent" value="Order by Most Recent">
-                <input type="button" name="suburbpost_popular" id="suburbpost_popular" value="Order by Most Popular">
+
+                <button name="suburbpost_recent" id="suburbpost_recent">
+                    Recent <i class="fas fa-child"></i>
+                </button>
+                <button name="suburbpost_viewed" id="suburbpost_viewed">
+                    Views <i class="fas fa-eye"></i>
+                </button>
+                <button name="suburbpost_popular" id="suburbpost_popular">
+                    Rated <i class="fas fa-star"></i>
+                </button>   
             </ul>
             <h1>Heading</h1>
             <h3>Sub Heading</h3>
@@ -252,14 +262,20 @@
             <label for="unfavourite{{id}}"></label>
             <p>{{spec_title}}</p>
             <p>{{tod}}</p>
-            <input type="text" onchange="" class="commentonspecial" name="commentonspecial{{id}}" id="commentonspecial{{id}}" placeholder="comment" disabled>
+            <div id="commentsonspecials{{id}}"></div>
+            <input type="text" onchange="" class="commentonspecial" name="commentonspecial{{id}}" id="commentonspecial{{id}}" placeholder="comments disabled" disabled>
         </section>
 </script>
-<script id="template-special-comment" type="text/template">
+<script id="template-special-footer" type="text/template">
+    <button name="suburbpost_recent" id="suburbpost_recent">
+        Add Special <i class="fas fa-ticket-alt"></i>
+    </button>
+</script>
+<script id="template-pub-footer" type="text/template">
         <footer>
-            <form>
-                <input type="text" name="special_comment" placeholder="comment">
-            </form>
+            <button name="suburbpost_recent" id="suburbpost_recent">
+                Add Pub <i class="fas fa-beer"></i>
+            </button>
         </footer>
     </aside>
 </script>

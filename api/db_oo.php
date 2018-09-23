@@ -38,23 +38,40 @@ SELECT * FROM pub
                 return false;
             }
         }
-        public function popularPubs($lat, $long, $radius) {
+        public function popularPubs($lat, $long, $radius, $order) {
             $clean_publat = validate($lat, 'GPS');
             $clean_publong = validate($long, 'GPS');
             $clean_pubradius = validate($radius, 'RADIUS');
+            $clean_order = validate($order, 'ORDER');
 
             if($clean_publat == false || $clean_publong == false ||
-                $clean_pubradius == false) {
+                $clean_pubradius == false || $clean_order == false) {
                 return false;
             }
             $clean_pubradius = $clean_pubradius / 100;
-            $sql = "
-SELECT * FROM pub 
+            if($clean_order == 'recent') {
+                $sqlpubs = "
+SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount
+    FROM pub 
     WHERE (pub.latitude - :radius) <= :lat AND
         (pub.latitude + :radius) >= :lat AND
         (pub.longitude - :radius) <= :long AND
-        (pub.longitude + :radius) >= :long";
-            $stmt = $this->conn->prepare($sql);
+        (pub.longitude + :radius) >= :long
+        ORDER BY updated DESC";
+            } else if ($clean_order == 'views') {
+                $sqlpubs = "
+SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount 
+    FROM pub 
+    WHERE (pub.latitude - :radius) <= :lat AND
+        (pub.latitude + :radius) >= :lat AND
+        (pub.longitude - :radius) <= :long AND
+        (pub.longitude + :radius) >= :long
+        ORDER BY viewcount DESC";
+            } else if ($clean_order == 'rated') {
+                // DONNO THIS SQL
+            }
+
+            $stmt = $this->conn->prepare($sqlpubs);
             $stmt->bindParam(':lat', $clean_publat, PDO::PARAM_STR, 10);
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
             $stmt->bindParam(':radius', $clean_pubradius);
@@ -97,8 +114,12 @@ SELECT * FROM special
                 }
                 $result[] = $row;
             }
-            if(is_array($result) && sizeof($result) > 0) {
-                return $result;
+            if(isset($result)) {
+                if(is_array($result) && sizeof($result) > 0) {
+                    return $result;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -148,18 +169,12 @@ INSERT INTO pub
                 return false;
             }
         }
+
+/* Authenticated users */
         public function newSpecial($specialArray) {
-        }      
-        public function getSpecialsForPub($pubID) {
         }
-        public function invalidatePub($pubID) {
+        public function commentOnSpecial($specialID, $comment) {
         }
-        public function invalidateSpecial($specialID) {
-        }
-        public function thumbsUpPub($pubid) {
-        } 
-        public function thumbsDownPub($pubid) {
-        } 
         public function thumbsUpSpecial($specialID) {
         }
         public function thumbsDownSpecial($specialID) {
@@ -295,6 +310,11 @@ function validate($value, $type) {
             if($safe_value <= 100) {
                 return $safe_value;
             }
+        }
+    }
+    if($type == 'ORDER') {
+        if($safe_value == 'recent' || $safe_value == 'views' || $safe_value == 'rated') {
+            return $safe_value;
         }
     }
     if($type == 'POSTCODE') {

@@ -43,6 +43,20 @@ if (localStorage.getItem('currentLong') === null) {
 } else {
     document.getElementById('suburbpost_long').value = localStorage.getItem('currentLong');
 }
+if (localStorage.getItem('currentSearchOrder') === null) {
+    localStorage.setItem('currentSearchOrder', 'recent');
+    document.getElementById('suburbpost_recent').classList.add('btnsel');
+} else {
+    if(localStorage.getItem('currentSearchOrder') == 'recent') {
+        document.getElementById('suburbpost_recent').classList.add('btnsel');
+    }
+    if(localStorage.getItem('currentSearchOrder') == 'views') {
+        document.getElementById('suburbpost_viewed').classList.add('btnsel');
+    }
+    if(localStorage.getItem('currentSearchOrder') == 'rated') {
+        document.getElementById('suburbpost_popular').classList.add('btnsel'); 
+    }
+}
 
 if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat') == '') {
     fetch('../api/ws.php?catid=locforip')
@@ -94,7 +108,12 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
         console.log('Fetch Error :-S', err);
     });
 } else {
-    AJAXpubsWithGPS();
+    if(localStorage.getItem('GPSAccess') === null) {
+        AJAXpubsWithGPS();
+    } else {
+        getSuburbFromGPS();
+        AJAXpubsWithGPS();
+    }
 }
 
 
@@ -104,6 +123,7 @@ document.getElementById('contentstuff').addEventListener('click', unCheck);
 
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
+        document.getElementById('suburbgps').removeAttribute('class');
         if(evt.srcElement.value.indexOf(',') > -1) {
             var dataFieldArray = evt.srcElement.value.split(',');
             document.getElementById('suburbpostlist').innerHTML = '';
@@ -158,13 +178,15 @@ for(var loop = 0;loop<requiredFields.length;loop++) {
         });
     }
 }
-
 document.getElementById('password1').addEventListener('change', checkPasswordsMatch);
 document.getElementById('password2').addEventListener('change', checkPasswordsMatch);
 document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
 document.getElementById('pubgps').addEventListener('click', getAddressFromGPS);
 document.getElementById('suburbpost_radius').addEventListener('change', rememberRadius);
 document.getElementById('suburbgps').addEventListener('click', getSuburbFromGPS);
+document.getElementById('suburbpost_recent').addEventListener('click', setSearchOrderRecent);
+document.getElementById('suburbpost_viewed').addEventListener('click', setSearchOrderViewed);
+document.getElementById('suburbpost_popular').addEventListener('click', setSearchOrderPopular);
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -220,6 +242,7 @@ function getAddressFromGPS() {
         });
     }
 }
+
 var places = new google.maps.places.Autocomplete(document.getElementById('pubaddress'));
 places.setComponentRestrictions(
     {'country': ['au']});
@@ -325,7 +348,7 @@ function checkInputElement(inputField) {
     }
 }
 function doSubmit(submitForm) {
-    // All posts need AJAX functions allocated 
+    // All POSTs need unique AJAX functions 
     submitForm.preventDefault(); 
     return false;
 }
@@ -390,6 +413,24 @@ function rememberLatLong(latitude, longitude) {
     localStorage.setItem('currentLat', latitude);
     localStorage.setItem('currentLong', longitude);
 }
+function setSearchOrderRecent() {
+    localStorage.setItem('currentSearchOrder','recent');
+    document.getElementById('suburbpost_recent').classList.add('btnsel');
+    document.getElementById('suburbpost_viewed').removeAttribute('class');
+    document.getElementById('suburbpost_popular').removeAttribute('class');
+}
+function setSearchOrderViewed() {
+    localStorage.setItem('currentSearchOrder', 'views');
+    document.getElementById('suburbpost_viewed').classList.add('btnsel');
+    document.getElementById('suburbpost_recent').removeAttribute('class');
+    document.getElementById('suburbpost_popular').removeAttribute('class');
+}
+function setSearchOrderPopular() {
+    localStorage.setItem('currentSearchOrder', 'rated');
+    document.getElementById('suburbpost_popular').classList.add('btnsel'); 
+    document.getElementById('suburbpost_viewed').removeAttribute('class');
+    document.getElementById('suburbpost_recent').removeAttribute('class');
+}
 
 /* AJAX */
 function getSuburbFromGPS() {
@@ -402,7 +443,8 @@ function getSuburbFromGPS() {
                 localStorage.setItem('currentLat', position.coords.latitude);
                 document.getElementById('suburbpost_long').value = position.coords.longitude;
                 localStorage.setItem('currentLong', position.coords.longitude);
-
+                localStorage.setItem('GPSAccess', 'true');
+                document.getElementById('suburbgps').classList.add('btnsel');
                 fetch(url)
                 .then(
                     function(response) {
@@ -431,7 +473,7 @@ function getSuburbFromGPS() {
                 .catch(function(err) {
                     console.log('Fetch Error :-S', err);
                 });
-            } //if
+            } /* if */
         });
     }
 }
@@ -466,7 +508,9 @@ function AJAXsearchSuburb(dataField) {
 }
 function AJAXpubsWithGPS() {
     var url = '../api/ws.php?catid=near&lat=' + localStorage.getItem('currentLat') + 
-              '&long=' + localStorage.getItem('currentLong') + '&radius=' + localStorage.getItem('currentRadius');
+                '&long=' + localStorage.getItem('currentLong') + '&radius=' + 
+                localStorage.getItem('currentRadius') + '&order=' +
+                localStorage.getItem('currentSearchOrder');
     fetch(url)
     .then(
         function(response) {
@@ -477,9 +521,8 @@ function AJAXpubsWithGPS() {
                 var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
                 var specialTemplateHTML = document.getElementById("template-special").innerHTML;
 
-                
-                var pubHtml = "";
-                
+                var pubHtml = '';
+
                 for(var key in data) {
                     pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]["viewcount"])
                                             .replace(/{{name}}/g, data[key]["name"])
@@ -495,12 +538,11 @@ function AJAXpubsWithGPS() {
                                                           .replace(/{{down}}/g, data[key].specials[special]['downcount'])
                                                           .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
                                                           .replace(/{{tod}}/g, data[key].specials[special]['time_of_day']);
-                        }               
-                    } else {
-
+                        }  
+                        pubHtml +=  document.getElementById('template-special-footer').innerHTML;
                     }
                 }
-                pubHtml +=  document.getElementById('template-special-comment').innerHTML;
+                pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
                 document.getElementById("publist").innerHTML = pubHtml;
 
                 for(var key in data) {
@@ -528,8 +570,10 @@ function AJAXpubsWithGPS() {
                     }
                     for(loop = 0;loop<specialComment.length;loop++) {
                         specialComment[loop].removeAttribute('disabled');
+                        specialComment[loop].setAttribute('placeholder', 'comments');
                     }
                 }
+                // Insert comments in the right places (Separate AJAX);
             });
         }
     )

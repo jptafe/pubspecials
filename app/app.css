@@ -167,7 +167,7 @@ input:disabled {
                 1px 1px 4px var(--main-dis);
     background-color: var(--main-bkg);
 }
-input[type="button"] {
+input[type="button"], button {
     padding: 4px;
     outline: 0;
     background-color: var(--button-bkg);
@@ -195,7 +195,7 @@ input[type="submit"][value="Error"] {
      50% {background-color: var(--button-submit-bkg)}
     100% {background-color: var(--button-bkg)}
 }
-input[type="button"]:focus {
+input[type="button"]:focus, button:focus, button:focus > i, .btnsel {
     outline: none;
     text-decoration: underline;
     box-shadow: 1px 1px 4px var(--main-act);
@@ -209,7 +209,7 @@ input[type="submit"]:focus {
     color: var(--button-act);
     border-color: var(--button-act);
 }
-input[type="button"]:active {
+input[type="button"]:active, button:active, button:active > i {
     outline: none;
     text-decoration: dashed;
     box-shadow: 1px 1px 4px var(--main-act);
@@ -224,7 +224,7 @@ input[type="submit"]:active {
     border-color: var(--button-submit-act);
 }
 input[type="button"]:disabled, 
-input[type="submit"]:disabled {
+input[type="submit"]:disabled, button:disabled {
     background-color: inherit;
     color: inherit;
     border-color: inherit;
