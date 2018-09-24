@@ -57,7 +57,8 @@ SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewco
         (pub.latitude + :radius) >= :lat AND
         (pub.longitude - :radius) <= :long AND
         (pub.longitude + :radius) >= :long
-        ORDER BY updated DESC";
+        ORDER BY last_updated DESC
+        LIMIT 10";
             } else if ($clean_order == 'views') {
                 $sqlpubs = "
 SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount 
@@ -66,11 +67,22 @@ SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewco
         (pub.latitude + :radius) >= :lat AND
         (pub.longitude - :radius) <= :long AND
         (pub.longitude + :radius) >= :long
-        ORDER BY viewcount DESC";
+        ORDER BY viewcount DESC
+        LIMIT 10";
             } else if ($clean_order == 'rated') {
-                // DONNO THIS SQL
+                $sqlpubs = "
+SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount
+    FROM pub 
+        INNER JOIN rating ON pub.id = rating.pub_id
+        WHERE (pub.latitude - :radius) <= :lat AND
+            (pub.latitude + :radius) >= :lat AND
+            (pub.longitude - :radius) <= :long AND
+            (pub.longitude + :radius) >= :long AND
+            rating.rating = 'UP' 
+            GROUP BY pub.id
+            ORDER BY count(rating.rating) DESC
+            LIMIT 10";
             }
-
             $stmt = $this->conn->prepare($sqlpubs);
             $stmt->bindParam(':lat', $clean_publat, PDO::PARAM_STR, 10);
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
@@ -94,6 +106,7 @@ SELECT * FROM special
                 $substmt->execute();
                 unset($specialresult);
                 while ($specialrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
+// we should loop through comments here!
                     $ratinguponspecialsql = "SELECT count(*) AS upcount FROM `rating` WHERE special_id = {$specialrow['id']} AND rating = 'UP'";
                     $uponstmt = $this->conn->prepare($ratinguponspecialsql);
                     $uponstmt->execute();

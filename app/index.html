@@ -75,10 +75,10 @@
                 </select>
 
                 <button name="suburbpost_recent" id="suburbpost_recent">
-                    Recent <i class="fas fa-child"></i>
+                    Recent <i class="fas fa-clock"></i>
                 </button>
                 <button name="suburbpost_viewed" id="suburbpost_viewed">
-                    Views <i class="fas fa-eye"></i>
+                    Viewed <i class="fas fa-eye"></i>
                 </button>
                 <button name="suburbpost_popular" id="suburbpost_popular">
                     Rated <i class="fas fa-star"></i>
@@ -136,10 +136,17 @@
                     <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
                     <label>Longitude</label>
                     <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
-                    <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS">
-                    <input type="submit" name="add_pub" value="add pub">
+                    <!-- <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS"> -->
+                    
+                    <button onclick="return false" name="find_pub_gps" id="pubgps">
+                        Get Address <i class="fas fa-globe"></i>
+                    </button>
+                    
+                    <button onclick="this.form.submit()" name="addpub_button" id="addpub_button" disabled>
+                        Add Pub <i class="fas fa-beer"></i>
+                    </button>
                 </form>
-            </fieldset> 
+            </fieldset>         
             <fieldset>
                 <legend>Add Special Form</legend>
                 <form action="#" method="POST" novalidate>
@@ -184,15 +191,6 @@
                     <input type="checkbox" name="specialneverexpires" id="specialneverexpires" checked>
                     
                     <input type="submit" name="add_special" value="add special">
-                </form>
-            </fieldset> 
-            <fieldset>
-                <legend>Add Comment to Special</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>comment</label>
-                    <input type="text" name="comment">
-                    <input type="hidden" name="specialid" value="">
-                    <input type="submit" name="add_comment" value="add comment">
                 </form>
             </fieldset> 
         </section>
@@ -248,8 +246,11 @@
             <span>{{name}}</span>
             <span id="{{calc_score_id}}">Score:</span>
         </header>
+        <p><a href="#">{{addr}}</a></p>
         <p>{{desc}}</p>
-        <p>{{addr}}</p>
+        <button onclick="" name="addspecial_button" id="addspecial_button" disabled>
+            Add Special <i class="fas fa-ticket-alt"></i>
+        </button>
 </script>
 <script id="template-special" type="text/template">
         <section>
@@ -262,20 +263,26 @@
             <label for="unfavourite{{id}}"></label>
             <p>{{spec_title}}</p>
             <p>{{tod}}</p>
+            
+            <!-- Comments inside another loop of JS -->
             <div id="commentsonspecials{{id}}"></div>
-            <input type="text" onchange="" class="commentonspecial" name="commentonspecial{{id}}" id="commentonspecial{{id}}" placeholder="comments disabled" disabled>
+            <fieldset>
+                <legend>Add Comment</legend>
+                <form action="#" method="POST" novalidate>
+                    <label>comments</label>
+                    <input type="text" onkeyup="" onchange="" class="commentonspecial" name="commentonspecial" id="commentonspecial{{id}}" placeholder="comments disabled" required disabled>
+                    <input type="hidden" name="specialid" value="{{id}}">
+                    <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}}" disabled>
+                        Add Comment <i class="fas fa-comments"></i>
+                    </button>
+                </form>
+            </fieldset>             
         </section>
-</script>
-<script id="template-special-footer" type="text/template">
-    <button name="suburbpost_recent" id="suburbpost_recent">
-        Add Special <i class="fas fa-ticket-alt"></i>
-    </button>
 </script>
 <script id="template-pub-footer" type="text/template">
         <footer>
-            <button name="suburbpost_recent" id="suburbpost_recent">
-                Add Pub <i class="fas fa-beer"></i>
-            </button>
+          
+
         </footer>
     </aside>
 </script>

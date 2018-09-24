@@ -61,7 +61,7 @@ CREATE TABLE `pub` (
   `logo` varchar(128) DEFAULT NULL,
   `latitude` decimal(11,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
-  `updated` timestamp NOT NULL,
+  `last_updated` datetime NOT NULL, 
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `viewcount` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -94,6 +94,7 @@ CREATE TABLE `rating` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `special_id` (`special_id`),
+  CONSTRAINT `rating_ibfk_0` FOREIGN KEY (`pub_id`) REFERENCES `pub` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `rating_ibfk_1` FOREIGN KEY (`special_id`) REFERENCES `special` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `rating_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;

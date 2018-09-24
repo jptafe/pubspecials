@@ -524,12 +524,13 @@ function AJAXpubsWithGPS() {
                 var pubHtml = '';
 
                 for(var key in data) {
-                    pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]["viewcount"])
-                                            .replace(/{{name}}/g, data[key]["name"])
-                                            .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]["id"])
-                                            .replace(/{{desc}}/g, data[key]["description"])
-                                            .replace(/{{addr}}/g, data[key]["address"])
-                                            .replace(/{{img}}/g, data[key]["postcode"]);
+                    pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]['viewcount'])
+                                            .replace(/{{name}}/g, data[key]['name'])
+                                            .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]['id'])
+                                            .replace(/{{desc}}/g, data[key]['description'])
+                                            .replace(/{{addr}}/g, data[key]['address'])
+                                            .replace(/{{img}}/g, data[key]['postcode'])
+                                            .replace(/{{id}}/g, data[key]['id']);
                     if (typeof data[key].specials !== 'undefined') {
                         for(var special in data[key].specials) {
                             pubHtml += specialTemplateHTML.replace(/{{up}}/g, data[key].specials[special]['upcount'])
@@ -539,7 +540,8 @@ function AJAXpubsWithGPS() {
                                                           .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
                                                           .replace(/{{tod}}/g, data[key].specials[special]['time_of_day']);
                         }  
-                        pubHtml +=  document.getElementById('template-special-footer').innerHTML;
+                    } else {
+                        pubHtml += '<p>No Specials</p>';
                     }
                 }
                 pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
