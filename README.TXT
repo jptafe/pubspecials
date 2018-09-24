@@ -10,8 +10,6 @@ They must also be logged in to add a special? May have anonymous cowards
 In mobile mode, search can be done by ones' location
 A users' IP will be used to find the city they are in
 A session stores the latitude and longitude of any location input the user wishes to divulge
-You have to be 18 or above to register, just like a pub.
-There should be three attempts and then a 20m cooling off period
 IPs found to be outside Australia will have limited access, 100 API calls per hour, 1000 API calls per day.
 
 INSTALL:
@@ -23,9 +21,9 @@ No logins
 Just public browsing of canned data to confirm UX issues.
 
 Todo:
-Login with Facebook/Google
-Get Address to autocomplete from Maps DONE
+Login with Google
 Image validator/uploader JS - https://www.dropzonejs.com
-Get a styled datepicker - Validate it so only future dates can be chosen + Start date can't exceed end date
+style the datepicker 
 
+Alternative Site:
 https://publocation.com.au/

@@ -140,7 +140,7 @@ CREATE TABLE `special` (
 
 LOCK TABLES `special` WRITE;
 /*!40000 ALTER TABLE `special` DISABLE KEYS */;
-INSERT INTO `special` VALUES (6,1,6,'Burger deal','Monday','16:00:00','2018-09-19','2018-09-26'),(7,1,6,'parmy night','Thursday','16:00:00','2018-10-01','2030-01-01');
+INSERT INTO `special` VALUES (6,1,6,'Burger deal','Monday','16:00:00','2018-09-19','2018-10-26'),(7,1,6,'parmy night','Thursday','16:00:00','2018-10-01','2030-01-01');
 /*!40000 ALTER TABLE `special` ENABLE KEYS */;
 UNLOCK TABLES;
 

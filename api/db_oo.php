@@ -99,14 +99,31 @@ UPDATE pub
                 $subupdate->execute();
 
                 $specialsql = "
-SELECT * FROM special
-    WHERE pub_id = :pub"; // don't show user/pub IDs...
+SELECT id, pub_id, special_text, day_of_week, time_of_day, starts, expires
+    FROM special
+        WHERE pub_id = :pub AND expires >= curdate()";
                 $substmt = $this->conn->prepare($specialsql);
                 $substmt->bindParam(':pub', $row['id'], PDO::PARAM_INT);
                 $substmt->execute();
                 unset($specialresult);
+                $specialcount = 0;
                 while ($specialrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
-// we should loop through comments here!
+                    $commentspecialsql = "
+SELECT * 
+    FROM comment 
+        WHERE special_id = :special";
+                    $subsubstmt = $this->conn->prepare($commentspecialsql);
+                    $subsubstmt->bindParam(':special', $specialrow['id'], PDO::PARAM_INT);
+                    $subsubstmt->execute();
+                    unset($specialcommentresult);
+                    while ($specialcommentrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
+                        $specialcommentresult[] = $specialcommentrow;
+                    }
+                    if(isset($specialcommentresult)) {
+                        if(is_array($specialcommentresult) && sizeof($specialcommentresult) > 0) {
+                            $row['specials'][$specialcount]['comments'] = $specialcommentresult;
+                        }
+                    }
                     $ratinguponspecialsql = "SELECT count(*) AS upcount FROM `rating` WHERE special_id = {$specialrow['id']} AND rating = 'UP'";
                     $uponstmt = $this->conn->prepare($ratinguponspecialsql);
                     $uponstmt->execute();
@@ -119,6 +136,7 @@ SELECT * FROM special
                     $downcount = $downstmt->fetch(PDO::FETCH_ASSOC);
                     $specialrow['downcount'] = $downcount['downcount'];
                     $specialresult[] = $specialrow;
+                    $specialcount++;
                 }
                 if(isset($specialresult)) {
                     if(is_array($specialresult) && sizeof($specialresult) > 0) {

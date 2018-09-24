@@ -59,7 +59,7 @@ if (localStorage.getItem('currentSearchOrder') === null) {
 }
 
 if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat') == '') {
-    fetch('../api/ws.php?catid=locforip')
+    fetch('api/ws.php?catid=locforip')
     .then(
         function(response) {
             if (response.status !== 200) {
@@ -437,7 +437,7 @@ function getSuburbFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
-                var url = '../api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
+                var url = 'api/ws.php?catid=listburbgps&lat=' + position.coords.latitude +
                           '&long=' + position.coords.longitude;
                 document.getElementById('suburbpost_lat').value = position.coords.latitude;
                 localStorage.setItem('currentLat', position.coords.latitude);
@@ -478,7 +478,7 @@ function getSuburbFromGPS() {
     }
 }
 function AJAXsearchSuburb(dataField) {
-    fetch('../api/ws.php?catid=postburb&locale=' + dataField)
+    fetch('api/ws.php?catid=postburb&locale=' + dataField)
     .then(
         function(response) {
             if (response.status !== 200) {
@@ -507,7 +507,7 @@ function AJAXsearchSuburb(dataField) {
     return false;
 }
 function AJAXpubsWithGPS() {
-    var url = '../api/ws.php?catid=near&lat=' + localStorage.getItem('currentLat') + 
+    var url = 'api/ws.php?catid=near&lat=' + localStorage.getItem('currentLat') + 
                 '&long=' + localStorage.getItem('currentLong') + '&radius=' + 
                 localStorage.getItem('currentRadius') + '&order=' +
                 localStorage.getItem('currentSearchOrder');
@@ -520,7 +520,7 @@ function AJAXpubsWithGPS() {
             response.json().then(function(data) {
                 var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
                 var specialTemplateHTML = document.getElementById("template-special").innerHTML;
-
+                var secialCommentTemplateHTML = document.getElementById("template-special-comments").innerHTML;
                 var pubHtml = '';
 
                 for(var key in data) {
@@ -538,11 +538,20 @@ function AJAXpubsWithGPS() {
                                                           .replace(/{{dow}}/g, data[key].specials[special]['day_of_week'])
                                                           .replace(/{{down}}/g, data[key].specials[special]['downcount'])
                                                           .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
-                                                          .replace(/{{tod}}/g, data[key].specials[special]['time_of_day']);
-                        }  
+                                                          .replace(/{{tod}}/g, data[key].specials[special]['time_of_day'])
+                                                          .replace(/{{pubid}}/g, data[key]['id']);
+                            if(typeof special.comments !== 'undefined') {
+                                for(var comment in special.comments) {
+                                    pubHtml += '<p>A Comment is HERE</p>';
+                                }
+                            } else {
+                                pubHtml += '<p>No Comments</p>';
+                            }
+                        }
                     } else {
                         pubHtml += '<p>No Specials</p>';
                     }
+                    // close off special HTML (or put start/end specials somewhere else)
                 }
                 pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
                 document.getElementById("publist").innerHTML = pubHtml;
@@ -563,19 +572,22 @@ function AJAXpubsWithGPS() {
                     var thumbsUp = document.getElementsByClassName('makefavourite');
                     var thumbsDown = document.getElementsByClassName('unfavourite');
                     var specialComment = document.getElementsByClassName('commentonspecial');
-
+                    var specialButton = document.getElementsByClassName('addspecial_button');
+                    
                     for(loop = 0;loop<thumbsUp.length;loop++) {
                         thumbsUp[loop].removeAttribute('disabled');
                     }
                     for(loop = 0;loop<thumbsDown.length;loop++) {
                         thumbsDown[loop].removeAttribute('disabled');
                     }
+                    for(loop = 0;loop<specialButton.length;loop++) {
+                        specialButton[loop].removeAttribute('disabled');
+                    }
                     for(loop = 0;loop<specialComment.length;loop++) {
                         specialComment[loop].removeAttribute('disabled');
-                        specialComment[loop].setAttribute('placeholder', 'comments');
+                        specialComment[loop].setAttribute('placeholder', 'Comment on this');
                     }
                 }
-                // Insert comments in the right places (Separate AJAX);
             });
         }
     )
