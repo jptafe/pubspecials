@@ -144,6 +144,7 @@ document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
         }
     }
 });
+
 var forms = document.getElementsByTagName('form');
 for(var loop = 0;loop<forms.length;loop++) {
     forms[loop].addEventListener('submit', function(evt) {
@@ -418,18 +419,22 @@ function setSearchOrderRecent() {
     document.getElementById('suburbpost_recent').classList.add('btnsel');
     document.getElementById('suburbpost_viewed').removeAttribute('class');
     document.getElementById('suburbpost_popular').removeAttribute('class');
+    AJAXpubsWithGPS();
+
 }
 function setSearchOrderViewed() {
     localStorage.setItem('currentSearchOrder', 'views');
     document.getElementById('suburbpost_viewed').classList.add('btnsel');
     document.getElementById('suburbpost_recent').removeAttribute('class');
     document.getElementById('suburbpost_popular').removeAttribute('class');
+    AJAXpubsWithGPS();
 }
 function setSearchOrderPopular() {
     localStorage.setItem('currentSearchOrder', 'rated');
     document.getElementById('suburbpost_popular').classList.add('btnsel'); 
     document.getElementById('suburbpost_viewed').removeAttribute('class');
     document.getElementById('suburbpost_recent').removeAttribute('class');
+    AJAXpubsWithGPS();
 }
 
 /* AJAX */
@@ -518,74 +523,78 @@ function AJAXpubsWithGPS() {
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
-                var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
-                var specialTemplateHTML = document.getElementById("template-special").innerHTML;
-                var secialCommentTemplateHTML = document.getElementById("template-special-comments").innerHTML;
-                var pubHtml = '';
-
-                for(var key in data) {
-                    pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]['viewcount'])
-                                            .replace(/{{name}}/g, data[key]['name'])
-                                            .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]['id'])
-                                            .replace(/{{desc}}/g, data[key]['description'])
-                                            .replace(/{{addr}}/g, data[key]['address'])
-                                            .replace(/{{img}}/g, data[key]['postcode'])
-                                            .replace(/{{id}}/g, data[key]['id']);
-                    if (typeof data[key].specials !== 'undefined') {
-                        for(var special in data[key].specials) {
-                            pubHtml += specialTemplateHTML.replace(/{{up}}/g, data[key].specials[special]['upcount'])
-                                                          .replace(/{{id}}/g, data[key].specials[special]['id'])
-                                                          .replace(/{{dow}}/g, data[key].specials[special]['day_of_week'])
-                                                          .replace(/{{down}}/g, data[key].specials[special]['downcount'])
-                                                          .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
-                                                          .replace(/{{tod}}/g, data[key].specials[special]['time_of_day'])
-                                                          .replace(/{{pubid}}/g, data[key]['id']);
-                            if(typeof special.comments !== 'undefined') {
-                                for(var comment in special.comments) {
-                                    pubHtml += '<p>A Comment is HERE</p>';
+                if(data[0].error == 'no data') {
+                    document.getElementById("publist").innerHTML = '<h1>No Pubs Found</h1>';
+                } else {
+                    var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
+                    var specialTemplateHTML = document.getElementById("template-special").innerHTML;
+                    var secialCommentTemplateHTML = document.getElementById("template-special-comments").innerHTML;
+                    var pubHtml = '';
+    
+                    for(var key in data) {
+                        pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]['viewcount'])
+                                                .replace(/{{name}}/g, data[key]['name'])
+                                                .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]['id'])
+                                                .replace(/{{desc}}/g, data[key]['description'])
+                                                .replace(/{{addr}}/g, data[key]['address'])
+                                                .replace(/{{img}}/g, data[key]['postcode'])
+                                                .replace(/{{id}}/g, data[key]['id']);
+                        if (typeof data[key].specials !== 'undefined') {
+                            for(var special in data[key].specials) {
+                                pubHtml += specialTemplateHTML.replace(/{{up}}/g, data[key].specials[special]['upcount'])
+                                                              .replace(/{{id}}/g, data[key].specials[special]['id'])
+                                                              .replace(/{{dow}}/g, data[key].specials[special]['day_of_week'])
+                                                              .replace(/{{down}}/g, data[key].specials[special]['downcount'])
+                                                              .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
+                                                              .replace(/{{tod}}/g, data[key].specials[special]['time_of_day'])
+                                                              .replace(/{{pubid}}/g, data[key]['id']);
+                                if(typeof special.comments !== 'undefined') {
+                                    for(var comment in special.comments) {
+                                        pubHtml += '<p>A Comment is HERE</p>';
+                                    }
+                                } else {
+                                    pubHtml += '<p>No Comments</p>';
                                 }
-                            } else {
-                                pubHtml += '<p>No Comments</p>';
                             }
+                        } else {
+                            pubHtml += '<p>No Specials</p>';
                         }
-                    } else {
-                        pubHtml += '<p>No Specials</p>';
+                        // close off special HTML (or put start/end specials somewhere else)
                     }
-                    // close off special HTML (or put start/end specials somewhere else)
-                }
-                pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
-                document.getElementById("publist").innerHTML = pubHtml;
-
-                for(var key in data) {
-                    if(typeof data[key].specials == 'undefined') {
-                        document.getElementById('calcscore' + data[key]['id']).innerHTML = 'Score: 0';
-                    } else {
-                        var calc_score = 0;
-                        for(var special in data[key].specials) {
-                            calc_score = calc_score + parseInt(data[key].specials[special].upcount);
-                            calc_score = calc_score - parseInt(data[key].specials[special].downcount);
+                    pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
+                    document.getElementById("publist").innerHTML = pubHtml;
+    
+                    for(var key in data) {
+                        if(typeof data[key].specials == 'undefined') {
+                            document.getElementById('calcscore' + data[key]['id']).innerHTML = 'Score: 0';
+                        } else {
+                            var calc_score = 0;
+                            for(var special in data[key].specials) {
+                                calc_score = calc_score + parseInt(data[key].specials[special].upcount);
+                                calc_score = calc_score - parseInt(data[key].specials[special].downcount);
+                            }
+                            document.getElementById('calcscore' + data[key]["id"]).innerHTML = 'Score: ' + calc_score;
                         }
-                        document.getElementById('calcscore' + data[key]["id"]).innerHTML = 'Score: ' + calc_score;
                     }
-                }
-                if(localStorage.getItem('authenticated') != 'false') {
-                    var thumbsUp = document.getElementsByClassName('makefavourite');
-                    var thumbsDown = document.getElementsByClassName('unfavourite');
-                    var specialComment = document.getElementsByClassName('commentonspecial');
-                    var specialButton = document.getElementsByClassName('addspecial_button');
-                    
-                    for(loop = 0;loop<thumbsUp.length;loop++) {
-                        thumbsUp[loop].removeAttribute('disabled');
-                    }
-                    for(loop = 0;loop<thumbsDown.length;loop++) {
-                        thumbsDown[loop].removeAttribute('disabled');
-                    }
-                    for(loop = 0;loop<specialButton.length;loop++) {
-                        specialButton[loop].removeAttribute('disabled');
-                    }
-                    for(loop = 0;loop<specialComment.length;loop++) {
-                        specialComment[loop].removeAttribute('disabled');
-                        specialComment[loop].setAttribute('placeholder', 'Comment on this');
+                    if(localStorage.getItem('authenticated') != 'false') {
+                        var thumbsUp = document.getElementsByClassName('makefavourite');
+                        var thumbsDown = document.getElementsByClassName('unfavourite');
+                        var specialComment = document.getElementsByClassName('commentonspecial');
+                        var specialButton = document.getElementsByClassName('addspecial_button');
+                        
+                        for(loop = 0;loop<thumbsUp.length;loop++) {
+                            thumbsUp[loop].removeAttribute('disabled');
+                        }
+                        for(loop = 0;loop<thumbsDown.length;loop++) {
+                            thumbsDown[loop].removeAttribute('disabled');
+                        }
+                        for(loop = 0;loop<specialButton.length;loop++) {
+                            specialButton[loop].removeAttribute('disabled');
+                        }
+                        for(loop = 0;loop<specialComment.length;loop++) {
+                            specialComment[loop].removeAttribute('disabled');
+                            specialComment[loop].setAttribute('placeholder', 'Comment on this');
+                        }
                     }
                 }
             });
