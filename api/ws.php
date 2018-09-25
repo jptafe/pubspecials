@@ -27,7 +27,6 @@
         }
     }
     $_SESSION['session_object']->logInteraction();
-    
     if(isset($_GET['catid'])) {
         if($_GET['catid'] == 'locforip') {
             $output = array();
@@ -47,23 +46,6 @@
                 $output['postcode'] = $_SESSION['session_object']->getPostcode();
             }
             if(sizeof($output) == 0) {
-                $output = array(['error'=>'true']);
-            }
-        }
-    
-        if($_GET['catid'] == 'recent') {
-            $output = $pubs->recentPubs($_SESSION['session_object']->getLat(), 
-                $_SESSION['session_object']->getLong(),
-                $_SESSION['session_object']->getRadius());
-            if($output == false) {
-                $output = array(['error'=>'true']);
-            }
-        }
-        if($_GET['catid'] == 'popular') { 
-            $output = $pubs->popularPubs($_SESSION['session_object']->getLat(), 
-                $_SESSION['session_object']->getLong(),
-                $_SESSION['session_object']->getRadius());
-            if($output == false) {
                 $output = array(['error'=>'true']);
             }
         }
@@ -117,22 +99,26 @@
                 $output = array(['error'=>'input']);
             }
         }
-        if($_GET['catid'] == 'listburbs') { // JSON autocomplete list for suburb;
-            $good = filter_input(INPUT_GET, $_GET['locale'], FILTER_SANITIZE_ENCODED);
-            if($good != false) {
-                $output = $locations->suburbList($good);
-                if($output == false) {
-                    $output = array(['error'=>'true']);
+        if($_GET['catid'] == 'reguser') { 
+            $gooduid = filter_input(INPUT_GET, 'uid', FILTER_VALIDATE_INT);
+            if($gooduid != false) {
+                $valid = checkUidWithFacebook($gooduid);
+                if($valid != false) {
+                    setAuthSession($valid);
+                    $output = array(['auth'=>'true']);
+                } else {
+                    $output = array(['auth'=>'false']);
                 }
             } else {
-                $output = array(['error'=>'true']);
+                $output = array(['auth'=>'false']);
             }
         }
+        
         header('Content-Type: application/json');
         if(isset($output)) {
             echo json_encode($output);
         } else {
-            echo json_encode(array('error'=>'Function Not Implemented'));
+            echo json_encode(array('error'=>'true'));
         }
     }
 ?>

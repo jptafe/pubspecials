@@ -88,7 +88,7 @@ SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewco
             $stmt->bindParam(':long', $clean_publong, PDO::PARAM_STR, 10);
             $stmt->bindParam(':radius', $clean_pubradius);
             $stmt->execute();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
                 $updateviewssql = "
 UPDATE pub 
     SET viewcount = viewcount + 1
@@ -106,24 +106,7 @@ SELECT id, pub_id, special_text, day_of_week, time_of_day, starts, expires
                 $substmt->bindParam(':pub', $row['id'], PDO::PARAM_INT);
                 $substmt->execute();
                 unset($specialresult);
-                $specialcount = 0;
-                while ($specialrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
-                    $commentspecialsql = "
-SELECT * 
-    FROM comment 
-        WHERE special_id = :special";
-                    $subsubstmt = $this->conn->prepare($commentspecialsql);
-                    $subsubstmt->bindParam(':special', $specialrow['id'], PDO::PARAM_INT);
-                    $subsubstmt->execute();
-                    unset($specialcommentresult);
-                    while ($specialcommentrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
-                        $specialcommentresult[] = $specialcommentrow;
-                    }
-                    if(isset($specialcommentresult)) {
-                        if(is_array($specialcommentresult) && sizeof($specialcommentresult) > 0) {
-                            $row['specials'][$specialcount]['comments'] = $specialcommentresult;
-                        }
-                    }
+                while($specialrow = $substmt->fetch(PDO::FETCH_ASSOC)) { 
                     $ratinguponspecialsql = "SELECT count(*) AS upcount FROM `rating` WHERE special_id = {$specialrow['id']} AND rating = 'UP'";
                     $uponstmt = $this->conn->prepare($ratinguponspecialsql);
                     $uponstmt->execute();
@@ -135,8 +118,23 @@ SELECT *
                     $downstmt->execute();
                     $downcount = $downstmt->fetch(PDO::FETCH_ASSOC);
                     $specialrow['downcount'] = $downcount['downcount'];
-                    $specialresult[] = $specialrow;
-                    $specialcount++;
+                    $commentspecialsql = "
+SELECT * 
+    FROM comment 
+        WHERE special_id = :thespecial";
+                    $subsubstmt = $this->conn->prepare($commentspecialsql);
+                    $subsubstmt->bindParam(':thespecial', $specialrow['id'], PDO::PARAM_INT);
+                    $subsubstmt->execute();
+                    unset($specialcommentresult);
+                    while($specialcommentrow = $subsubstmt->fetch(PDO::FETCH_ASSOC)) { 
+                        $specialcommentresult[] = $specialcommentrow;
+                    }
+                    if(isset($specialcommentresult)) {
+                        if(is_array($specialcommentresult) && sizeof($specialcommentresult) > 0) {
+                            $specialrow['comments'] = $specialcommentresult;
+                        }
+                    }
+                    $specialresult[] = $specialrow;                   
                 }
                 if(isset($specialresult)) {
                     if(is_array($specialresult) && sizeof($specialresult) > 0) {
@@ -154,22 +152,6 @@ SELECT *
             } else {
                 return false;
             }
-        }
-        public function specialsNowPubs($lat, $long, $radius) {
-            
-            $sql = "
-SELECT count(special_id) AS specialcount, special.special_text,
-special.day_of_week, special.time_of_day, special.starts,
-pub.name, pub.address, pub.postcode,
-pub.latitude, pub.longitude 
-    FROM rating 
-        INNER JOIN special ON special.id = rating.special_id
-            INNER JOIN pub ON pub.id = special.pub_id
-            GROUP BY rating.special_id
-                ORDER BY specialcount DESC
-            ";
-            
-            $dow = date('l');
         }
         public function newPub($pubArray) {
             $clean_pubname = validate($pubArray['pubname'], 'PUBNAME');

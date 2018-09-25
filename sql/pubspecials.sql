@@ -23,10 +23,11 @@ DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `comment` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `comment` text NOT NULL,
   `user_id` int(11) NOT NULL,
   `special_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `special_id` (`special_id`),
   CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

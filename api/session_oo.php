@@ -8,7 +8,8 @@
         private $postcode = false;
         private $radius = 0;
         private $outOfOzConfirmed = false;
-
+        private $authUser = false;
+        
         public function __construct($IP) {
             $this->IP = $IP;
         }
