@@ -6,6 +6,16 @@
     box-sizing: border-box;
     transition: all .3s;
 }
+
+
+fieldset {
+    display: none;
+}
+#contentstuff {
+    min-height: 44em;
+}
+
+
 :root {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-weight: 400;
@@ -309,7 +319,7 @@ nav footer span {
     color: var(--sub-menu-dis);
 }
 nav footer input[type="button"]:disabled, 
-nav footer input[type="submit"]:disabled {
+nav footer input[type="submit"]:disabled, nav footer button:disabled {
     background-color: inherit;
     color: var(--menu-dis);
     border-color: var(--menu-dis);
@@ -427,12 +437,6 @@ article section {
         --section-width: 70em;
         --section-margin: 2em;
     }
-    #hamburgercheck { 
-        display: none;
-    }
-    #hamburgercheck + label {
-        display: none;
-    }
 }
 @media screen and (max-width:70em) and (min-width: 25em) {
     :root {
@@ -444,43 +448,11 @@ article section {
         --inline-margin: .2em;
         --inline-padding: .2em;
     }
-
-    #hamburgercheck { 
-        display: none;
-    }
-    #hamburgercheck + label {
-        display: none;
-    }
 }
 @media screen and (max-width: 25em) {
     :root {
         --section-padding: .1em;
         --section-width: 100%;
         --section-margin: .1em;
-    }
-    #hamburgercheck { 
-        display: none;
-    }
-    #hamburgercheck + label {
-        background-color: var(--menu-bkg);
-        color: var(--menu-txt);
-        display: inline-block;
-        cursor: pointer;
-        font-weight: 800;
-    }
-    #hamburgercheck ~ div {
-        background-color: var(--menu-bkg);
-        color: var(--menu-txt);
-        display: inline-block;
-        width: 90%;
-        text-align: center;
-    }
-    nav { /* Extensive restyling of NAV is now necessary */
-        display: none;
-        width: 12em;
-        position: absolute;
-    }
-    #hamburgercheck:checked ~ nav {
-        display: block;
     }
 }

@@ -548,20 +548,17 @@ function AJAXpubsWithGPS() {
                                                               .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
                                                               .replace(/{{tod}}/g, data[key].specials[special]['time_of_day'])
                                                               .replace(/{{pubid}}/g, data[key]['id']);
-                                if(typeof special.comments !== 'undefined') {
-                                    for(var comment in special.comments) {
-                                        pubHtml += '<p>A Comment is HERE</p>';
+                                console.log(data[key].specials[special].comments);
+                                if(typeof data[key].specials[special].comments !== 'undefined') {
+                                    for(var comment in data[key].specials[special].comments) {
+                                        pubHtml += secialCommentTemplateHTML.replace(/{{msg}}/g, data[key].specials[special].comments[comment].comment);
                                     }
-                                } else {
-                                    pubHtml += '<p>No Comments</p>';
                                 }
+                                pubHtml +=  document.getElementById('template-special-footer').innerHTML;
                             }
-                        } else {
-                            pubHtml += '<p>No Specials</p>';
                         }
-                        // close off special HTML (or put start/end specials somewhere else)
+                        pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
                     }
-                    pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
                     document.getElementById("publist").innerHTML = pubHtml;
     
                     for(var key in data) {
@@ -645,11 +642,13 @@ document.getElementById('specialbegins').value = new Date().toISOString().substr
     //FB.AppEvents.logPageView();   
   
     FB.getLoginStatus(function(response) {
+        console.log(response);
         if(response.status == 'not_authorized') {
             sessionStorage.setItem('authenticated', 'false');
         }
         if(response.status == 'connected') {
             sessionStorage.setItem('authenticated', response.authResponse.userID);
+            document.getElementById('FBButton').style.display = 'none';
         }
     });
   };

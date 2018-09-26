@@ -25,11 +25,11 @@
     <script src="app.js" defer></script>
 </head>
 <body>
-    <input type="checkbox" id="hamburgercheck">
-    <label for="hamburgercheck">&#9776;</label>
-    <div>Pub Specials</div>
     <nav>
         <header>
+            <div>Pub Specials</div>
+        </header>
+        <footer>
             <button id="suburbgps" name="suburbgps">
                 Near <i class="fas fa-map-marker-alt"></i>
             </button>
@@ -57,157 +57,138 @@
             <button name="suburbpost_popular" id="suburbpost_popular">
                 Rated <i class="fas fa-star"></i>
             </button>   
-        </header>
-        <footer>
-            <ul>
-                <li><a href="#">Link</a></li>
-                <li>Txt</li>
-                <li><input type="text" placeholder="form" pattern="[A-Z]"></li>
-                <li><span>Dead link</span></li>
-                <li><input type="button" value="button"></li>
-                <li><input type="button" value="disabled" disabled></li>
-                <li><input type="submit" value="Submit"></li>
-            </ul>
+            &nbsp;
+            <button name="addpub_button" id="addpub_button" disabled>
+                Add Pub <i class="fas fa-beer"></i>
+            </button>
+            &nbsp;
+            <span id="FBbutton">
+                <fb:login-button 
+                    scope="public_profile,email"
+                    onlogin="checkLoginState();">
+                </fb:login-button>
+            </span>
         </footer>
     </nav>
     <article id="contentstuff">
         <section>
-            <h1>Heading</h1>
-            <h3>Sub Heading</h3>
-            <!--
-            <input type="checkbox" class="favourite" id="favourite" style="display: none;">
-            <label for="favourite"><i id="favouriteicon" class="far fa-thumbs-up"></i></label>
--->
             <p id="publist">Lorem ipsum</p>
-            <fieldset>
-                <legend>Registration Form</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>E-mail</label>
-                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-                    <label>Password</label>
-                    <input type="password" name="password" id="password1" placeholder="Password" autocomplete="new-password" pattern=".{8,}" required>
-                    <label>Password Again</label>
-                    <input type="password" name="passwordagain" id="password2" placeholder="Password Again" autocomplete="new-password" pattern=".{8,}" required>
-                    <input type="submit" name="register" value="register">
-                </form>
-            </fieldset> 
-            <fieldset>
-                <legend>Login Form</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>E-mail</label>
-                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" pattern=".{8,}" required>
-                    <input type="submit" name="login" value="login">
-                </form>
-            </fieldset> 
-            <fieldset>
-                <legend>Add Pub Form</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>Pub Name</label>
-                    <input type="text" name="pubname" placeholder="Pub Name" required>
-                    <label>Pub Address</label>
-                    <input type="text" name="pubaddress" placeholder="Pub Address" id="pubaddress" required>
-                    <label>Pub Image</label>
-                    <input type="file" name="publogo" accept="image/png, image/jpeg">
-                    <input type="hidden" name="postcode">
-                    <label>Number & Street</label>
-                    <input type="text" name="pubnostreet" id="pubnostreet"size="14" maxlength="64" disabled>
-                    <label>Suburb</label>
-                    <input type="text" name="pubsuburb" id="pubsuburb" size="14" maxlength="32" disabled>
-                    <label>State</label>
-                    <input type="text" name="pubstate" id="pubstate" size="3" maxlength="3" disabled>   
-                    <label>Postcode</label>
-                    <input type="number" name="pubpcode" id="pubpcode"size="4" maxlength="4" disabled>   
-                    <label>Latitude</label>
-                    <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
-                    <label>Longitude</label>
-                    <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
-                    <!-- <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS"> -->
-                    
-                    <button onclick="return false" name="find_pub_gps" id="pubgps">
-                        Get Address <i class="fas fa-globe"></i>
-                    </button>
-                    
-                    <button onclick="this.form.submit()" name="addpub_button" id="addpub_button" disabled>
-                        Add Pub <i class="fas fa-beer"></i>
-                    </button>
-                </form>
-            </fieldset>         
-            <fieldset>
-                <legend>Add Special Form</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>Special Description</label>
-                    <input type="text" name="specialdesc" placeholder="Special Description" required>
-                    <label>Day of Week</label>
-                    <select name="specialdow" pattern="[A-Za-z]{6,9}" required>
-                        <option value="choose" selected>Choose...</option>
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                        <option value="Weekdays">Weekdays</option>
-                        <option value="Weekends">Weekends</option>
-                        <option value="Alldays">All Days</option>
-                    </select>
-                    <label>Start Time</label>
-                    <select name="specialstarttime" pattern="[0-9]{2}+:[0-9]{2}" required>
-                        <option value="choose" selected>Choose...</option>
-                        <option value="10:00">10 am</option>
-                        <option value="11:00">11 am</option>
-                        <option value="12:00">12 pm</option>
-                        <option value="13:00">1 pm</option>
-                        <option value="14:00">2 pm</option>
-                        <option value="15:00">3 pm</option>
-                        <option value="16:00">4 pm</option>
-                        <option value="17:00">5 pm</option>
-                        <option value="18:00">6 pm</option>
-                        <option value="19:00">7 pm</option>
-                        <option value="20:00">8 pm</option>
-                        <option value="21:00">9 pm</option>
-                        <option value="22:00">10 pm</option>
-                    </select>
-                    <label>Effective</label>
-                    <input type="text" name="specialbegins" id="specialbegins" placeholder="Special Begins" required>
-                    <label>Expires</label>
-                    <input type="text" name="specialexpires" id="specialexpires" value="2030-01-01" placeholder="Special Expires" required disabled>
-                    <label>Never Expires</label>
-                    <input type="checkbox" name="specialneverexpires" id="specialneverexpires" checked>
-                    
-                    <input type="submit" name="add_special" value="add special">
-                </form>
-            </fieldset> 
         </section>
-    <section>
-    </section>
     <footer>
-        <fb:login-button 
-            scope="public_profile,email"
-            onlogin="checkLoginState();">
-        </fb:login-button>
-        <ul>
-            <li><a href="#">Link</a></li>
-            <li>Txt</li>
-            <li><input type="text" pattern="[A-Z]" placeholder="form"></li>
-            <li><span>Dead link</span></li>
-            <li><input type="button" value="button"></li>
-            <li><input type="button" value="disabled" disabled></li>
-            <li><input type="submit" value="Submit"></li>
-        </ul>
+        <!-- About, Bug Reporting, contact form -->
     </footer>
-        <form method="POST" action="#" novalidate>
-            <a href="#">Link</a>
-            Txt
-            <input name="single_letter" type="text" pattern="[A-Z]" title="Please enter a Single Capital Letter" placeholder="Single Capital Letter" required>
-            <input name="three_letters" type="text" pattern="[A-Z]{1,3}" title="You must enter 1-3 Capital Letters" placeholder="Max 3 Capitals" required>
-            <span>Dead link</span>
-            <input type="button" value="button">
-            <input type="button" value="disabled" disabled>
-            <input type="submit" value="Submit">
-        </form>
+    <aside>
+        <fieldset>
+            <legend>Registration Form</legend>
+            <form action="#" method="POST" novalidate>
+                <label>E-mail</label>
+                <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                <label>Password</label>
+                <input type="password" name="password" id="password1" placeholder="Password" autocomplete="new-password" pattern=".{8,}" required>
+                <label>Password Again</label>
+                <input type="password" name="passwordagain" id="password2" placeholder="Password Again" autocomplete="new-password" pattern=".{8,}" required>
+                <input type="submit" name="register" value="register">
+            </form>
+        </fieldset> 
+        <fieldset>
+            <legend>Login Form</legend>
+            <form action="#" method="POST" novalidate>
+                <label>E-mail</label>
+                <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Password" autocomplete="current-password" pattern=".{8,}" required>
+                <input type="submit" name="login" value="login">
+            </form>
+        </fieldset> 
+        <fieldset>
+            <legend>Add Pub Form</legend>
+            <form action="#" method="POST" novalidate>
+                <label>Pub Name</label>
+                <input type="text" name="pubname" placeholder="Pub Name" required>
+                <label>Pub Address</label>
+                <input type="text" name="pubaddress" placeholder="Pub Address" id="pubaddress" required>
+                <label>Pub Image</label>
+                <input type="file" name="publogo" accept="image/png, image/jpeg">
+                <input type="hidden" name="postcode">
+                <label>Number & Street</label>
+                <input type="text" name="pubnostreet" id="pubnostreet"size="14" maxlength="64" disabled>
+                <label>Suburb</label>
+                <input type="text" name="pubsuburb" id="pubsuburb" size="14" maxlength="32" disabled>
+                <label>State</label>
+                <input type="text" name="pubstate" id="pubstate" size="3" maxlength="3" disabled>   
+                <label>Postcode</label>
+                <input type="number" name="pubpcode" id="pubpcode"size="4" maxlength="4" disabled>   
+                <label>Latitude</label>
+                <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
+                <label>Longitude</label>
+                <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
+                <!-- <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS"> -->
+                <button onclick="return false" name="find_pub_gps" id="pubgps">
+                    Get Address <i class="fas fa-globe"></i>
+                </button>
+                <button name="addpub_button" id="addpub_button" disabled>
+                    Add Pub <i class="fas fa-beer"></i>
+                </button>
+            </form>
+        </fieldset>         
+        <fieldset>
+            <legend>Add Special Form</legend>
+            <form action="#" method="POST" novalidate>
+                <label>Special Description</label>
+                <input type="text" name="specialdesc" placeholder="Special Description" required>
+                <label>Day of Week</label>
+                <select name="specialdow" pattern="[A-Za-z]{6,9}" required>
+                    <option value="choose" selected>Choose...</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Weekdays">Weekdays</option>
+                    <option value="Weekends">Weekends</option>
+                    <option value="Alldays">All Days</option>
+                </select>
+                <label>Start Time</label>
+                <select name="specialstarttime" pattern="[0-9]{2}+:[0-9]{2}" required>
+                    <option value="choose" selected>Choose...</option>
+                    <option value="10:00">10 am</option>
+                    <option value="11:00">11 am</option>
+                    <option value="12:00">12 pm</option>
+                    <option value="13:00">1 pm</option>
+                    <option value="14:00">2 pm</option>
+                    <option value="15:00">3 pm</option>
+                    <option value="16:00">4 pm</option>
+                    <option value="17:00">5 pm</option>
+                    <option value="18:00">6 pm</option>
+                    <option value="19:00">7 pm</option>
+                    <option value="20:00">8 pm</option>
+                    <option value="21:00">9 pm</option>
+                    <option value="22:00">10 pm</option>
+                </select>
+                <label>Effective</label>
+                <input type="text" name="specialbegins" id="specialbegins" placeholder="Special Begins" required>
+                <label>Expires</label>
+                <input type="text" name="specialexpires" id="specialexpires" value="2030-01-01" placeholder="Special Expires" required disabled>
+                <label>Never Expires</label>
+                <input type="checkbox" name="specialneverexpires" id="specialneverexpires" checked>
+                <input type="submit" name="add_special" value="add special">
+            </form>
+        </fieldset> 
+        <fieldset>
+            <legend>Add Comment</legend>
+            <form action="#" method="POST" novalidate>
+                <label>comments</label>
+                <input type="hidden" name="specialid" value="{{id}}">
+                <input type="hidden" name="pubid" value="{{pubid}}">
+                <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial{{id}}" placeholder="comments disabled" disabled>
+                <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}},{{pubid}}" disabled>
+                    Add Comment <i class="fas fa-comments"></i>
+                </button>
+            </form>
+        </fieldset>    
+    </aside>
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
         <figcaption>ERROR:</figcaption>
@@ -235,44 +216,37 @@
         </header>
         <p><a href="#">{{addr}}</a></p>
         <p>{{desc}}</p>
-        <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" id="addspecial_button" disabled>
-            Add new Special for <b>{{name}}</b> <i class="fas fa-ticket-alt"></i>
-        </button>
+        <section>
+            <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" id="addspecial_button" disabled>
+                Add new Special for <b>{{name}}</b> <i class="fas fa-ticket-alt"></i>
+            </button>
 </script>
 <script id="template-special" type="text/template">
-        <section>
-            <input onChange="upThumb({{id}})" type="checkbox" class="makefavourite" id="makefavourite{{id}}" disabled>
-            <label for="makefavourite{{id}}"></label>
-            <span id="allthumbsup{{id}}">{{up}}</span>
-            <span>{{dow}}</span>
-            <span id="allthumbsdown{{id}}">{{down}}</span>
-            <input onChange="downThumb({{id}})" type="checkbox" class="unfavourite" id="unfavourite{{id}}" disabled>
-            <label for="unfavourite{{id}}"></label>
+            <div>
+                <input onChange="upThumb({{id}})" type="checkbox" class="makefavourite" id="makefavourite{{id}}" disabled>
+                <label for="makefavourite{{id}}"></label>
+                <span id="allthumbsup{{id}}">{{up}}</span>
+                <span>{{dow}}</span>
+                <span id="allthumbsdown{{id}}">{{down}}</span>
+                <input onChange="downThumb({{id}})" type="checkbox" class="unfavourite" id="unfavourite{{id}}" disabled>
+                <label for="unfavourite{{id}}"></label>
+            </div>
             <p>{{spec_title}}</p>
             <p>{{tod}}</p>
-            
-            <!-- Comments inside another loop of JS -->
-            <div id="commentsonspecials{{id}}"></div>
-            <fieldset>
-                <legend>Add Comment</legend>
-                <form action="#" method="POST" novalidate>
-                    <label>comments</label>
-                    <input type="hidden" name="specialid" value="{{id}}">
-                    <input type="hidden" name="pubid" value="{{pubid}}">
-                    <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial{{id}}" placeholder="comments disabled" disabled>
-                    <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}},{{pubid}}" disabled>
-                        Add Comment <i class="fas fa-comments"></i>
-                    </button>
-                </form>
-            </fieldset>             
-        </section>
+            <section>
+                <button onclick="FORMAddComment({{id}},{{pubid}})" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}},{{pubid}}" disabled>
+                    Add New Comment <i class="fas fa-comments"></i>
+                </button>
 </script>
 <script id="template-special-comments" type="text/template">
-        <section>
-          
-        </section>
+    <p>{{msg}}</p>
+</script>
+<script id="template-special-footer" type="text/template">
+    </section>
 </script>
 <script id="template-pub-footer" type="text/template">
+    
+        </section>
         <footer>
           
         </footer>
