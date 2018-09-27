@@ -102,7 +102,7 @@
         if($_GET['catid'] == 'reguser') { 
             $gooduid = filter_input(INPUT_GET, 'uid', FILTER_VALIDATE_INT);
             if($gooduid != false) {
-                $valid = checkUidWithFacebook($gooduid);
+                $valid = checkUIDWithFacebook($gooduid);
                 if($valid != false) {
                     setAuthSession($valid);
                     $output = array(['auth'=>'true']);

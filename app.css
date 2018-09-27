@@ -249,6 +249,7 @@ Navigation */
 nav header {
     background-color:  var(--menu-bkg);
     color: var(--menu-txt);
+    padding: 3px;
 }
 nav header ul {
 }
@@ -300,6 +301,7 @@ nav header input:focus {
 nav footer {
     background-color:  var(--sub-menu-bkg);
     color: var(--sub-menu-txt);
+    padding: 3px;
 }
 nav footer ul {
 }

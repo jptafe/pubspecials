@@ -118,8 +118,6 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
 
 
 /* EVENTS */
-window.addEventListener("resize", unCheck);
-document.getElementById('contentstuff').addEventListener('click', unCheck);
 
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
@@ -194,9 +192,6 @@ for(var loop = 0;loop<alertBoxes.length;loop++) {
     alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
         hideMessage(evt.target.parentElement);
     });
-}
-function unCheck() {
-    document.getElementById('hamburgercheck').checked = false;
 }
 
 /* GMAPS */
@@ -548,7 +543,6 @@ function AJAXpubsWithGPS() {
                                                               .replace(/{{spec_title}}/g, data[key].specials[special]['special_text'])
                                                               .replace(/{{tod}}/g, data[key].specials[special]['time_of_day'])
                                                               .replace(/{{pubid}}/g, data[key]['id']);
-                                console.log(data[key].specials[special].comments);
                                 if(typeof data[key].specials[special].comments !== 'undefined') {
                                     for(var comment in data[key].specials[special].comments) {
                                         pubHtml += secialCommentTemplateHTML.replace(/{{msg}}/g, data[key].specials[special].comments[comment].comment);
@@ -576,7 +570,7 @@ function AJAXpubsWithGPS() {
                     if(localStorage.getItem('authenticated') != 'false') {
                         var thumbsUp = document.getElementsByClassName('makefavourite');
                         var thumbsDown = document.getElementsByClassName('unfavourite');
-                        var specialComment = document.getElementsByClassName('commentonspecial');
+                        var specialComment = document.getElementsByClassName('addspecialcomment_button');
                         var specialButton = document.getElementsByClassName('addspecial_button');
                         
                         for(loop = 0;loop<thumbsUp.length;loop++) {
@@ -645,13 +639,23 @@ document.getElementById('specialbegins').value = new Date().toISOString().substr
         console.log(response);
         if(response.status == 'not_authorized') {
             sessionStorage.setItem('authenticated', 'false');
+            disableButtons();
         }
         if(response.status == 'connected') {
             sessionStorage.setItem('authenticated', response.authResponse.userID);
-            document.getElementById('FBButton').style.display = 'none';
+            enableButtons();
         }
     });
   };
+  
+function enableButtons() {
+    document.getElementById('FBButton').style.display = 'none';
+    document.getElementById('addpub_button').removeAttribute('disabled');
+}
+function disableButtons() {
+    document.getElementById('FBButton').style.display = 'inline';
+    document.getElementById('addpub_button').setAttribute('disabled', '');
+}
 
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
@@ -663,7 +667,6 @@ document.getElementById('specialbegins').value = new Date().toISOString().substr
 
 function checkLoginState() {
   FB.getLoginStatus(function(response) {
-    //statusChangeCallback(response);
     console.log(response);
   });
 }

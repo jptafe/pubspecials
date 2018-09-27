@@ -62,7 +62,7 @@
                 Add Pub <i class="fas fa-beer"></i>
             </button>
             &nbsp;
-            <span id="FBbutton">
+            <span id="FBButton">
                 <fb:login-button 
                     scope="public_profile,email"
                     onlogin="checkLoginState();">
@@ -217,7 +217,7 @@
         <p><a href="#">{{addr}}</a></p>
         <p>{{desc}}</p>
         <section>
-            <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" id="addspecial_button" disabled>
+            <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" class="addspecial_button" disabled>
                 Add new Special for <b>{{name}}</b> <i class="fas fa-ticket-alt"></i>
             </button>
 </script>
@@ -234,7 +234,7 @@
             <p>{{spec_title}}</p>
             <p>{{tod}}</p>
             <section>
-                <button onclick="FORMAddComment({{id}},{{pubid}})" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}},{{pubid}}" disabled>
+                <button onclick="FORMAddComment({{id}},{{pubid}})" name="addspecialcomment_button" class="addspecialcomment_button" value="{{id}},{{pubid}}" disabled>
                     Add New Comment <i class="fas fa-comments"></i>
                 </button>
 </script>
@@ -248,7 +248,9 @@
     
         </section>
         <footer>
-          
+            
+            <img src="https://graph.facebook.com/531077201/picture?width=64&height=64">
+            <img src="https://graph.facebook.com/10155400463042202/picture?width=64&height=64">
         </footer>
     </aside>
 </script>
