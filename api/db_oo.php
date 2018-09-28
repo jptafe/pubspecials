@@ -50,6 +50,8 @@ SELECT * FROM pub
             }
             $clean_pubradius = $clean_pubradius / 100;
             if($clean_order == 'recent') {
+// We also want to know who added the pub!
+
                 $sqlpubs = "
 SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount
     FROM pub 
@@ -97,6 +99,7 @@ UPDATE pub
                 $subupdate->bindParam(':pubid', $row['id'], PDO::PARAM_INT);
                 $row['viewcount'] = $row['viewcount'] + 1;
                 $subupdate->execute();
+// We also want to know who added the special!
 
                 $specialsql = "
 SELECT id, pub_id, special_text, day_of_week, time_of_day, starts, expires
@@ -118,6 +121,7 @@ SELECT id, pub_id, special_text, day_of_week, time_of_day, starts, expires
                     $downstmt->execute();
                     $downcount = $downstmt->fetch(PDO::FETCH_ASSOC);
                     $specialrow['downcount'] = $downcount['downcount'];
+// Who made the comment
                     $commentspecialsql = "
 SELECT * 
     FROM comment 
@@ -153,6 +157,9 @@ SELECT *
                 return false;
             }
         }
+        
+/* Authenticated users */
+        
         public function newPub($pubArray) {
             $clean_pubname = validate($pubArray['pubname'], 'PUBNAME');
             $clean_pubaddress = validate($pubArray['pubaddress'], 'PUBADDR');
@@ -182,8 +189,6 @@ INSERT INTO pub
                 return false;
             }
         }
-
-/* Authenticated users */
         public function newSpecial($specialArray) {
         }
         public function commentOnSpecial($specialID, $comment) {

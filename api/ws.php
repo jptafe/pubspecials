@@ -99,12 +99,15 @@
                 $output = array(['error'=>'input']);
             }
         }
-        if($_GET['catid'] == 'reguser') { 
-            $gooduid = filter_input(INPUT_GET, 'uid', FILTER_VALIDATE_INT);
-            if($gooduid != false) {
-                $valid = checkUIDWithFacebook($gooduid);
+        if($_GET['catid'] == 'regFBuser') { 
+            $goodUID = filter_input(INPUT_GET, 'uid', FILTER_VALIDATE_INT);
+            //$goodToken = filter_input(INPUT_GET, 'token', FILTER_VALIDATE_URL);
+            $goodToken = $_GET['token'];
+            
+            if($goodUID != false || $goodToken != false) {
+                $username = $_SESSION['session_object']->checkUIDWithFacebook($goodUID, $goodToken);
                 if($valid != false) {
-                    setAuthSession($valid);
+                    $_SESSION['session_object']->setAuthSession($goodUID, $username);
                     $output = array(['auth'=>'true']);
                 } else {
                     $output = array(['auth'=>'false']);
@@ -114,6 +117,16 @@
             }
         }
         
+        /* Areas Requiring Authentication */
+        if($_SESSION['session_object']->isAuthSession()) {
+            if($_GET['catid'] == 'endorse') { 
+                $userEndorcments = getAllEndorcementsForUser($_SESSION['session_object']->getUID());
+            }
+            if($_GET['catid'] == 'removeendorse') { 
+                $userEndorcments = getAllEndorcementsForUser($_SESSION['session_object']->getUID());
+            }
+        }
+
         header('Content-Type: application/json');
         if(isset($output)) {
             echo json_encode($output);

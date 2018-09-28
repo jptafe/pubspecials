@@ -206,6 +206,7 @@
         <figcaption>ALERT:</figcaption>
         <div id="notice">Notice: this is an Notice</div>
     </div>
+    <img id="fbid" src="https://graph.facebook.com/10155400463042202/picture?width=64&height=64">
 </body>
 <script id="template-pub" type="text/template">
     <aside>
@@ -213,9 +214,12 @@
             <span>Views:{{views}}</span>
             <span>{{name}}</span>
             <span id="{{calc_score_id}}">Score:</span>
+            
         </header>
         <p><a href="#">{{addr}}</a></p>
         <p>{{desc}}</p>
+        <input type="checkbox" class="expand" id="arrow{{id}}">
+        <label for="arrow{{id}}"></label>
         <section>
             <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" class="addspecial_button" disabled>
                 Add new Special for <b>{{name}}</b> <i class="fas fa-ticket-alt"></i>
@@ -223,12 +227,12 @@
 </script>
 <script id="template-special" type="text/template">
             <div>
-                <input onChange="upThumb({{id}})" type="checkbox" class="makefavourite" id="makefavourite{{id}}" disabled>
+                <input onChange="AJAXThumbbing(this, {{id}}, 'UP')" type="checkbox" value="{{id}}" class="makefavourite" id="makefavourite{{id}}" disabled>
                 <label for="makefavourite{{id}}"></label>
                 <span id="allthumbsup{{id}}">{{up}}</span>
                 <span>{{dow}}</span>
                 <span id="allthumbsdown{{id}}">{{down}}</span>
-                <input onChange="downThumb({{id}})" type="checkbox" class="unfavourite" id="unfavourite{{id}}" disabled>
+                <input onChange="AJAXThumbbing(this, {{id}}, 'DOWN')" type="checkbox" class="unfavourite" id="unfavourite{{id}}" disabled>
                 <label for="unfavourite{{id}}"></label>
             </div>
             <p>{{spec_title}}</p>
@@ -245,12 +249,8 @@
     </section>
 </script>
 <script id="template-pub-footer" type="text/template">
-    
         </section>
         <footer>
-            
-            <img src="https://graph.facebook.com/531077201/picture?width=64&height=64">
-            <img src="https://graph.facebook.com/10155400463042202/picture?width=64&height=64">
         </footer>
     </aside>
 </script>

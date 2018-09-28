@@ -378,22 +378,6 @@ function hideMessage(targetElement) {
 function showMessage(targetElement) {
     targetElement.style.display = 'block';
 }
-function upThumb(specialID) {
-    if(document.getElementById('makefavourite' + specialID).checked == true) {
-        document.getElementById('unfavourite' + specialID).checked = false;
-        // AJAXUpVoteSpecial(specialID);
-    } else {
-        // AJAXCancelUpVoteSpecial(specialID);
-    }
-}
-function downThumb(specialID) {
-    if(document.getElementById('unfavourite' + specialID).checked == true) {
-        document.getElementById('makefavourite' + specialID).checked = false;
-        // AJAXDownVoteSpecial(specialID);
-    } else {
-        // AJAXCancelDownVoteSpecial(specialID);
-    }
-}
 
 /* PERSISTENCE EVENTS */
 function rememberRadius() {
@@ -433,6 +417,139 @@ function setSearchOrderPopular() {
 }
 
 /* AJAX */
+function AJAXVerifyFBAuthentication(FBToken, FBUID) {
+    fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid' + FBUID)
+    .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+            }
+            response.json().then(function(data) {
+                if(data.length > 0) {
+                    if(data.auth == 'true') {
+                        localStorage.setItem('authenticated', data.verifiedToken);
+                        enableButtons();
+                        return true;
+                    } else {
+                        localStorage.setItem('authenticated', 'false');
+                        disableButtons();
+                        return false;
+                    }
+                } else {
+                    localStorage.setItem('authenticated', 'false');
+                    disableButtons();
+                    return false;
+                }
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
+    return false;
+}
+function AJAXsetAllThumbsForUser(ajaxedPubs) {
+    // all the thumbbed checkboxes for all the displayed 
+    // specials need to be set to whatever the user has already touched
+    var haystack = [];
+    for(var pub in ajaxedPubs) {
+        if(typeof ajaxedPubs[pub].specials != 'undefined') {
+            for(var special in ajaxedPubs[pub].specials) {
+                haystack.push(ajaxedPubs[pub].specials[special].id);
+            }
+        }
+    }
+    if(haystack.length > 0) {
+        var url = 'api/ws.php?catid=userthumbs&uid=' + localStorage.getItem('authenticated');
+        fetch(url)
+       .then(
+            function(response) {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                }
+                response.json().then(function(data) {
+                    if(data.length > 0) {
+                        for(var loop = 0;loop < data.length;loop++) {
+                            if(haystack.includes(data[loop].special_id)) {
+                                if(data[loop].rating == 'UP') {
+                                    document.getElementById('unfavourite' + data[loop].special_id).checked = false;
+                                    document.getElementById('makefavourite' + data[loop].special_id).checked = true;
+                                } 
+                                if(data[loop].rating == 'DOWN') {
+                                    document.getElementById('makefavourite' + data[loop].special_id).checked = false;
+                                    document.getElementById('unfavourite' + data[loop].special_id).checked = true;
+                                }
+                            }
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        )
+        .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+        });
+    }
+    return false;
+}
+function AJAXThumbbing(theCheckbox, specialID, direction) {
+    var allUp = parseInt(document.getElementById('allthumbsup' + specialID).innerHTML);
+    var allDown = parseInt(document.getElementById('allthumbsdown' + specialID).innerHTML)
+    if(direction == 'UP') {
+        if(theCheckbox.checked == true) {
+            var url = 'api/ws.php?catid=endorse&specialid=' + specialID + '&direction=' + 'UP';
+            allUp++;
+            if(document.getElementById('unfavourite' + specialID).checked == true) {
+                document.getElementById('unfavourite' + specialID).checked = false;
+                allDown--;
+            }
+        } else {
+            var url = 'api/ws.php?catid=removeendorse&specialid=' + specialID + '&direction=' + 'UP';
+            allUp--;
+        }
+    }
+    if(direction == 'DOWN') {
+        if(theCheckbox.checked == true) {
+            var url = 'api/ws.php?catid=endorse&specialid=' + specialID + '&direction=' + 'DOWN';
+            allDown++;
+            if(document.getElementById('makefavourite' + specialID).checked == true) {
+                allUp--;
+                document.getElementById('makefavourite' + specialID).checked = false;
+            }
+        } else {
+            var url = 'api/ws.php?catid=removeendorse&specialid=' + specialID + '&direction=' + 'DOWN';
+            allDown--;
+        }
+    }
+    document.getElementById('allthumbsup' + specialID).innerHTML = allUp;
+    document.getElementById('allthumbsdown' + specialID).innerHTML = allDown;
+    
+   fetch(url)
+   .then(
+        function(response) {
+            if (response.status !== 200) {
+                console.log('Looks like there was a problem. Status Code: ' + response.status);
+            }
+            response.json().then(function(data) {
+                if(data.length > 0) {
+                    if(data.error == 'true') {
+                        console.log(data);
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        }
+    )
+    .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
+    return false;
+}
+
 function getSuburbFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -551,6 +668,7 @@ function AJAXpubsWithGPS() {
                                 pubHtml +=  document.getElementById('template-special-footer').innerHTML;
                             }
                         }
+                        pubHtml +=  document.getElementById('template-special-footer').innerHTML;
                         pubHtml +=  document.getElementById('template-pub-footer').innerHTML;
                     }
                     document.getElementById("publist").innerHTML = pubHtml;
@@ -586,6 +704,8 @@ function AJAXpubsWithGPS() {
                             specialComment[loop].removeAttribute('disabled');
                             specialComment[loop].setAttribute('placeholder', 'Comment on this');
                         }
+                        
+                        AJAXsetAllThumbsForUser(data);
                     }
                 }
             });
@@ -638,12 +758,11 @@ document.getElementById('specialbegins').value = new Date().toISOString().substr
     FB.getLoginStatus(function(response) {
         console.log(response);
         if(response.status == 'not_authorized') {
-            sessionStorage.setItem('authenticated', 'false');
+            localStorage.setItem('authenticated', 'false');
             disableButtons();
         }
         if(response.status == 'connected') {
-            sessionStorage.setItem('authenticated', response.authResponse.userID);
-            enableButtons();
+            AJAXVerifyFBAuthentication(response.authResponse.accessToken, response.authResponse.userID);
         }
     });
   };
