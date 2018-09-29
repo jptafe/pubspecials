@@ -154,11 +154,9 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(24) NOT NULL,
-  `password` varchar(24) NOT NULL,
+  `FBuserid` bigint(16) NOT NULL,
+  `FBusername` varchar(24) NOT NULL,
   `privilege` int(2) NOT NULL,
-  `yob` int(4) NOT NULL,
-  `email` varchar(128) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
@@ -170,7 +168,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'asdf','asdf',1,1939,'asdf@asdf.com','2018-08-06 01:49:08');
+INSERT INTO `user` VALUES (1, 10155400463042202,'John Perry',1,'2018-08-06 01:49:08');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

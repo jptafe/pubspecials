@@ -418,7 +418,7 @@ function setSearchOrderPopular() {
 
 /* AJAX */
 function AJAXVerifyFBAuthentication(FBToken, FBUID) {
-    fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid' + FBUID)
+    fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid=' + FBUID)
     .then(
         function(response) {
             if (response.status !== 200) {
@@ -426,8 +426,8 @@ function AJAXVerifyFBAuthentication(FBToken, FBUID) {
             }
             response.json().then(function(data) {
                 if(data.length > 0) {
-                    if(data.auth == 'true') {
-                        localStorage.setItem('authenticated', data.verifiedToken);
+                    if(data[0].auth == 'true') {
+                        localStorage.setItem('authenticated', data[0].verifiedToken);
                         enableButtons();
                         return true;
                     } else {

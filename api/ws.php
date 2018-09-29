@@ -103,13 +103,19 @@
             $goodUID = filter_input(INPUT_GET, 'uid', FILTER_VALIDATE_INT);
             //$goodToken = filter_input(INPUT_GET, 'token', FILTER_VALIDATE_URL);
             $goodToken = $_GET['token'];
-            
+
             if($goodUID != false || $goodToken != false) {
-                $username = $_SESSION['session_object']->checkUIDWithFacebook($goodUID, $goodToken);
-                if($valid != false) {
-                    $_SESSION['session_object']->setAuthSession($goodUID, $username);
-                    $output = array(['auth'=>'true']);
+                $username = $_SESSION['session_object']->checkUIDWithFacebook($goodToken, $goodUID);
+                if($username != false) {
+                    $uniquekey = $pubs->newUser($goodUID, $username);
+                    if($uniquekey != false) {
+                        $_SESSION['session_object']->setAuthSession($goodUID, $username, $uniquekey);
+                    } else {
+                        return false;
+                    }
+                    $output = array(['auth'=>'true', 'verifiedToken'=>$goodToken]);
                 } else {
+                    $_SESSION['session_object']->unsetAuthSession();
                     $output = array(['auth'=>'false']);
                 }
             } else {
@@ -117,7 +123,7 @@
             }
         }
         
-        /* Areas Requiring Authentication */
+/* Areas Requiring Authentication */
         if($_SESSION['session_object']->isAuthSession()) {
             if($_GET['catid'] == 'endorse') { 
                 $userEndorcments = getAllEndorcementsForUser($_SESSION['session_object']->getUID());

@@ -50,8 +50,7 @@ SELECT * FROM pub
             }
             $clean_pubradius = $clean_pubradius / 100;
             if($clean_order == 'recent') {
-// We also want to know who added the pub!
-
+// who added the pub!
                 $sqlpubs = "
 SELECT pub.id, name, description, address, suburb, state, postcode, logo, viewcount
     FROM pub 
@@ -99,8 +98,7 @@ UPDATE pub
                 $subupdate->bindParam(':pubid', $row['id'], PDO::PARAM_INT);
                 $row['viewcount'] = $row['viewcount'] + 1;
                 $subupdate->execute();
-// We also want to know who added the special!
-
+// who added the special!
                 $specialsql = "
 SELECT id, pub_id, special_text, day_of_week, time_of_day, starts, expires
     FROM special
@@ -158,8 +156,30 @@ SELECT *
             }
         }
         
+        public function newUser($uid, $uname) {
+            $sql = "SELECT * FROM user WHERE FBuserid = :uid";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':uid', $uid, PDO::PARAM_INT, 24);
+            $res = $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if(is_array($result) && (sizeof($result) > 0)) {
+                return $result['id'];
+            } else {
+                $insertsql = "
+INSERT INTO user
+    (FBuserid, FBusername, privilege) 
+        VALUES ( :fbuserid, :fbusername, 1);";
+                $stmt = $this->conn->prepare($insertsql);
+                $stmt->bindParam(':fbuserid', $uid, PDO::PARAM_INT, 24);
+                $stmt->bindParam(':fbusername', $uname, PDO::PARAM_STR, 128);
+                $res = $stmt->execute();
+                if($res == true) {
+                    return $this->conn->lastInsertId();
+                }
+                return false;
+            }
+        }
 /* Authenticated users */
-        
         public function newPub($pubArray) {
             $clean_pubname = validate($pubArray['pubname'], 'PUBNAME');
             $clean_pubaddress = validate($pubArray['pubaddress'], 'PUBADDR');

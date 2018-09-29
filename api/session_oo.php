@@ -11,6 +11,7 @@
         private $authUser = false;
         private $uid;
         private $uname;
+        private $ukey;
         
         public function __construct($IP) {
             $this->IP = $IP;
@@ -82,13 +83,14 @@
             //Log source IP, session_id, request URL
             return false;
         }
-        public function setAuthSession($uid, $uname) {
+        public function setAuthSession($uid, $uname, $uniquekey) {
             $this->authUser = true;
             $this->uid = $uid;
             $this->uname = $uname;
-            // insert this sucker into the database
+            $this->ukey = $uniquekey;
+            return true;
         }
-        public function unSetAuthSession($uid) {
+        public function unSetAuthSession() {
             $this->authUser = false;
             unset($this->uid);
             unset($this->uname);
@@ -100,8 +102,8 @@
             return $this->uid;
         }
         
-        public function checkUIDWithFacebook($fbid, $sessKey) {
-            $graph_url = "https://graph.facebook.com/me?access_token=" . $sessKey;
+        public function checkUIDWithFacebook($sessToken, $fbid) {
+            $graph_url = "https://graph.facebook.com/me?access_token=" . $sessToken;
 
             $ch = curl_init($graph_url);
             curl_setopt($ch, CURLOPT_TIMEOUT, 100);
@@ -114,23 +116,17 @@
             $response = curl_exec($ch);
             if($response === false) {
                 print_r(curl_getinfo($ch));
+                return false;
             } 
             curl_close($ch);
-/*
-            $req = new HttpRequest($graph_url, HttpRequest::METH_GET);
-            $req->send();
-            if ($req->getResponseCode() == 200) {
-                $response = $req->getResponseBody();
-            }
-*/
-            die();
-            $decoded_response = json_decode($response);
+            
+            $response = get_object_vars(json_decode($response));
 
-            if ($decoded_response['error']) {
+            if (isset($response['error'])) {
                 return false;
             } else {
-                if($decoded_response->id == $fbid) {
-                    return $decoded_response->name;
+                if($response['id'] == $fbid) {
+                    return $response['name'];
                 }
             }
             return false;
