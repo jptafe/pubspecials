@@ -101,16 +101,32 @@
         }
         
         public function checkUIDWithFacebook($fbid, $sessKey) {
-            $graph_url = "https://graph.facebook.com/me?" . "access_token=" . $sessKey;
-            
+            $graph_url = "https://graph.facebook.com/me?access_token=" . $sessKey;
+
+            $ch = curl_init($graph_url);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $response = curl_exec($ch);
+            if($response === false) {
+                print_r(curl_getinfo($ch));
+            } 
+            curl_close($ch);
+/*
             $req = new HttpRequest($graph_url, HttpRequest::METH_GET);
             $req->send();
             if ($req->getResponseCode() == 200) {
                 $response = $req->getResponseBody();
             }
+*/
+            die();
             $decoded_response = json_decode($response);
-              
-            if ($decoded_response->error) {
+
+            if ($decoded_response['error']) {
                 return false;
             } else {
                 if($decoded_response->id == $fbid) {

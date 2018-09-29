@@ -10,6 +10,7 @@ weekday[5] = "Friday";
 weekday[6] = "Saturday";
 console.log(weekday[d.getDay()]);
 
+
 /* PERSISTENT STORAGE */
 if(localStorage.getItem('authenticated') === null) {
     localStorage.setItem('authenticated', 'false');
@@ -57,7 +58,6 @@ if (localStorage.getItem('currentSearchOrder') === null) {
         document.getElementById('suburbpost_popular').classList.add('btnsel'); 
     }
 }
-
 if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat') == '') {
     fetch('api/ws.php?catid=locforip')
     .then(
@@ -118,7 +118,6 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
 
 
 /* EVENTS */
-
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
         document.getElementById('suburbgps').removeAttribute('class');
@@ -142,7 +141,6 @@ document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
         }
     }
 });
-
 var forms = document.getElementsByTagName('form');
 for(var loop = 0;loop<forms.length;loop++) {
     forms[loop].addEventListener('submit', function(evt) {
@@ -194,6 +192,7 @@ for(var loop = 0;loop<alertBoxes.length;loop++) {
     });
 }
 
+
 /* GMAPS */
 var geocoder = new google.maps.Geocoder;
 function getAddressFromGPS() {
@@ -238,7 +237,6 @@ function getAddressFromGPS() {
         });
     }
 }
-
 var places = new google.maps.places.Autocomplete(document.getElementById('pubaddress'));
 places.setComponentRestrictions(
     {'country': ['au']});
@@ -272,6 +270,7 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     document.getElementById("pubaddress").value = address;
 });
+
 
 /* FORM VALIDATION */
 function checkSubmit(thisForm) {
@@ -416,6 +415,7 @@ function setSearchOrderPopular() {
     AJAXpubsWithGPS();
 }
 
+
 /* AJAX */
 function AJAXVerifyFBAuthentication(FBToken, FBUID) {
     fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid' + FBUID)
@@ -549,7 +549,6 @@ function AJAXThumbbing(theCheckbox, specialID, direction) {
     });
     return false;
 }
-
 function getSuburbFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -642,7 +641,6 @@ function AJAXpubsWithGPS() {
                     var specialTemplateHTML = document.getElementById("template-special").innerHTML;
                     var secialCommentTemplateHTML = document.getElementById("template-special-comments").innerHTML;
                     var pubHtml = '';
-    
                     for(var key in data) {
                         pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]['viewcount'])
                                                 .replace(/{{name}}/g, data[key]['name'])
@@ -675,14 +673,14 @@ function AJAXpubsWithGPS() {
     
                     for(var key in data) {
                         if(typeof data[key].specials == 'undefined') {
-                            document.getElementById('calcscore' + data[key]['id']).innerHTML = 'Score: 0';
+                            document.getElementById('calcscore' + data[key]['id']).innerHTML = '0';
                         } else {
                             var calc_score = 0;
                             for(var special in data[key].specials) {
                                 calc_score = calc_score + parseInt(data[key].specials[special].upcount);
                                 calc_score = calc_score - parseInt(data[key].specials[special].downcount);
                             }
-                            document.getElementById('calcscore' + data[key]["id"]).innerHTML = 'Score: ' + calc_score;
+                            document.getElementById('calcscore' + data[key]["id"]).innerHTML = calc_score;
                         }
                     }
                     if(localStorage.getItem('authenticated') != 'false') {
@@ -716,6 +714,7 @@ function AJAXpubsWithGPS() {
     })
 }
 
+
 /* 3rd Party Components */
 var dateFormat = "yy-mm-dd",
     from = $('#specialbegins').datepicker({
@@ -743,6 +742,7 @@ var dateFormat = "yy-mm-dd",
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
 
+
 /* FACEBOOK */
   window.fbAsyncInit = function() {
     FB.init({
@@ -752,9 +752,6 @@ document.getElementById('specialbegins').value = new Date().toISOString().substr
       version    : 'v3.1'
     });
 
-    //This is FB logging my site?
-    //FB.AppEvents.logPageView();   
-  
     FB.getLoginStatus(function(response) {
         console.log(response);
         if(response.status == 'not_authorized') {

@@ -403,12 +403,12 @@ article section {
 .expand + label::after {
     font-family: "Font Awesome 5 Free"; 
     font-weight: 900;
-    content: '\f0d7';
+    content: '\f0d9';
 }
 .expand:checked + label::after {
     font-family: "Font Awesome 5 Free"; 
     font-weight: 900;
-    content: '\f0d8';
+    content: '\f0d7';
 }
 .expand ~ section {
     height: 0;
