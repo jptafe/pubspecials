@@ -68,6 +68,11 @@
                     onlogin="checkLoginState();">
                 </fb:login-button>
             </span>
+            <span class="fb-like" 
+                data-href="https://www.facebook.com/Pub-Specials-307009586789860" 
+                data-layout="standard" data-action="like" 
+                data-size="small" data-show-faces="false" 
+                data-share="false"></span>
         </footer>
     </nav>
     <article id="contentstuff">
@@ -77,8 +82,9 @@
     <footer>
         <!-- About, Bug Reporting, contact form -->
     </footer>
-    <aside>
-        <fieldset>
+    <aside id="backdrop"></aside>
+    <aside id="formgroup">
+        <fieldset id="formregistration">
             <legend>Registration Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>E-mail</label>
@@ -90,7 +96,7 @@
                 <input type="submit" name="register" value="register">
             </form>
         </fieldset> 
-        <fieldset>
+        <fieldset id="formlogin">
             <legend>Login Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>E-mail</label>
@@ -100,7 +106,7 @@
                 <input type="submit" name="login" value="login">
             </form>
         </fieldset> 
-        <fieldset>
+        <fieldset id="formaddpub">
             <legend>Add Pub Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>Pub Name</label>
@@ -131,7 +137,7 @@
                 </button>
             </form>
         </fieldset>         
-        <fieldset>
+        <fieldset id="formaddspecial">
             <legend>Add Special Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>Special Description</label>
@@ -176,7 +182,7 @@
                 <input type="submit" name="add_special" value="add special">
             </form>
         </fieldset> 
-        <fieldset>
+        <fieldset id="formaddcomment">
             <legend>Add Comment</legend>
             <form action="#" method="POST" novalidate>
                 <label>comments</label>
@@ -192,20 +198,19 @@
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
         <figcaption>ERROR:</figcaption>
-        <div id="error">Error: this is an error</div>
+        <div id="error">this is an error</div>
     </div>
-    
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
         <figcaption>MESSAGE:</figcaption>
-        <div id="message">Message: this is an message</div>
+        <div id="message">this is an message</div>
     </div>
-        
     <div class="alert">
         <aside class="close_icon">&#10060;</aside>
-        <figcaption>ALERT:</figcaption>
-        <div id="notice">Notice: this is an Notice</div>
+        <figcaption>WARNING:</figcaption>
+        <div id="notice">this is an alert</div>
     </div>
+    <!-- Use this in author label of pub, special & comment -->
     <img id="fbid" src="https://graph.facebook.com/10155400463042202/picture?width=64&height=64">
 </body>
 <script id="template-pub" type="text/template">

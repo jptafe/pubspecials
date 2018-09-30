@@ -115,7 +115,7 @@
 
             $response = curl_exec($ch);
             if($response === false) {
-                print_r(curl_getinfo($ch));
+                //print_r(curl_getinfo($ch)); // DEBUG, Why did it fail?
                 return false;
             } 
             curl_close($ch);

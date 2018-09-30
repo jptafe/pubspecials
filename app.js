@@ -10,6 +10,39 @@ weekday[5] = "Friday";
 weekday[6] = "Saturday";
 console.log(weekday[d.getDay()]);
 
+/* FACEBOOK */
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '335876946985539',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.1'
+    });
+
+    FB.getLoginStatus(function(response) {
+        if(response.status == 'not_authorized') {
+            localStorage.setItem('authenticated', 'false');
+            disableButtons();
+        }
+        if(response.status == 'connected') {
+            AJAXVerifyFBAuthentication(response.authResponse.accessToken, response.authResponse.userID);
+        }
+    });
+};
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+        console.log(response);
+    });
+}
+
+
 
 /* PERSISTENT STORAGE */
 if(localStorage.getItem('authenticated') === null) {
@@ -95,11 +128,10 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
                         document.getElementById('suburbpost_long').value = data.long;
                     }
                 }
-                // After all this, if we still don't have a location, we have to assume the are non .au referrers.
                 if(localStorage.getItem('currentLat') == '' && localStorage.getItem('currentLong') == '') {
-                    // tell the user, not in OZ
+                    showMessage('We don\'t know where you are, please search for a pub');
                 } else {
-                    // do a search on lat and long pulled from IP address
+                    AJAXpubsWithGPS();
                 }
             });
         }
@@ -108,12 +140,7 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
         console.log('Fetch Error :-S', err);
     });
 } else {
-    if(localStorage.getItem('GPSAccess') === null) {
-        AJAXpubsWithGPS();
-    } else {
-        getSuburbFromGPS();
-        AJAXpubsWithGPS();
-    }
+    AJAXpubsWithGPS();
 }
 
 
@@ -155,8 +182,7 @@ for(var loop = 0;loop<forms.length;loop++) {
             evt.target.lastElementChild.value = 'Submit';  //          This goes into AJAX...
         } else {
             evt.target.lastElementChild.value = 'Error';
-            document.getElementById('error').innerHTML = errorCode;
-            showMessage(document.getElementById('error').parentElement);
+            showError(errorCode);
             evt.preventDefault();
         }
     });
@@ -180,7 +206,7 @@ document.getElementById('password2').addEventListener('change', checkPasswordsMa
 document.getElementById('specialneverexpires').addEventListener('change', disableSpecialExpires);
 document.getElementById('pubgps').addEventListener('click', getAddressFromGPS);
 document.getElementById('suburbpost_radius').addEventListener('change', rememberRadius);
-document.getElementById('suburbgps').addEventListener('click', getSuburbFromGPS);
+document.getElementById('suburbgps').addEventListener('click', AJAXgetSuburbFromGPS);
 document.getElementById('suburbpost_recent').addEventListener('click', setSearchOrderRecent);
 document.getElementById('suburbpost_viewed').addEventListener('click', setSearchOrderViewed);
 document.getElementById('suburbpost_popular').addEventListener('click', setSearchOrderPopular);
@@ -371,13 +397,14 @@ function enableFields(fieldsToEable) {
         }
     }
 }
-function hideMessage(targetElement) {
-    targetElement.style.display = 'none';
+function enableButtons() {
+    document.getElementById('FBButton').style.display = 'none';
+    document.getElementById('addpub_button').removeAttribute('disabled');
 }
-function showMessage(targetElement) {
-    targetElement.style.display = 'block';
+function disableButtons() {
+    document.getElementById('FBButton').style.display = 'inline';
+    document.getElementById('addpub_button').setAttribute('disabled', '');
 }
-
 /* PERSISTENCE EVENTS */
 function rememberRadius() {
     localStorage.setItem('currentRadius', document.getElementById('suburbpost_radius').value); 
@@ -433,6 +460,7 @@ function AJAXVerifyFBAuthentication(FBToken, FBUID) {
                     } else {
                         localStorage.setItem('authenticated', 'false');
                         disableButtons();
+                        showMessage('Login to Facebook to be able to Add Pubs, Specials or comments');
                         return false;
                     }
                 } else {
@@ -526,8 +554,8 @@ function AJAXThumbbing(theCheckbox, specialID, direction) {
     document.getElementById('allthumbsup' + specialID).innerHTML = allUp;
     document.getElementById('allthumbsdown' + specialID).innerHTML = allDown;
     
-   fetch(url)
-   .then(
+    fetch(url)
+    .then(
         function(response) {
             if (response.status !== 200) {
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
@@ -549,7 +577,7 @@ function AJAXThumbbing(theCheckbox, specialID, direction) {
     });
     return false;
 }
-function getSuburbFromGPS() {
+function AJAXgetSuburbFromGPS() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             if(parseFloat(position.coords.latitude) && parseFloat(position.coords.longitude)) {
@@ -635,7 +663,8 @@ function AJAXpubsWithGPS() {
             }
             response.json().then(function(data) {
                 if(data[0].error == 'no data') {
-                    document.getElementById("publist").innerHTML = '<h1>No Pubs Found</h1>';
+                    document.getElementById("publist").innerHTML = '<h1>No Pubs Found!</h1>';
+                    showWarning('No Pubs Found, Consider searching again OR widening radius');
                 } else {
                     var pubTemplateHTML = document.getElementById("template-pub").innerHTML;
                     var specialTemplateHTML = document.getElementById("template-special").innerHTML;
@@ -713,8 +742,31 @@ function AJAXpubsWithGPS() {
         console.log('Fetch Error :-S', err);
     })
 }
-
-
+/* ALERTS */
+function hideMessage(targetElement) {
+    targetElement.style.display = 'none';
+}
+function showError(error) {
+    document.getElementById('error').innerHTML = error;
+    document.getElementById('error').parentElement.style.display = 'block';
+    setTimeout(hideAlerts, 8000);
+}
+function showMessage(message) {
+    document.getElementById('message').innerHTML = message;
+    document.getElementById('message').parentElement.style.display = 'block';
+    setTimeout(hideAlerts, 8000);
+}
+function showWarning(warning) {
+    document.getElementById('notice').innerHTML = warning;
+    document.getElementById('notice').parentElement.style.display = 'block';
+    setTimeout(hideAlerts, 8000);
+}
+function hideAlerts() {
+    var allAlerts = document.getElementsByClassName('alert');                    
+    for(loop = 0;loop<allAlerts.length;loop++) {
+        allAlerts[loop].removeAttribute('style');
+    }
+}
 /* 3rd Party Components */
 var dateFormat = "yy-mm-dd",
     from = $('#specialbegins').datepicker({
@@ -741,48 +793,3 @@ var dateFormat = "yy-mm-dd",
         console.log('foo');
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
-
-
-/* FACEBOOK */
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '335876946985539',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v3.1'
-    });
-
-    FB.getLoginStatus(function(response) {
-        console.log(response);
-        if(response.status == 'not_authorized') {
-            localStorage.setItem('authenticated', 'false');
-            disableButtons();
-        }
-        if(response.status == 'connected') {
-            AJAXVerifyFBAuthentication(response.authResponse.accessToken, response.authResponse.userID);
-        }
-    });
-  };
-  
-function enableButtons() {
-    document.getElementById('FBButton').style.display = 'none';
-    document.getElementById('addpub_button').removeAttribute('disabled');
-}
-function disableButtons() {
-    document.getElementById('FBButton').style.display = 'inline';
-    document.getElementById('addpub_button').setAttribute('disabled', '');
-}
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-
-function checkLoginState() {
-  FB.getLoginStatus(function(response) {
-    console.log(response);
-  });
-}
