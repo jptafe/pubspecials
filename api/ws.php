@@ -107,13 +107,13 @@
             if($goodUID != false || $goodToken != false) {
                 $username = $_SESSION['session_object']->checkUIDWithFacebook($goodToken, $goodUID);
                 if($username != false) {
-                    $uniquekey = $pubs->newUser($goodUID, $username);
+                    $uniquekey = $pubs->newUser($username['id'], $username['name']);
                     if($uniquekey != false) {
-                        $_SESSION['session_object']->setAuthSession($goodUID, $username, $uniquekey);
+                        $_SESSION['session_object']->setAuthSession($username['id'], $username['name'], $uniquekey);
                     } else {
                         return false;
                     }
-                    $output = array(['auth'=>'true', 'verifiedToken'=>$goodToken]);
+                    $output = array(['auth'=>'true', 'verifiedID'=>$username['id']]);
                 } else {
                     $_SESSION['session_object']->unsetAuthSession();
                     $output = array(['auth'=>'false']);

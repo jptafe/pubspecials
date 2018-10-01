@@ -126,7 +126,7 @@
                 return false;
             } else {
                 if($response['id'] == $fbid) {
-                    return $response['name'];
+                    return array('name'=>$response['name'],'id'=>$response['id']);
                 }
             }
             return false;
