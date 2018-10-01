@@ -6,26 +6,41 @@
     box-sizing: border-box;
     transition: all .3s;
 }
-fieldset {
-    display: none;
-}
-#backdrop {
+#formgroup {
     display: none;
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    filter: blur(20px);
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
 }
 fieldset {
+    display: none;
     position: absolute;
-    left: 20%;
+    border-radius: 5px;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(1);
+    transform-origin: center center 0px;
+    width: var(--section-width);
     background: var(--main-bkg);
     border-style: double;
     border-width: 2px;
     padding: var(--padding);
     width: var(--section-width);
     border-color: var(--alert-notice-txt);
-    width: 22em;
+    box-shadow: 10px 10px 20px var(--main-act);
+    padding: 2.5em;
+}
+fieldset aside {
+    display: block;
+    width: 1em;
+    margin-top: -2em;
+    margin-left: -2em;
+    cursor: pointer;
+}
+legend {
+    float: left;
+    display: block;
+    border: none;
 }
 #contentstuff {
     min-height: 44em;
@@ -133,7 +148,14 @@ Pallette */
     --alert-notice-bkg: var(--mindaro);
     --alert-notice-txt: var(--mindaro-dark);
 }
+/*
 
+
+
+Fixes */
+.clearfix{
+    clear: both;
+}
 /*
 
 
@@ -143,10 +165,7 @@ body {
     background-image: linear-gradient(175deg, var(--block-bkg), var(--main-bkg), var(--main-bkg), var(--sidebar-bkg));
     color: var(--main-txt);
 }
-::-moz-selection {
-    background: var(--main-lit);
-}
-::selection {
+::-moz-selection, ::selection {
     background: var(--main-lit);
 }
 a {
@@ -432,11 +451,15 @@ article section {
     display: none;
     position: fixed;
     border-style: double;
+    border-radius: 5px;
     border-width: 2px;
     padding: var(--padding);
     width: var(--section-width);
     border-color: var(--alert-notice-txt);
     bottom: 0;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) scale(1);
+    transform-origin: center bottom 0px;
 }
 .alert aside { 
     display: block;
@@ -467,14 +490,14 @@ article section {
     color: var(--alert-notice-txt);
 }
 @media screen and (min-width: 70em) {
-    :root {
+    #begincontent {
         --section-padding: 2em;
         --section-width: 70em;
         --section-margin: 2em;
     }
 }
 @media screen and (max-width:70em) and (min-width: 25em) {
-    :root {
+    #begincontent {
         --section-padding: 1em;
         --section-width: 60em;
         --section-margin: 1em;
@@ -485,7 +508,7 @@ article section {
     }
 }
 @media screen and (max-width: 25em) {
-    :root {
+    #begincontent {
         --section-padding: .1em;
         --section-width: 100%;
         --section-margin: .1em;

@@ -25,67 +25,70 @@
     <script src="app.js" defer></script>
 </head>
 <body>
-    <nav>
-        <header>
-            <div>Pub Specials</div>
-        </header>
+    <div id="begincontent">
+        <nav>
+            <header>
+                <div>Pub Specials</div>
+            </header>
+            <footer>
+                <button id="suburbgps" name="suburbgps">
+                    Near <i class="fas fa-map-marker-alt"></i>
+                </button>
+                <input type="text" name="suburbpost" id="suburbpost" list="suburbpostlist" onfocus="this.select()" placeholder="Search Suburb or Postcode" 
+                    pattern="[A-Za-z0-9 ,-.]{3,}"> 
+                <datalist id="suburbpostlist">
+                </datalist>
+                <input type="hidden" name="suburbpost_post" id="suburbpost_post" size="4" maxwidth="4" disabled>
+                <input type="hidden" name="suburbpost_state" id="suburbpost_state" size="3" maxlength="3" disabled>
+                <input type="hidden" name="suburbpost_lat" id="suburbpost_lat" size="7" maxlengeth="8" disabled>
+                <input type="hidden" name="suburbpost_long" id="suburbpost_long" size="7" maxlength="8" disabled>
+                <select name="subrubpost_radius" id="suburbpost_radius">
+                    <option value="1">1km</option>
+                    <option value="5">5km</option>
+                    <option value="10">10km</option>
+                    <option value="50">50km</option>
+                    <option value="100">100km</option>
+                </select>
+                <button name="suburbpost_recent" id="suburbpost_recent">
+                    Recent <i class="fas fa-clock"></i>
+                </button>
+                <button name="suburbpost_viewed" id="suburbpost_viewed">
+                    Viewed <i class="fas fa-eye"></i>
+                </button>
+                <button name="suburbpost_popular" id="suburbpost_popular">
+                    Rated <i class="fas fa-star"></i>
+                </button>   
+                &nbsp;
+                <button name="addpub_button" id="addpub_button" disabled>
+                    Add Pub <i class="fas fa-beer"></i>
+                </button>
+                &nbsp;
+                <span id="FBButton">
+                    <fb:login-button 
+                        scope="public_profile,email"
+                        onlogin="checkLoginState();">
+                    </fb:login-button>
+                </span>
+                <span class="fb-like" 
+                    data-href="https://www.facebook.com/Pub-Specials-307009586789860" 
+                    data-layout="standard" data-action="like" 
+                    data-size="small" data-show-faces="false" 
+                    data-share="false"></span>
+            </footer>
+        </nav>
+        <article id="contentstuff">
+            <section>
+                <p id="publist">Lorem ipsum</p>
+            </section>
         <footer>
-            <button id="suburbgps" name="suburbgps">
-                Near <i class="fas fa-map-marker-alt"></i>
-            </button>
-            <input type="text" name="suburbpost" id="suburbpost" list="suburbpostlist" onfocus="this.select()" placeholder="Search Suburb or Postcode" 
-                pattern="[A-Za-z0-9 ,-.]{3,}"> 
-            <datalist id="suburbpostlist">
-            </datalist>
-            <input type="hidden" name="suburbpost_post" id="suburbpost_post" size="4" maxwidth="4" disabled>
-            <input type="hidden" name="suburbpost_state" id="suburbpost_state" size="3" maxlength="3" disabled>
-            <input type="hidden" name="suburbpost_lat" id="suburbpost_lat" size="7" maxlengeth="8" disabled>
-            <input type="hidden" name="suburbpost_long" id="suburbpost_long" size="7" maxlength="8" disabled>
-            <select name="subrubpost_radius" id="suburbpost_radius">
-                <option value="1">1km</option>
-                <option value="5">5km</option>
-                <option value="10">10km</option>
-                <option value="50">50km</option>
-                <option value="100">100km</option>
-            </select>
-            <button name="suburbpost_recent" id="suburbpost_recent">
-                Recent <i class="fas fa-clock"></i>
-            </button>
-            <button name="suburbpost_viewed" id="suburbpost_viewed">
-                Viewed <i class="fas fa-eye"></i>
-            </button>
-            <button name="suburbpost_popular" id="suburbpost_popular">
-                Rated <i class="fas fa-star"></i>
-            </button>   
-            &nbsp;
-            <button name="addpub_button" id="addpub_button" disabled>
-                Add Pub <i class="fas fa-beer"></i>
-            </button>
-            &nbsp;
-            <span id="FBButton">
-                <fb:login-button 
-                    scope="public_profile,email"
-                    onlogin="checkLoginState();">
-                </fb:login-button>
-            </span>
-            <span class="fb-like" 
-                data-href="https://www.facebook.com/Pub-Specials-307009586789860" 
-                data-layout="standard" data-action="like" 
-                data-size="small" data-show-faces="false" 
-                data-share="false"></span>
+            <!-- About, Bug Reporting, contact form -->
         </footer>
-    </nav>
-    <article id="contentstuff">
-        <section>
-            <p id="publist">Lorem ipsum</p>
-        </section>
-    <footer>
-        <!-- About, Bug Reporting, contact form -->
-    </footer>
-    <aside id="backdrop"></aside>
+    </div> <!-- end content -->
     <aside id="formgroup">
         <fieldset id="formregistration">
+            <aside class="close_icon">&#10060;</aside>
             <legend>Registration Form</legend>
+            <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
                 <label>E-mail</label>
                 <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
@@ -97,6 +100,7 @@
             </form>
         </fieldset> 
         <fieldset id="formlogin">
+            <aside class="close_icon">&#10060;</aside>
             <legend>Login Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>E-mail</label>
@@ -107,6 +111,7 @@
             </form>
         </fieldset> 
         <fieldset id="formaddpub">
+            <aside class="close_icon">&#10060;</aside>
             <legend>Add Pub Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>Pub Name</label>
@@ -138,6 +143,7 @@
             </form>
         </fieldset>         
         <fieldset id="formaddspecial">
+            <aside class="close_icon">&#10060;</aside>
             <legend>Add Special Form</legend>
             <form action="#" method="POST" novalidate>
                 <label>Special Description</label>
@@ -183,6 +189,7 @@
             </form>
         </fieldset> 
         <fieldset id="formaddcomment">
+            <aside class="close_icon">&#10060;</aside>
             <legend>Add Comment</legend>
             <form action="#" method="POST" novalidate>
                 <label>comments</label>

@@ -175,7 +175,6 @@ for(var loop = 0;loop<forms.length;loop++) {
         if(errorCode == true) {
             evt.target.lastElementChild.value = 'Loading...';
             disableFields(evt.target.children);
-            hideMessage(document.getElementById('error').parentElement);
             doSubmit(evt);
             clearForm(evt.target.children); // Make Sure you do this AFTER AJAX is done
             enableFields(evt.target.children);  // Make Sure you do this AFTER AJAX is done
@@ -214,7 +213,14 @@ document.getElementById('suburbpost_popular').addEventListener('click', setSearc
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
     alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
-        hideMessage(evt.target.parentElement);
+        evt.target.parentElement.style.display = 'none';
+    });
+}
+var closeModals = document.getElementsByTagName('fieldset');
+for(var loop = 0;loop<closeModals.length;loop++) {
+    closeModals[loop].firstElementChild.addEventListener('click', function(evt) {
+        evt.target.parentElement.style.display = 'none';
+        document.getElementById('begincontent').removeAttribute('style');
     });
 }
 
@@ -743,9 +749,6 @@ function AJAXpubsWithGPS() {
     })
 }
 /* ALERTS */
-function hideMessage(targetElement) {
-    targetElement.style.display = 'none';
-}
 function showError(error) {
     document.getElementById('error').innerHTML = error;
     document.getElementById('error').parentElement.style.display = 'block';
