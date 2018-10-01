@@ -25,7 +25,7 @@ Todo:
 Log all interactions with the Web Service.
 Implement google maps on click of Pub Address.
 send a client SSID to google for all requests (mitigate cost)
-Confirm authentic FB/Google account on Server Side
+Confirm authentic Google account on Server Side
 Implement all the Authenticated actions (POST)
 Implement Rate limiting for non .au IPs
 Image validator/uploader in JS - https://www.dropzonejs.com
@@ -34,7 +34,7 @@ style the datepicker
 Login with Google
 
 Annoynaces that need fixing (low priority)
-dropdowns should use the style of the interface
+dropdowns don't work in FireFox should use alternative 
 Login with google
 Add unique pubspecial events to the timeline inside FaceBook!
 

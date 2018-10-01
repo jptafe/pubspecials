@@ -102,6 +102,7 @@
         <fieldset id="formlogin">
             <aside class="close_icon">&#10060;</aside>
             <legend>Login Form</legend>
+            <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
                 <label>E-mail</label>
                 <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
@@ -113,38 +114,59 @@
         <fieldset id="formaddpub">
             <aside class="close_icon">&#10060;</aside>
             <legend>Add Pub Form</legend>
+            <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
-                <label>Pub Name</label>
-                <input type="text" name="pubname" placeholder="Pub Name" required>
-                <label>Pub Address</label>
-                <input type="text" name="pubaddress" placeholder="Pub Address" id="pubaddress" required>
-                <label>Pub Image</label>
-                <input type="file" name="publogo" accept="image/png, image/jpeg">
-                <input type="hidden" name="postcode">
-                <label>Number & Street</label>
-                <input type="text" name="pubnostreet" id="pubnostreet"size="14" maxlength="64" disabled>
-                <label>Suburb</label>
-                <input type="text" name="pubsuburb" id="pubsuburb" size="14" maxlength="32" disabled>
-                <label>State</label>
-                <input type="text" name="pubstate" id="pubstate" size="3" maxlength="3" disabled>   
-                <label>Postcode</label>
-                <input type="number" name="pubpcode" id="pubpcode"size="4" maxlength="4" disabled>   
-                <label>Latitude</label>
-                <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
-                <label>Longitude</label>
-                <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
-                <!-- <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS"> -->
-                <button onclick="return false" name="find_pub_gps" id="pubgps">
-                    Get Address <i class="fas fa-globe"></i>
-                </button>
-                <button name="addpub_button" id="addpub_button_form" disabled>
-                    Add Pub <i class="fas fa-beer"></i>
-                </button>
+                <div>
+                    <label>Pub Name</label>
+                    <input type="text" name="pubname" placeholder="Pub Name" required>
+                </div>
+                <div>
+                    <label>Pub Address</label>
+                    <input type="text" name="pubaddress" placeholder="Pub Address" id="pubaddress" required>
+                </div>
+                <div>                
+                    <label>Pub Image</label>
+                    <input type="file" name="publogo" accept="image/png, image/jpeg">
+                </div>
+                <div>               
+                    <label>Number & Street</label>
+                    <input type="text" name="pubnostreet" id="pubnostreet"size="14" maxlength="64" disabled>
+                </div>
+                <div>
+                    <label>Suburb</label>
+                    <input type="text" name="pubsuburb" id="pubsuburb" size="14" maxlength="32" disabled>
+                </div>
+                <div>
+                    <label>State</label>                 
+                    <input type="text" name="pubstate" id="pubstate" size="3" maxlength="3" disabled>   
+                </div>
+                <div>
+                    <label>Postcode</label>                 
+                    <input type="number" name="pubpcode" id="pubpcode"size="4" maxlength="4" disabled>   
+                </div>
+                <div>
+                    <label>Latitude</label>
+                    <input type="number" name="publat" id="publat" size="7" maxlength="8" disabled>
+                </div>
+                <div>
+                    <label>Longitude</label>                  
+                    <input type="number" name="publong" id="publong" size="7" maxlength="8" disabled>
+                    <!-- <input type="button" name="find_pub_gps" id="pubgps" value="Get Address from GPS"> -->
+                </div>
+                <div>
+                    <button onclick="return false" name="find_pub_gps" id="pubgps">
+                        Address from GPS <i class="fas fa-globe"></i>
+                    </button>
+                    <button name="addpub_button" id="addpub_button_form" disabled>
+                        Add Pub <i class="fas fa-beer"></i>
+                    </button>
+                </div>
             </form>
         </fieldset>         
         <fieldset id="formaddspecial">
             <aside class="close_icon">&#10060;</aside>
-            <legend>Add Special for <span id="formaddspecial_title"></span></span></legend>
+            <legend>Add Special for <span id="formaddspecial_title"></span></legend>
+            <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
                 <label>Special Description</label>
                 <input type="text" name="specialdesc" placeholder="Special Description" required>
@@ -191,6 +213,7 @@
         <fieldset id="formaddcomment">
             <aside class="close_icon">&#10060;</aside>
             <legend>Add Comment</legend>
+            <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
                 <label>comments</label>
                 <input type="hidden" name="specialid" value="{{id}}">
@@ -228,7 +251,6 @@
             <span>{{name}}</span>
             <i class="fas fa-star">:</i>
             <span id="{{calc_score_id}}"></span>
-            
         </header>
         <p><a href="#">{{addr}}</a></p>
         <p>{{desc}}</p>

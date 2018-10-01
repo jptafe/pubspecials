@@ -16,8 +16,7 @@ fieldset {
     display: none;
     position: absolute;
     border-radius: 5px;
-    left: 50%;
-    top: 50%;
+    left: 50%; top: 50%;
     transform: translateY(-50%) translateX(-50%) scale(1);
     transform-origin: center center 0px;
     width: var(--section-width);
@@ -37,10 +36,26 @@ fieldset aside {
     margin-left: -2em;
     cursor: pointer;
 }
-legend {
+fieldset legend {
+    font-weight: 600;
     float: left;
     display: block;
     border: none;
+    margin-bottom: 1em;
+}
+fieldset form div {
+    margin-bottom: .5em;
+}
+fieldset form div:last-child {
+    margin-top: 2em;
+}
+fieldset label {
+    margin-left: 1em;
+    display: inline-block;
+    width: 40%;
+}
+fieldset input {
+    display: inline-block;
 }
 #contentstuff {
     min-height: 44em;
@@ -481,14 +496,17 @@ article section {
     padding: 4em 0 2em 3em;
 }
 #error {
+    width: calc(var(--section-width) / 2);
     background-color: var(--alert-error-bkg);
     color: var(--alert-error-txt);
 }
 #message {
+    width: calc(var(--section-width) / 2);
     background-color: var(--alert-message-bkg);
     color: var(--alert-message-txt);
 }
 #notice {
+    width: calc(var(--section-width) / 2);
     background-color: var(--alert-notice-bkg);
     color: var(--alert-notice-txt);
 }
