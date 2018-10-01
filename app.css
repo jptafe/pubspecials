@@ -165,7 +165,10 @@ body {
     background-image: linear-gradient(175deg, var(--block-bkg), var(--main-bkg), var(--main-bkg), var(--sidebar-bkg));
     color: var(--main-txt);
 }
-::-moz-selection, ::selection {
+::-moz-selection {
+    background: var(--main-lit);
+}
+::selection {
     background: var(--main-lit);
 }
 a {

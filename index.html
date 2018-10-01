@@ -137,14 +137,14 @@
                 <button onclick="return false" name="find_pub_gps" id="pubgps">
                     Get Address <i class="fas fa-globe"></i>
                 </button>
-                <button name="addpub_button" id="addpub_button" disabled>
+                <button name="addpub_button" id="addpub_button_form" disabled>
                     Add Pub <i class="fas fa-beer"></i>
                 </button>
             </form>
         </fieldset>         
         <fieldset id="formaddspecial">
             <aside class="close_icon">&#10060;</aside>
-            <legend>Add Special Form</legend>
+            <legend>Add Special for <span id="formaddspecial_title"></span></span></legend>
             <form action="#" method="POST" novalidate>
                 <label>Special Description</label>
                 <input type="text" name="specialdesc" placeholder="Special Description" required>
@@ -195,8 +195,8 @@
                 <label>comments</label>
                 <input type="hidden" name="specialid" value="{{id}}">
                 <input type="hidden" name="pubid" value="{{pubid}}">
-                <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial{{id}}" placeholder="comments disabled" disabled>
-                <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button{{id}}" value="{{id}},{{pubid}}" disabled>
+                <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial" placeholder="comments disabled" disabled>
+                <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button" value="{{id}},{{pubid}}" disabled>
                     Add Comment <i class="fas fa-comments"></i>
                 </button>
             </form>
@@ -235,7 +235,7 @@
         <input type="checkbox" class="expand" id="arrow{{id}}">
         <label for="arrow{{id}}"></label>
         <section>
-            <button onclick="FORMaddSpecial({{id}})" name="addspecial_button" class="addspecial_button" disabled>
+            <button onclick="FORMaddSpecial({{id}}, '{{name}}')" name="addspecial_button" class="addspecial_button" disabled>
                 Add new Special for <b>{{name}}</b> <i class="fas fa-ticket-alt"></i>
             </button>
 </script>

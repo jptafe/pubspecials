@@ -209,6 +209,22 @@ document.getElementById('suburbgps').addEventListener('click', AJAXgetSuburbFrom
 document.getElementById('suburbpost_recent').addEventListener('click', setSearchOrderRecent);
 document.getElementById('suburbpost_viewed').addEventListener('click', setSearchOrderViewed);
 document.getElementById('suburbpost_popular').addEventListener('click', setSearchOrderPopular);
+document.getElementById('addpub_button').addEventListener('click', FORMOpenAddPub);
+
+window.addEventListener('keydown', function(evt) {
+    if((evt.key == 'Escape' || evt.key == 'Esc' || evt.keyCode == 27)){ 
+           // && (evt.target.nodeName == 'BODY')) {
+                
+        document.getElementById('begincontent').removeAttribute('style');
+        document.getElementById('formgroup').style.display = 'none';     
+        var alertBoxes = document.getElementsByClassName('alert');
+        for(var loop = 0;loop<alertBoxes.length;loop++) {
+            alertBoxes[loop].style.display = 'none';
+        }
+        evt.preventDefault();
+    }
+}, true);
+
 
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
@@ -221,6 +237,7 @@ for(var loop = 0;loop<closeModals.length;loop++) {
     closeModals[loop].firstElementChild.addEventListener('click', function(evt) {
         evt.target.parentElement.style.display = 'none';
         document.getElementById('begincontent').removeAttribute('style');
+        document.getElementById('formgroup').style.display = 'none';
     });
 }
 
@@ -406,6 +423,10 @@ function enableFields(fieldsToEable) {
 function enableButtons() {
     document.getElementById('FBButton').style.display = 'none';
     document.getElementById('addpub_button').removeAttribute('disabled');
+    document.getElementById('commentonspecial').removeAttribute('disabled');
+    document.getElementById('addpub_button_form').removeAttribute('disabled');
+    document.getElementById('addspecialcomment_button').removeAttribute('disabled');
+    document.getElementById('addspecialcomment_button').setAttribute('placeholder', 'Comment on this');
 }
 function disableButtons() {
     document.getElementById('FBButton').style.display = 'inline';
@@ -447,8 +468,22 @@ function setSearchOrderPopular() {
     document.getElementById('suburbpost_recent').removeAttribute('class');
     AJAXpubsWithGPS();
 }
-
-
+function FORMOpenAddPub() {
+    document.getElementById('formgroup').style.display = 'block';
+    document.getElementById('formaddpub').style.display = 'block';
+    document.getElementById('begincontent').style.filter = 'blur(5px)';
+}
+function FORMaddSpecial(pubid, pubname) {
+    document.getElementById('formgroup').style.display = 'block';
+    document.getElementById('formaddspecial').style.display = 'block';
+    document.getElementById('begincontent').style.filter = 'blur(5px)';   
+    document.getElementById('formaddspecial_title').innerHTML = pubname;
+}
+function FORMAddComment(pubid, specialid) {
+    document.getElementById('formgroup').style.display = 'block';
+    document.getElementById('formaddcomment').style.display = 'block';
+    document.getElementById('begincontent').style.filter = 'blur(5px)';   
+}
 /* AJAX */
 function AJAXVerifyFBAuthentication(FBToken, FBUID) {
     fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid=' + FBUID)
@@ -721,23 +756,21 @@ function AJAXpubsWithGPS() {
                     if(localStorage.getItem('authenticated') != 'false') {
                         var thumbsUp = document.getElementsByClassName('makefavourite');
                         var thumbsDown = document.getElementsByClassName('unfavourite');
-                        var specialComment = document.getElementsByClassName('addspecialcomment_button');
-                        var specialButton = document.getElementsByClassName('addspecial_button');
-                        
+                        var addSpecial = document.getElementsByClassName('addspecial_button');
+                        var addComment = document.getElementsByClassName('addspecialcomment_button');
+
                         for(loop = 0;loop<thumbsUp.length;loop++) {
                             thumbsUp[loop].removeAttribute('disabled');
                         }
                         for(loop = 0;loop<thumbsDown.length;loop++) {
                             thumbsDown[loop].removeAttribute('disabled');
                         }
-                        for(loop = 0;loop<specialButton.length;loop++) {
-                            specialButton[loop].removeAttribute('disabled');
+                        for(loop = 0;loop<thumbsUp.length;loop++) {
+                            addSpecial[loop].removeAttribute('disabled');
                         }
-                        for(loop = 0;loop<specialComment.length;loop++) {
-                            specialComment[loop].removeAttribute('disabled');
-                            specialComment[loop].setAttribute('placeholder', 'Comment on this');
+                        for(loop = 0;loop<thumbsDown.length;loop++) {
+                            addComment[loop].removeAttribute('disabled');
                         }
-                        
                         AJAXsetAllThumbsForUser(data);
                     }
                 }
