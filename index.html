@@ -90,13 +90,21 @@
             <legend>Registration Form</legend>
             <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
-                <label>E-mail</label>
-                <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-                <label>Password</label>
-                <input type="password" name="password" id="password1" placeholder="Password" autocomplete="new-password" pattern=".{8,}" required>
-                <label>Password Again</label>
-                <input type="password" name="passwordagain" id="password2" placeholder="Password Again" autocomplete="new-password" pattern=".{8,}" required>
-                <input type="submit" name="register" value="register">
+                <div>
+                    <label>E-mail</label>
+                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" name="password" id="password1" placeholder="Password" autocomplete="new-password" pattern=".{8,}" required>
+                <div>
+                </div>
+                    <label>Password Again</label>
+                    <input type="password" name="passwordagain" id="password2" placeholder="Password Again" autocomplete="new-password" pattern=".{8,}" required>
+                </div>
+                <div>
+                    <input type="submit" name="register" value="register">
+                </div>
             </form>
         </fieldset> 
         <fieldset id="formlogin">
@@ -104,11 +112,17 @@
             <legend>Login Form</legend>
             <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
-                <label>E-mail</label>
-                <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Password" autocomplete="current-password" pattern=".{8,}" required>
-                <input type="submit" name="login" value="login">
+                <div>
+                    <label>E-mail</label>
+                    <input type="text" name="email" placeholder="Email Address" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" pattern=".{8,}" required>
+                </div>
+                <div>
+                    <input type="submit" name="login" value="login">
+                </div>
             </form>
         </fieldset> 
         <fieldset id="formaddpub">
@@ -168,46 +182,60 @@
             <legend>Add Special for <span id="formaddspecial_title"></span></legend>
             <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
-                <label>Special Description</label>
-                <input type="text" name="specialdesc" placeholder="Special Description" required>
-                <label>Day of Week</label>
-                <select name="specialdow" pattern="[A-Za-z]{6,9}" required>
-                    <option value="choose" selected>Choose...</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                    <option value="Weekdays">Weekdays</option>
-                    <option value="Weekends">Weekends</option>
-                    <option value="Alldays">All Days</option>
-                </select>
-                <label>Start Time</label>
-                <select name="specialstarttime" pattern="[0-9]{2}+:[0-9]{2}" required>
-                    <option value="choose" selected>Choose...</option>
-                    <option value="10:00">10 am</option>
-                    <option value="11:00">11 am</option>
-                    <option value="12:00">12 pm</option>
-                    <option value="13:00">1 pm</option>
-                    <option value="14:00">2 pm</option>
-                    <option value="15:00">3 pm</option>
-                    <option value="16:00">4 pm</option>
-                    <option value="17:00">5 pm</option>
-                    <option value="18:00">6 pm</option>
-                    <option value="19:00">7 pm</option>
-                    <option value="20:00">8 pm</option>
-                    <option value="21:00">9 pm</option>
-                    <option value="22:00">10 pm</option>
-                </select>
-                <label>Effective</label>
-                <input type="text" name="specialbegins" id="specialbegins" placeholder="Special Begins" required>
-                <label>Expires</label>
-                <input type="text" name="specialexpires" id="specialexpires" value="2030-01-01" placeholder="Special Expires" required disabled>
-                <label>Never Expires</label>
-                <input type="checkbox" name="specialneverexpires" id="specialneverexpires" checked>
-                <input type="submit" name="add_special" value="add special">
+                <div>
+                    <label>Special Description</label>
+                    <input type="text" name="specialdesc" placeholder="Special Description" required>
+                </div>
+                <div>
+                    <label>Day of Week</label>
+                    <select name="specialdow" pattern="[A-Za-z]{6,9}" required>
+                        <option value="choose" selected>Choose...</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Weekdays">Weekdays</option>
+                        <option value="Weekends">Weekends</option>
+                        <option value="Alldays">All Days</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Start Time</label>
+                    <select name="specialstarttime" pattern="[0-9]{2}+:[0-9]{2}" required>
+                        <option value="choose" selected>Choose...</option>
+                        <option value="10:00">10 am</option>
+                        <option value="11:00">11 am</option>
+                        <option value="12:00">12 pm</option>
+                        <option value="13:00">1 pm</option>
+                        <option value="14:00">2 pm</option>
+                        <option value="15:00">3 pm</option>
+                        <option value="16:00">4 pm</option>
+                        <option value="17:00">5 pm</option>
+                        <option value="18:00">6 pm</option>
+                        <option value="19:00">7 pm</option>
+                        <option value="20:00">8 pm</option>
+                        <option value="21:00">9 pm</option>
+                        <option value="22:00">10 pm</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Effective</label>
+                    <input type="text" name="specialbegins" id="specialbegins" placeholder="Special Begins" required>
+                </div>
+                <div>
+                    <label>Expires</label>
+                    <input type="text" name="specialexpires" id="specialexpires" value="2030-01-01" placeholder="Special Expires" required disabled>
+                </div>
+                <div>
+                    <label>Never Expires</label>
+                    <input type="checkbox" name="specialneverexpires" id="specialneverexpires" checked>
+                </div>
+                <div>
+                    <input type="submit" name="add_special" value="add special">
+                </div>
             </form>
         </fieldset> 
         <fieldset id="formaddcomment">
@@ -215,13 +243,17 @@
             <legend>Add Comment</legend>
             <div class="clearfix"></div>
             <form action="#" method="POST" novalidate>
-                <label>comments</label>
-                <input type="hidden" name="specialid" value="{{id}}">
-                <input type="hidden" name="pubid" value="{{pubid}}">
-                <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial" placeholder="comments disabled" disabled>
-                <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button" value="{{id}},{{pubid}}" disabled>
-                    Add Comment <i class="fas fa-comments"></i>
-                </button>
+                <div>
+                    <label>comments</label>
+                    <input type="hidden" name="specialid" value="{{id}}">
+                    <input type="hidden" name="pubid" value="{{pubid}}">
+                    <input type="text" onkeyup="if(this.value.length>3){this.nextElementSibling.removeAttribute('disabled');}else{this.nextElementSibling.setAttribute('disabled', '');}" class="commentonspecial" name="commentonspecial" id="commentonspecial" placeholder="comments disabled" disabled>
+                </div>
+                <div>
+                    <button onclick="this.form.submit()" name="addspecialcomment_button" id="addspecialcomment_button" value="{{id}},{{pubid}}" disabled>
+                        Add Comment <i class="fas fa-comments"></i>
+                    </button>
+                </div>
             </form>
         </fieldset>    
     </aside>

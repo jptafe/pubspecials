@@ -1,4 +1,7 @@
-/* CONSTANTS */
+/* 
+
+
+CONSTANTS */
 var d = new Date();
 var weekday = new Array(7);
 weekday[0] =  "Sunday";
@@ -9,8 +12,10 @@ weekday[4] = "Thursday";
 weekday[5] = "Friday";
 weekday[6] = "Saturday";
 console.log(weekday[d.getDay()]);
+/* 
 
-/* FACEBOOK */
+
+FACEBOOK */
 window.fbAsyncInit = function() {
     FB.init({
         appId      : '335876946985539',
@@ -41,10 +46,10 @@ function checkLoginState() {
         console.log(response);
     });
 }
+/* 
 
 
-
-/* PERSISTENT STORAGE */
+PERSISTENT STORAGE */
 if(localStorage.getItem('authenticated') === null) {
     localStorage.setItem('authenticated', 'false');
 }
@@ -142,9 +147,10 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
 } else {
     AJAXpubsWithGPS();
 }
+/* 
 
 
-/* EVENTS */
+EVENTS */
 document.getElementById('suburbpost').addEventListener('keyup', function(evt) {
     if(document.getElementById('suburbpost').checkValidity()) {
         document.getElementById('suburbgps').removeAttribute('class');
@@ -213,10 +219,12 @@ document.getElementById('addpub_button').addEventListener('click', FORMOpenAddPu
 
 window.addEventListener('keydown', function(evt) {
     if((evt.key == 'Escape' || evt.key == 'Esc' || evt.keyCode == 27)){ 
-           // && (evt.target.nodeName == 'BODY')) {
-                
         document.getElementById('begincontent').removeAttribute('style');
-        document.getElementById('formgroup').style.display = 'none';     
+        document.getElementById('formgroup').style.display = 'none';
+        var modalForms = document.getElementsByTagName('fieldset');
+        for(var loop = 0;loop<modalForms.length;loop++) {
+            modalForms[loop].style.display = 'none';
+        }
         var alertBoxes = document.getElementsByClassName('alert');
         for(var loop = 0;loop<alertBoxes.length;loop++) {
             alertBoxes[loop].style.display = 'none';
@@ -224,8 +232,6 @@ window.addEventListener('keydown', function(evt) {
         evt.preventDefault();
     }
 }, true);
-
-
 var alertBoxes = document.getElementsByClassName('alert');
 for(var loop = 0;loop<alertBoxes.length;loop++) {
     alertBoxes[loop].firstElementChild.addEventListener('click', function(evt) {
@@ -240,9 +246,10 @@ for(var loop = 0;loop<closeModals.length;loop++) {
         document.getElementById('formgroup').style.display = 'none';
     });
 }
+/* 
 
 
-/* GMAPS */
+GMAPS */
 var geocoder = new google.maps.Geocoder;
 function getAddressFromGPS() {
     if(navigator.geolocation) {
@@ -319,9 +326,10 @@ google.maps.event.addListener(places, 'place_changed', function() {
 
     document.getElementById("pubaddress").value = address;
 });
+/* 
 
 
-/* FORM VALIDATION */
+FORM VALIDATION */
 function checkSubmit(thisForm) {
     var checkFields = thisForm.childNodes;
     for(loop = 0;loop < checkFields.length;loop++) {
@@ -452,7 +460,6 @@ function setSearchOrderRecent() {
     document.getElementById('suburbpost_viewed').removeAttribute('class');
     document.getElementById('suburbpost_popular').removeAttribute('class');
     AJAXpubsWithGPS();
-
 }
 function setSearchOrderViewed() {
     localStorage.setItem('currentSearchOrder', 'views');
@@ -484,7 +491,10 @@ function FORMAddComment(pubid, specialid) {
     document.getElementById('formaddcomment').style.display = 'block';
     document.getElementById('begincontent').style.filter = 'blur(5px)';   
 }
-/* AJAX */
+/* 
+
+
+AJAX */
 function AJAXVerifyFBAuthentication(FBToken, FBUID) {
     fetch('api/ws.php?catid=regFBuser&token=' + FBToken + '&uid=' + FBUID)
     .then(
@@ -495,7 +505,7 @@ function AJAXVerifyFBAuthentication(FBToken, FBUID) {
             response.json().then(function(data) {
                 if(data.length > 0) {
                     if(data[0].auth == 'true') {
-                        localStorage.setItem('authenticated', data[0].verifiedToken);
+                        localStorage.setItem('authenticated', data[0].verifiedID);
                         enableButtons();
                         return true;
                     } else {
@@ -713,7 +723,7 @@ function AJAXpubsWithGPS() {
                     var pubHtml = '';
                     for(var key in data) {
                         pubHtml += pubTemplateHTML.replace(/{{views}}/g, data[key]['viewcount'])
-                                                .replace(/{{name}}/g, data[key]['name'])
+                                                .replace(/{{name}}/g, data[key]['name'].trim())
                                                 .replace(/{{calc_score_id}}/g, 'calcscore' + data[key]['id'])
                                                 .replace(/{{desc}}/g, data[key]['description'])
                                                 .replace(/{{addr}}/g, data[key]['address'])
@@ -765,10 +775,10 @@ function AJAXpubsWithGPS() {
                         for(loop = 0;loop<thumbsDown.length;loop++) {
                             thumbsDown[loop].removeAttribute('disabled');
                         }
-                        for(loop = 0;loop<thumbsUp.length;loop++) {
+                        for(loop = 0;loop<addSpecial.length;loop++) {
                             addSpecial[loop].removeAttribute('disabled');
                         }
-                        for(loop = 0;loop<thumbsDown.length;loop++) {
+                        for(loop = 0;loop<addComment.length;loop++) {
                             addComment[loop].removeAttribute('disabled');
                         }
                         AJAXsetAllThumbsForUser(data);
@@ -781,7 +791,10 @@ function AJAXpubsWithGPS() {
         console.log('Fetch Error :-S', err);
     })
 }
-/* ALERTS */
+/* 
+
+
+ALERTS */
 function showError(error) {
     document.getElementById('error').innerHTML = error;
     document.getElementById('error').parentElement.style.display = 'block';
