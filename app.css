@@ -298,6 +298,12 @@ nav header {
     background-color:  var(--menu-bkg);
     color: var(--menu-txt);
     padding: 3px;
+    height: 45px;
+    padding: 1px;
+}
+nav header img {
+    width: 45px;
+    height: auto;
 }
 nav header ul {
 }
