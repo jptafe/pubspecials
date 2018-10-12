@@ -4,7 +4,7 @@
     include('./session_oo.php');
     session_start();
 
-//  RATE LIMITING CODE COULD BE GOOD HERE min 1 per second & 1,000 per day.
+//  RATE LIMITING CODE COULD BE GOOD HERE max 1 per second & 1,000 per day.
 //  include(./security_oo.php);
 
     $pubs = new pubSpecial;

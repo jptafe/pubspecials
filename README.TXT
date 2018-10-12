@@ -38,5 +38,8 @@ dropdowns don't work in FireFox should use alternative
 Login with google
 Add unique pubspecial events to the timeline inside FaceBook!
 
+Code stored at
+http://github.com/jptafe/pubspecials
+
 Alternative Site:
 https://publocation.com.au/

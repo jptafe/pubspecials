@@ -104,7 +104,6 @@ if(localStorage.getItem('currentLong') == '' && localStorage.getItem('currentLat
                 console.log('Looks like there was a problem. Status Code: ' + response.status);
             }
             response.json().then(function(data) {
-                console.log(data);
                 if(data.hasOwnProperty('suburb')){
                     if(localStorage.getItem('currentSuburb') == '') {
                         localStorage.setItem('currentSuburb', data.suburb);
@@ -348,6 +347,7 @@ function checkSubmit(thisForm) {
                 if(checkFields[loop].value == 'choose') {
                     checkFields[loop].focus();
                     checkFields[loop].setCustomValidity('must choose one');
+                    return 'must choose one';
                 }
             }
         }
@@ -839,6 +839,5 @@ var dateFormat = "yy-mm-dd",
     })
     .on('change', function() {
         from.datepicker('option', 'maxDate', this.value)
-        console.log('foo');
     });
 document.getElementById('specialbegins').value = new Date().toISOString().substr(0, 10);
